@@ -2,13 +2,14 @@
 Welcome to the can-do project! This project is an android application that connects people with events in their community.
 
 ## Team Members
-| CCID | Github Username |
-| ziqi24 | [ziqizhang42](https://github.com/ziqizhang42) |
-| lyunze | [Davidsharkdododo](https://github.com/Davidsharkdododo) |
-| bshan1 | [nickshan11](https://github.com/nickshan11) |
-| qiran2 | [SkyChen8](https://github.com/SkyChen8) |
-| dixeelyn | [dixeee](https://github.com/dixeee) |
-| riyasat | [riyasatzaman](https://github.com/riyasatzaman) |
+| CCID     | Github Username                                         |
+|----------|---------------------------------------------------------|
+| ziqi24   | [ziqizhang42](https://github.com/ziqizhang42)           |
+| lyunze   | [Davidsharkdododo](https://github.com/Davidsharkdododo) |
+| bshan1   | [nickshan11](https://github.com/nickshan11)             |
+| qiran2   | [SkyChen8](https://github.com/SkyChen8)                 |
+| dixeelyn | [dixeee](https://github.com/dixeee)                     |
+| riyasat  | [riyasatzaman](https://github.com/riyasatzaman)         |
 
 ## Compatibility
 ### Minimum
