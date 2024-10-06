@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = "com.bugoff.can_do"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.bugoff.can_do"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 28
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
