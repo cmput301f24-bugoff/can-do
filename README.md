@@ -23,10 +23,10 @@ Welcome to the can-do project! This project is an android application that conne
 - Everything in the minimum requirements
 - Android 15.0 (API level 35) or higher
 ### Development
-- Android Studio 2024.2.1 or higher is required to build the project
-- JDK 21.0.3 or higher is required
-- You may need to `git reset --hard` to the latest commit after setting up the project for the first time to avoid certain file differences with the main branch
-- If you get an error of: Invalid Gradle JDK configuration found, then please go to File -> Invalidate Caches -> Invalidate and Restart to fix the issue
+- Install Android Studio 2024.2.1 or higher
+- Install JDK 21.0.3 or higher
+- If you get an error of: `Invalid Gradle JDK configuration found`, then please go to File -> Invalidate Caches -> Invalidate and Restart to fix the issue
+- You may need to `git reset --hard` to the latest commit after setting up the project for the first time to avoid minor file differences with the main branch
 
 ## Wiki Page
 For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki).
