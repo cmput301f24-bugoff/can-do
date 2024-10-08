@@ -1,8 +1,6 @@
 name: "Custom CodeQL Config"
 include:
   - codeql-queries: security-extended, security-and-quality
-paths:
-  - include: "**/*.xml"
 data-flow:
   configurations:
     - name: "CustomTaintTracking"
