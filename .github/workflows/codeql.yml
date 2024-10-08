@@ -85,16 +85,7 @@ jobs:
 
           # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
           queries: +security-extended,security-and-quality
-          data-extensions: |
-            data-flow-configuration:
-              name: CustomTaintTracking
-              includeSources:
-                - "$remoteInput" # Capture remote inputs like HTTP requests
-                - "$localInput"  # Capture local inputs like file reads or console inputs
-              includeSinks:
-                - "$sensitiveSink" # Capture sinks like file writes, database calls, etc.
-              excludeSinks:
-                - "$safeLogging"
+          config-file: .github/codeql-config.yml
 
       # Build the project manually since build-mode is set to 'manual'
       - if: matrix.build-mode == 'manual'

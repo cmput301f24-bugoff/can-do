@@ -1,0 +1,15 @@
+name: "Custom CodeQL Config"
+include:
+  - codeql-queries: security-extended, security-and-quality
+data-flow:
+  configurations:
+    - name: "CustomTaintTracking"
+      source:
+        categories:
+          - remoteInput # Captures remote inputs like HTTP requests
+          - localInput  # Captures local inputs like file reads or console inputs
+      sink:
+        categories:
+          - sensitiveSink # Captures sinks like file writes, database calls, etc.
+      sink-exclusions:
+        - safeLogging
