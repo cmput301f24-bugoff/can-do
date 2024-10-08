@@ -30,5 +30,5 @@ Welcome to the can-do project! This project is an android application that conne
 
 ## Wiki Page
 For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki).
-The Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1).
-The CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards).
+Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1).
+Our CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards).
