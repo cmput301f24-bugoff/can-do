@@ -59,7 +59,7 @@ jobs:
 
       # Cache Gradle dependencies to speed up builds
       - name: Cache Gradle Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
@@ -68,7 +68,7 @@ jobs:
 
       # Setup Java 21
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin' # Can be 'zulu' or other distributions if preferred
           java-version: '21'
