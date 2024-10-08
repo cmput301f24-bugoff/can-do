@@ -1,5 +1,5 @@
 # can-do
-Welcome to the can-do project! An android application that connects people with events in their community.
+Welcome to the can-do project! This project is an android application that connects people with events in their community.
 
 ## Team Members
 | CCID     | Github Username                                         |
