@@ -20,6 +20,15 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    # Cache Gradle dependencies to speed up builds
+    - name: Cache Gradle Dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     - name: Create google-services.json
       run: |
         echo "$GOOGLE_SERVICES_JSON" > "$GITHUB_WORKSPACE/app/google-services.json"
