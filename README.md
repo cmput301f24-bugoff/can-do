@@ -29,6 +29,6 @@ Welcome to the can-do project! This project is an android application that conne
 - You may need to `git reset --hard` to the latest commit after setting up the project for the first time to avoid minor file differences with the main branch
 
 ## Wiki Page
-For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki).
-Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1).
+For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki). \
+Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1). \
 Our CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards).
