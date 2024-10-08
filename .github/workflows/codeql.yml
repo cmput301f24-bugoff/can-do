@@ -73,6 +73,12 @@ jobs:
           distribution: 'temurin' # Can be 'zulu' or other distributions if preferred
           java-version: '21'
 
+      - name: Create google-services.json
+        run: |
+          echo "$GOOGLE_SERVICES_JSON" > "$GITHUB_WORKSPACE/app/google-services.json"
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
