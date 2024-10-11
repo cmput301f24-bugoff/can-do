@@ -42,7 +42,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test  # Build without running tests
 
-  test:
+  unit-tests:
 
     runs-on: ubuntu-latest
 
