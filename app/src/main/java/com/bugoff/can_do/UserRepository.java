@@ -27,6 +27,7 @@ public class UserRepository {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("androidId", user.getAndroidId());
         userMap.put("name", user.getName());
+        userMap.put("isAdmin", user.getIsAdmin());
 
         usersCollection.document(user.getAndroidId())
                 .set(userMap)
@@ -43,7 +44,8 @@ public class UserRepository {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
-                        User user = new User(androidId, name);
+                        Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
+                        User user = new User(androidId, name, isAdmin);
                         onSuccess.onSuccess(user);
                     } else {
                         onFailure.onFailure(new Exception("User not found"));
