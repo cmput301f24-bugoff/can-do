@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
 
     id("com.google.gms.google-services")
+
+    id("org.jetbrains.dokka") version "2.0.0-Beta"
 }
 
 android {
@@ -33,10 +35,6 @@ android {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
 dependencies {
 
     implementation(libs.appcompat)
@@ -50,4 +48,12 @@ dependencies {
 
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
+tasks.register("generateJavadoc", org.jetbrains.dokka.gradle.DokkaTask::class) {
+    outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
 }
