@@ -63,6 +63,9 @@ tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("generateJavadoc") {
             sourceRoots.from(file("src/main/java"))  // Point to Java files in the app module
             platform.set(org.jetbrains.dokka.Platform.jvm)  // Set platform to JVM for Java
 
+            languageVersion.set("21")
+            apiVersion.set("21")
+
             // Include visibility settings to document private/protected members
             documentedVisibilities.set(
                 setOf(
