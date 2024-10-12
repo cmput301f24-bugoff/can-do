@@ -48,6 +48,8 @@ dependencies {
 
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
+
+    dokkaPlugin(libs.kotlinAsJavaPlugin)
 }
 
 tasks.withType<Test> {
