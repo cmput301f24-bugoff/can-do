@@ -1,0 +1,30 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.bugoff.can_do////PointingToDeclaration/app/com.bugoff.can_do/index.html
+$dokka.location:com.bugoff.can_do/FirestoreHelper///PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/index.html
+$dokka.location:com.bugoff.can_do/FirestoreHelper/FirestoreHelper/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/-firestore-helper.html
+$dokka.location:com.bugoff.can_do/FirestoreHelper/db/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/db.html
+$dokka.location:com.bugoff.can_do/FirestoreHelper/instance/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/instance.html
+$dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
+$dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
+$dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/User///PointingToDeclaration/app/com.bugoff.can_do/-user/index.html
+$dokka.location:com.bugoff.can_do/User/User/#java.lang.String#java.lang.String#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
+$dokka.location:com.bugoff.can_do/User/User/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
+$dokka.location:com.bugoff.can_do/User/androidId/#/PointingToDeclaration/app/com.bugoff.can_do/-user/android-id.html
+$dokka.location:com.bugoff.can_do/User/isAdmin/#/PointingToDeclaration/app/com.bugoff.can_do/-user/is-admin.html
+$dokka.location:com.bugoff.can_do/User/name/#/PointingToDeclaration/app/com.bugoff.can_do/-user/name.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator///PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/index.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/UserAuthenticator/#/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/-user-authenticator.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/authenticateUser/#com.bugoff.can_do.UserRepository#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/authenticate-user.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserAddError/#java.lang.Exception/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-add-error.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserAdded/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-added.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserFound/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-found.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserNotFound/#com.bugoff.can_do.UserRepository#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-not-found.html
+$dokka.location:com.bugoff.can_do/UserRepository///PointingToDeclaration/app/com.bugoff.can_do/-user-repository/index.html
+$dokka.location:com.bugoff.can_do/UserRepository/UserRepository/#/PointingToDeclaration/app/com.bugoff.can_do/-user-repository/-user-repository.html
+$dokka.location:com.bugoff.can_do/UserRepository/addUser/#com.bugoff.can_do.User#OnSuccessListener<Void>#OnFailureListener/PointingToDeclaration/app/com.bugoff.can_do/-user-repository/add-user.html
+$dokka.location:com.bugoff.can_do/UserRepository/db/#/PointingToDeclaration/app/com.bugoff.can_do/-user-repository/db.html
+$dokka.location:com.bugoff.can_do/UserRepository/getUser/#java.lang.String#OnSuccessListener<User>#OnFailureListener/PointingToDeclaration/app/com.bugoff.can_do/-user-repository/get-user.html
+$dokka.location:com.bugoff.can_do/UserRepository/usersCollection/#/PointingToDeclaration/app/com.bugoff.can_do/-user-repository/users-collection.html
+com.bugoff.can_do
