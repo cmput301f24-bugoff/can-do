@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
 
     id("com.google.gms.google-services")
+
+    id("org.jetbrains.dokka") version "2.0.0-Beta"
 }
 
 android {
@@ -33,10 +35,6 @@ android {
     }
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
 dependencies {
 
     implementation(libs.appcompat)
@@ -50,4 +48,30 @@ dependencies {
 
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
+tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("generateJavadoc") {
+    outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+
+    dokkaSourceSets {
+        create("androidMain") {
+            displayName.set("JavaMain")
+            sourceRoots.from(file("src/main/java"))  // Point to Java files in the app module
+            platform.set(org.jetbrains.dokka.Platform.jvm)  // Set platform to JVM for Java
+
+            // Include visibility settings to document private/protected members
+            documentedVisibilities.set(
+                setOf(
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PUBLIC,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PROTECTED,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PACKAGE,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PRIVATE
+                )
+            )
+        }
+    }
 }

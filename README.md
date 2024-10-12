@@ -11,6 +11,12 @@ Welcome to the can-do project! This project is an android application that conne
 | dixeelyn | [dixeee](https://github.com/dixeee)                     |
 | riyasat  | [riyasatzaman](https://github.com/riyasatzaman)         |
 
+## Wiki Page
+Our Javadoc webpage is at https://cmput301f24-bugoff.github.io/can-do/. \
+Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1). \
+Our CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards). \
+For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki).
+
 ## Compatibility
 ### Minimum
 - Android 9.0 (API level 28)
@@ -27,8 +33,3 @@ Welcome to the can-do project! This project is an android application that conne
 - Install JDK 21.0.3 or higher
 - If you get an error of: `Invalid Gradle JDK configuration found`, then make sure you have the proper `local.properties` file
 - You may need to `git reset --hard` to the latest commit after setting up the project for the first time to avoid minor file differences with the main branch
-
-## Wiki Page
-For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki). \
-Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1). \
-Our CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards).
