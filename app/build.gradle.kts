@@ -54,6 +54,24 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.register("generateJavadoc", org.jetbrains.dokka.gradle.DokkaTask::class) {
+tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("generateJavadoc") {
     outputDirectory.set(layout.buildDirectory.dir("docs/javadoc"))
+
+    dokkaSourceSets {
+        create("androidMain") {
+            displayName.set("JavaMain")
+            sourceRoots.from(file("src/main/java"))  // Point to Java files in the app module
+            platform.set(org.jetbrains.dokka.Platform.jvm)  // Set platform to JVM for Java
+
+            // Include visibility settings to document private/protected members
+            documentedVisibilities.set(
+                setOf(
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PUBLIC,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PROTECTED,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PACKAGE,
+                    org.jetbrains.dokka.DokkaConfiguration.Visibility.PRIVATE
+                )
+            )
+        }
+    }
 }
