@@ -45,7 +45,8 @@ public class UserRepository {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
                         Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
-                        User user = new User(androidId, name, isAdmin);
+                        Facility facility = new Facility("Facility Name", "Facility Address");
+                        User user = new User(androidId, name, isAdmin, facility);
                         onSuccess.onSuccess(user);
                     } else {
                         onFailure.onFailure(new Exception("User not found"));
