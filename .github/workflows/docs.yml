@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  generate-javadoc:
+  generate-publish-javadoc:
 
     runs-on: ubuntu-latest
 
