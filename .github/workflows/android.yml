@@ -3,10 +3,10 @@ name: Android CI
 on:
   push:
     branches:
-      - '*'           # Trigger on push to any branch
+      - 'main'
   pull_request:
     branches:
-      - '*'           # Trigger on pull requests targeting any branch
+      - 'main'
 
 jobs:
   build:
