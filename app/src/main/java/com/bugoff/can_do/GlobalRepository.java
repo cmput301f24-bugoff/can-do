@@ -12,13 +12,13 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRepository {
+public class GlobalRepository {
     private FirebaseFirestore db;
     private CollectionReference usersCollection;
     private CollectionReference facilitiesCollection;
 
     // Constructor to initialize Firestore
-    public UserRepository() {
+    public GlobalRepository() {
         db = FirestoreHelper.getInstance().getDb();
         usersCollection = db.collection("users");
         facilitiesCollection = db.collection("facilities");

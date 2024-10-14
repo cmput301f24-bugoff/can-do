@@ -16,17 +16,17 @@ public class UserAuthenticator {
      * If the user exists, returns the user.
      * If not, creates a new user and returns it.
      *
-     * @param userRepository The repository to interact with Firestore.
+     * @param globalRepository The repository to interact with Firestore.
      * @param androidId      The Android ID of the user.
      * @return A Task that resolves to the authenticated User.
      */
     @NonNull
-    public static Task<User> authenticateUser(@NonNull UserRepository userRepository,
+    public static Task<User> authenticateUser(@NonNull GlobalRepository globalRepository,
                                               @NonNull String androidId) {
         TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
 
         // Attempt to get the user from Firestore
-        userRepository.getUser(androidId)
+        globalRepository.getUser(androidId)
                 .addOnSuccessListener(user -> {
                     // User found, set the result
                     Log.d(TAG, "User found: " + user.getAndroidId());
@@ -35,7 +35,7 @@ public class UserAuthenticator {
                 .addOnFailureListener(e -> {
                     // User not found, attempt to create a new user
                     Log.d(TAG, "User not found: " + androidId + ". Creating new user.");
-                    onUserNotFound(userRepository, androidId, taskCompletionSource);
+                    onUserNotFound(globalRepository, androidId, taskCompletionSource);
                 });
         return taskCompletionSource.getTask();
     }
@@ -44,16 +44,16 @@ public class UserAuthenticator {
      * Handles the scenario where the user is not found.
      * Creates a new user and adds it to Firestore.
      *
-     * @param userRepository       The repository to interact with Firestore.
+     * @param globalRepository       The repository to interact with Firestore.
      * @param androidId            The Android ID of the user.
      * @param taskCompletionSource The TaskCompletionSource to set the Task's outcome.
      */
-    private static void onUserNotFound(@NonNull UserRepository userRepository,
+    private static void onUserNotFound(@NonNull GlobalRepository globalRepository,
                                        @NonNull String androidId,
                                        TaskCompletionSource<User> taskCompletionSource) {
         User newUser = new User(androidId);
         // Add the new user to Firestore
-        userRepository.addUser(newUser)
+        globalRepository.addUser(newUser)
                 .addOnSuccessListener(aVoid -> {
                     // User successfully added, set the result
                     Log.d(TAG, "User added: " + newUser.getAndroidId());
