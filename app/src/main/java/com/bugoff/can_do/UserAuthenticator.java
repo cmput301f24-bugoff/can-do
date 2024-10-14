@@ -4,64 +4,65 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+
 // Intended to be a purely stateless class
 public class UserAuthenticator {
+    private static final String TAG = "UserAuthenticator";
+
     /**
-     * Method to authenticate a user using the given UserRepository.
-     * If the user exists in Firestore, it logs that the user was found.
-     * If the user does not exist, it creates a new user and adds it to Firestore.
+     * Authenticates a user by their Android ID.
+     * If the user exists, returns the user.
+     * If not, creates a new user and returns it.
      *
-     * @param userRepository The repository used to access user data.
-     * @param androidId The Android ID of the user to authenticate.
+     * @param userRepository The repository to interact with Firestore.
+     * @param androidId      The Android ID of the user.
+     * @return A Task that resolves to the authenticated User.
      */
-    public static void authenticateUser(@NonNull UserRepository userRepository, @NonNull String androidId) {
-        // Get user from Firestore
-        userRepository.getUser(androidId,
-                UserAuthenticator::onUserFound,
-                e -> onUserNotFound(userRepository, androidId));
+    @NonNull
+    public static Task<User> authenticateUser(@NonNull UserRepository userRepository,
+                                              @NonNull String androidId) {
+        TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
+
+        // Attempt to get the user from Firestore
+        userRepository.getUser(androidId)
+                .addOnSuccessListener(user -> {
+                    // User found, set the result
+                    Log.d(TAG, "User found: " + user.getAndroidId());
+                    taskCompletionSource.setResult(user);
+                })
+                .addOnFailureListener(e -> {
+                    // User not found, attempt to create a new user
+                    Log.d(TAG, "User not found: " + androidId + ". Creating new user.");
+                    onUserNotFound(userRepository, androidId, taskCompletionSource);
+                });
+        return taskCompletionSource.getTask();
     }
 
     /**
-     * Callback method to handle when a user is found in Firestore.
-     * Logs the user's Android ID.
+     * Handles the scenario where the user is not found.
+     * Creates a new user and adds it to Firestore.
      *
-     * @param user The user that was found in Firestore.
+     * @param userRepository       The repository to interact with Firestore.
+     * @param androidId            The Android ID of the user.
+     * @param taskCompletionSource The TaskCompletionSource to set the Task's outcome.
      */
-    private static void onUserFound(@NonNull User user) {
-        Log.d("UserAuthenticator", "User found: " + user.getAndroidId());
-    }
-
-    /**
-     * Callback method to handle when a user is not found in Firestore.
-     * Creates a new user with the given Android ID and adds it to Firestore.
-     *
-     * @param userRepository The repository used to add the new user.
-     * @param androidId The Android ID of the user to add.
-     */
-    private static void onUserNotFound(@NonNull UserRepository userRepository, @NonNull String androidId) {
+    private static void onUserNotFound(@NonNull UserRepository userRepository,
+                                       @NonNull String androidId,
+                                       TaskCompletionSource<User> taskCompletionSource) {
         User newUser = new User(androidId);
-        userRepository.addUser(newUser,
-                aVoid -> onUserAdded(newUser),
-                UserAuthenticator::onUserAddError);
-    }
-
-    /**
-     * Callback method to handle when a user is successfully added to Firestore.
-     * Logs the user's Android ID.
-     *
-     * @param user The user that was successfully added to Firestore.
-     */
-    private static void onUserAdded(@NonNull User user) {
-        Log.d("UserAuthenticator", "User added: " + user.getAndroidId());
-    }
-
-    /**
-     * Callback method to handle an error that occurred while adding a user to Firestore.
-     * Logs the error message.
-     *
-     * @param e The exception that occurred during the user addition process.
-     */
-    private static void onUserAddError(Exception e) {
-        Log.e("UserAuthenticator", "Error adding user", e);
+        // Add the new user to Firestore
+        userRepository.addUser(newUser)
+                .addOnSuccessListener(aVoid -> {
+                    // User successfully added, set the result
+                    Log.d(TAG, "User added: " + newUser.getAndroidId());
+                    taskCompletionSource.setResult(newUser);
+                })
+                .addOnFailureListener(e -> {
+                    // Error adding user, set the exception
+                    Log.e(TAG, "Error adding user", e);
+                    taskCompletionSource.setException(e);
+                });
     }
 }

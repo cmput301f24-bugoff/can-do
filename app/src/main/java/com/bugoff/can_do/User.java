@@ -8,6 +8,9 @@ public class User {
 
     public User(String androidId) {
         this.androidId = androidId;
+        this.name = null;
+        this.isAdmin = false;
+        this.facility = null;
     }
 
     public User(String androidId, String name, Boolean isAdmin, Facility facility) {
@@ -19,10 +22,6 @@ public class User {
 
     public String getAndroidId() {
         return androidId;
-    }
-
-    public void setAndroidId(String androidId) {
-        this.androidId = androidId;
     }
 
     public String getName() {

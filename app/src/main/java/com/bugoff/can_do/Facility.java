@@ -1,11 +1,20 @@
 package com.bugoff.can_do;
 
-public class Facility {
-    private String name;
-    private String address;
+import androidx.annotation.NonNull;
 
-    public Facility(String name, String address) {
-        this.name = name;
-        this.address = address;
+public class Facility {
+    private String id;
+    private User owner;
+
+    public Facility(@NonNull User owner) {
+        this.id = owner.getAndroidId(); // The id of the facility is the Android ID of the user
+        owner.setFacility(this); // Set the facility of the owner to this facility
+    }
+
+    public String getId() {
+        return id;
+    }
+    public User getOwner() {
+        return owner;
     }
 }
