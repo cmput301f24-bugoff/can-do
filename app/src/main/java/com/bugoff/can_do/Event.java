@@ -11,7 +11,7 @@ public class Event {
     public Event(@NonNull Facility facility, @NonNull CollectionReference eventsCollection) {
         this.id = eventsCollection.document().getId();
         this.facility = facility;
-        facility.getEvents().add(this);
+        facility.addEvent(this);
     }
 
     public String getId() {

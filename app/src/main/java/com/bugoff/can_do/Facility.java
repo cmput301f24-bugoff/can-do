@@ -29,4 +29,8 @@ public class Facility {
         return events;
     }
 
+    public void addEvent(@NonNull Event event) {
+        events.add(event);
+    }
+
 }
