@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,12 +21,11 @@ public class MainActivity extends AppCompatActivity {
         UserAuthenticator.authenticateUser(globalRepository, androidId)
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
-                    Log.d("MainActivity", "Authenticated User: " + user.getAndroidId());
-                    Facility facility = new Facility(user);
+                    Log.d(TAG, "Authenticated User: " + user.getAndroidId());
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
-                    Log.e("MainActivity", "Authentication failed", e);
+                    Log.e(TAG, "Authentication failed", e);
                 });
     }
 }

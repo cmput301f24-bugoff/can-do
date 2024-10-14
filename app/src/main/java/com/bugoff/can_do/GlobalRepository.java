@@ -1,11 +1,14 @@
 package com.bugoff.can_do;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -16,12 +19,30 @@ public class GlobalRepository {
     private FirebaseFirestore db;
     private CollectionReference usersCollection;
     private CollectionReference facilitiesCollection;
+    private CollectionReference eventsCollection;
 
     // Constructor to initialize Firestore
     public GlobalRepository() {
         db = FirestoreHelper.getInstance().getDb();
         usersCollection = db.collection("users");
         facilitiesCollection = db.collection("facilities");
+        eventsCollection = db.collection("events");
+    }
+
+    public FirebaseFirestore getDb() {
+        return db;
+    }
+
+    public CollectionReference getUsersCollection() {
+        return usersCollection;
+    }
+
+    public CollectionReference getFacilitiesCollection() {
+        return facilitiesCollection;
+    }
+
+    public CollectionReference getEventsCollection() {
+        return eventsCollection;
     }
 
     /**
@@ -92,6 +113,35 @@ public class GlobalRepository {
         batch.commit()
                 .addOnSuccessListener(aVoid -> taskCompletionSource.setResult(null))
                 .addOnFailureListener(taskCompletionSource::setException);
+
+        return taskCompletionSource.getTask();
+    }
+
+    public Task<Void> addEvent(@NonNull Event event) {
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+        // Prepare Event data
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("id", event.getId());
+        eventMap.put("facilityId", event.getFacility().getId());
+        eventMap.put("ownerId", event.getFacility().getOwner().getAndroidId());
+
+        DocumentReference eventRef = eventsCollection.document(event.getId());
+        DocumentReference facilityRef = facilitiesCollection.document(event.getFacility().getId());
+
+        WriteBatch batch = db.batch();
+        batch.set(eventRef, eventMap);
+        batch.update(facilityRef, "events", FieldValue.arrayUnion(event.getId()));
+
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("GlobalRepository", "Event added successfully: " + event.getId());
+                    taskCompletionSource.setResult(null);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GlobalRepository", "Error adding Event: " + event.getId(), e);
+                    taskCompletionSource.setException(e);
+                });
 
         return taskCompletionSource.getTask();
     }
