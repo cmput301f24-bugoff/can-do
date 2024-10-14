@@ -94,6 +94,13 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Adds a facility to Firestore and associates it with the user (owner) by using a batch write.
+     * This ensures both the facility and the user's association with the facility are updated atomically.
+     *
+     * @param facility The Facility object to add.
+     * @return A Task representing the add operation.
+     */
     public Task<Void> addFacility(@NonNull Facility facility) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -117,6 +124,13 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Adds an event to Firestore and associates it with a facility by updating the facility's event list.
+     * The operation is performed using a batch write to ensure atomicity.
+     *
+     * @param event The Event object to add.
+     * @return A Task representing the add operation.
+     */
     public Task<Void> addEvent(@NonNull Event event) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
