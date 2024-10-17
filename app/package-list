@@ -1,17 +1,28 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.bugoff.can_do////PointingToDeclaration/app/com.bugoff.can_do/index.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity///PointingToDeclaration/app/com.bugoff.can_do/-database-entity/index.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/attach-listener.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/detach-listener.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/getId/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/get-id.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/on-update.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/set-remote.html
+$dokka.location:com.bugoff.can_do/DatabaseEntity/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/to-map.html
 $dokka.location:com.bugoff.can_do/Event///PointingToDeclaration/app/com.bugoff.can_do/-event/index.html
 $dokka.location:com.bugoff.can_do/Event/Event/#com.bugoff.can_do.Facility#DocumentSnapshot/PointingToDeclaration/app/com.bugoff.can_do/-event/-event.html
 $dokka.location:com.bugoff.can_do/Event/Event/#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-event/-event.html
+$dokka.location:com.bugoff.can_do/Event/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-event/attach-listener.html
+$dokka.location:com.bugoff.can_do/Event/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-event/detach-listener.html
 $dokka.location:com.bugoff.can_do/Event/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do/-event/get-facility.html
 $dokka.location:com.bugoff.can_do/Event/getId/#/PointingToDeclaration/app/com.bugoff.can_do/-event/get-id.html
+$dokka.location:com.bugoff.can_do/Event/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-event/on-update.html
 $dokka.location:com.bugoff.can_do/Event/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-event/set-remote.html
+$dokka.location:com.bugoff.can_do/Event/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-event/to-map.html
 $dokka.location:com.bugoff.can_do/Facility///PointingToDeclaration/app/com.bugoff.can_do/-facility/index.html
 $dokka.location:com.bugoff.can_do/Facility/Facility/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-facility/-facility.html
 $dokka.location:com.bugoff.can_do/Facility/addEvent/#com.bugoff.can_do.Event/PointingToDeclaration/app/com.bugoff.can_do/-facility/add-event.html
-$dokka.location:com.bugoff.can_do/Facility/attachEventsListener/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/attach-events-listener.html
-$dokka.location:com.bugoff.can_do/Facility/detachEventsListener/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/detach-events-listener.html
+$dokka.location:com.bugoff.can_do/Facility/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/attach-listener.html
+$dokka.location:com.bugoff.can_do/Facility/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/detach-listener.html
 $dokka.location:com.bugoff.can_do/Facility/fetchRemoteEventsInBatches/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-facility/fetch-remote-events-in-batches.html
 $dokka.location:com.bugoff.can_do/Facility/getEventIds/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/get-event-ids.html
 $dokka.location:com.bugoff.can_do/Facility/getEvents/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/get-events.html
@@ -19,7 +30,10 @@ $dokka.location:com.bugoff.can_do/Facility/getId/#/PointingToDeclaration/app/co
 $dokka.location:com.bugoff.can_do/Facility/getOwner/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/get-owner.html
 $dokka.location:com.bugoff.can_do/Facility/loadExistingEvents/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/load-existing-events.html
 $dokka.location:com.bugoff.can_do/Facility/onEventsUpdated/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/on-events-updated.html
+$dokka.location:com.bugoff.can_do/Facility/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/on-update.html
 $dokka.location:com.bugoff.can_do/Facility/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/set-remote.html
+$dokka.location:com.bugoff.can_do/Facility/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/to-map.html
+$dokka.location:com.bugoff.can_do/Facility/updateLocalEventIds/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-facility/update-local-event-ids.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper///PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/index.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper/FirestoreHelper/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/-firestore-helper.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper/getDb/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/get-db.html
@@ -30,8 +44,10 @@ $dokka.location:com.bugoff.can_do/GlobalRepository/addEvent/#com.bugoff.can_do.E
 $dokka.location:com.bugoff.can_do/GlobalRepository/addFacility/#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/add-facility.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/addUser/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/add-user.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getDb/#/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-db.html
+$dokka.location:com.bugoff.can_do/GlobalRepository/getEvent/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-event.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getEventsCollection/#/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-events-collection.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getFacilitiesCollection/#/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-facilities-collection.html
+$dokka.location:com.bugoff.can_do/GlobalRepository/getFacility/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-facility.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-user.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getUsersCollection/#/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-users-collection.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
@@ -41,15 +57,20 @@ $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclar
 $dokka.location:com.bugoff.can_do/User///PointingToDeclaration/app/com.bugoff.can_do/-user/index.html
 $dokka.location:com.bugoff.can_do/User/User/#java.lang.String#java.lang.String#java.lang.Boolean#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
 $dokka.location:com.bugoff.can_do/User/User/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
-$dokka.location:com.bugoff.can_do/User/getAndroidId/#/PointingToDeclaration/app/com.bugoff.can_do/-user/get-android-id.html
+$dokka.location:com.bugoff.can_do/User/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-user/attach-listener.html
+$dokka.location:com.bugoff.can_do/User/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-user/detach-listener.html
 $dokka.location:com.bugoff.can_do/User/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do/-user/get-facility.html
+$dokka.location:com.bugoff.can_do/User/getId/#/PointingToDeclaration/app/com.bugoff.can_do/-user/get-id.html
 $dokka.location:com.bugoff.can_do/User/getIsAdmin/#/PointingToDeclaration/app/com.bugoff.can_do/-user/get-is-admin.html
 $dokka.location:com.bugoff.can_do/User/getName/#/PointingToDeclaration/app/com.bugoff.can_do/-user/get-name.html
+$dokka.location:com.bugoff.can_do/User/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-user/on-update.html
 $dokka.location:com.bugoff.can_do/User/setFacility/#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user/set-facility.html
 $dokka.location:com.bugoff.can_do/User/setIsAdmin/#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do/-user/set-is-admin.html
 $dokka.location:com.bugoff.can_do/User/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user/set-name.html
+$dokka.location:com.bugoff.can_do/User/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-user/set-remote.html
+$dokka.location:com.bugoff.can_do/User/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-user/to-map.html
 $dokka.location:com.bugoff.can_do/UserAuthenticator///PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/index.html
 $dokka.location:com.bugoff.can_do/UserAuthenticator/UserAuthenticator/#/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/-user-authenticator.html
-$dokka.location:com.bugoff.can_do/UserAuthenticator/authenticateUser/#com.bugoff.can_do.GlobalRepository#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/authenticate-user.html
-$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserNotFound/#com.bugoff.can_do.GlobalRepository#java.lang.String#TaskCompletionSource<User>/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-not-found.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/authenticateUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/authenticate-user.html
+$dokka.location:com.bugoff.can_do/UserAuthenticator/onUserNotFound/#java.lang.String#TaskCompletionSource<User>/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-not-found.html
 com.bugoff.can_do
