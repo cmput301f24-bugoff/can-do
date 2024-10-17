@@ -34,15 +34,6 @@ public class Facility implements DatabaseEntity {
         loadExistingEvents();
     }
 
-    public Facility(@NonNull User owner, @NonNull DocumentSnapshot doc) {
-        this.id = owner.getId(); // The id of the facility is the Android ID of the user
-        this.owner = owner;
-        owner.setFacility(this); // Set the facility of the owner to this facility
-        events = new ArrayList<>();
-        this.db = FirestoreHelper.getInstance().getDb();
-        loadExistingEvents();
-    }
-
     @Override
     public String getId() {
         return id;
