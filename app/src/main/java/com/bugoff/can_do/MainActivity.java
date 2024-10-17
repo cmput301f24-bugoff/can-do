@@ -22,10 +22,20 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
                     Log.d(TAG, "Authenticated User: " + user.getAndroidId());
+                    databaseDemo(user);
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
                     Log.e(TAG, "Authentication failed", e);
                 });
+    }
+
+    public void databaseDemo(User user) {
+        // Create a facility
+        Facility facility = new Facility(user);
+        facility.setRemote();
+        // Create an event
+        Event event = new Event(facility);
+        event.setRemote();
     }
 }

@@ -17,9 +17,9 @@ import java.util.Map;
 
 public class GlobalRepository {
     private FirebaseFirestore db;
-    private CollectionReference usersCollection;
-    private CollectionReference facilitiesCollection;
-    private CollectionReference eventsCollection;
+    private static CollectionReference usersCollection;
+    private static CollectionReference facilitiesCollection;
+    private static CollectionReference eventsCollection;
 
     // Constructor to initialize Firestore
     public GlobalRepository() {
@@ -33,15 +33,15 @@ public class GlobalRepository {
         return db;
     }
 
-    public CollectionReference getUsersCollection() {
+    public static CollectionReference getUsersCollection() {
         return usersCollection;
     }
 
-    public CollectionReference getFacilitiesCollection() {
+    public static CollectionReference getFacilitiesCollection() {
         return facilitiesCollection;
     }
 
-    public CollectionReference getEventsCollection() {
+    public static CollectionReference getEventsCollection() {
         return eventsCollection;
     }
 
