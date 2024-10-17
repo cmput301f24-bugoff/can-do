@@ -14,14 +14,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Connect to Firestore
-        GlobalRepository globalRepository = new GlobalRepository();
+        new GlobalRepository();
 
         // Get Android ID
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        UserAuthenticator.authenticateUser(globalRepository, androidId)
+        UserAuthenticator.authenticateUser(androidId)
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
-                    Log.d(TAG, "Authenticated User: " + user.getAndroidId());
+                    Log.d(TAG, "Authenticated User: " + user.getId());
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure

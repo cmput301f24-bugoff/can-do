@@ -10,7 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Event {
+public class Event implements DatabaseEntity {
     private String id;
     private Facility facility;
 
@@ -26,6 +26,14 @@ public class Event {
         this.facility = facility;
     }
 
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("facilityId", facility.getId());
+        return map;
+    }
+
+    @Override
     public String getId() {
         return id;
     }
@@ -35,11 +43,11 @@ public class Event {
     }
 
     // Method to save the facility to Firestore
+    @Override
     public void setRemote() {
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
-        Map<String, Object> update = new HashMap<>();
-        update.put("id", id);
-        update.put("facilityId", facility.getId());
+
+        Map<String, Object> update = this.toMap();
 
         eventRef.set(update)
                 .addOnSuccessListener(aVoid -> {
@@ -48,5 +56,20 @@ public class Event {
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "Error updating event", e);
                 });
+    }
+
+    @Override
+    public void attachListener() {
+
+    }
+
+    @Override
+    public void detachListener() {
+
+    }
+
+    @Override
+    public void onUpdate() {
+
     }
 }

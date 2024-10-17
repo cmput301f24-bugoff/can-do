@@ -16,21 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlobalRepository {
-    private FirebaseFirestore db;
     private static CollectionReference usersCollection;
     private static CollectionReference facilitiesCollection;
     private static CollectionReference eventsCollection;
 
     // Constructor to initialize Firestore
     public GlobalRepository() {
-        db = FirestoreHelper.getInstance().getDb();
+        FirebaseFirestore db = FirestoreHelper.getInstance().getDb();
         usersCollection = db.collection("users");
         facilitiesCollection = db.collection("facilities");
         eventsCollection = db.collection("events");
     }
 
     public FirebaseFirestore getDb() {
-        return db;
+        return FirestoreHelper.getInstance().getDb();
     }
 
     public static CollectionReference getUsersCollection() {
@@ -51,16 +50,17 @@ public class GlobalRepository {
      * @param user The User object to add.
      * @return A Task representing the add operation.
      */
-    public Task<Void> addUser(@NonNull User user) {
+    @NonNull
+    public static Task<Void> addUser(@NonNull User user) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
         Map<String, Object> userMap = new HashMap<>();
-        userMap.put("androidId", user.getAndroidId());
+        userMap.put("id", user.getId());
         userMap.put("name", user.getName());
         userMap.put("isAdmin", user.getIsAdmin());
         // users by default will not have a facility
 
-        usersCollection.document(user.getAndroidId())
+        usersCollection.document(user.getId())
                 .set(userMap)
                 .addOnSuccessListener(aVoid -> taskCompletionSource.setResult(null))
                 .addOnFailureListener(taskCompletionSource::setException);
@@ -74,7 +74,8 @@ public class GlobalRepository {
      * @param androidId The Android ID of the user.
      * @return A Task that resolves to the User if found.
      */
-    public Task<User> getUser(String androidId) {
+    @NonNull
+    public static Task<User> getUser(String androidId) {
         TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
 
         usersCollection.document(androidId)
@@ -101,19 +102,20 @@ public class GlobalRepository {
      * @param facility The Facility object to add.
      * @return A Task representing the add operation.
      */
-    public Task<Void> addFacility(@NonNull Facility facility) {
+    @NonNull
+    public static Task<Void> addFacility(@NonNull Facility facility) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
         // Prepare Facility data
         Map<String, Object> facilityMap = new HashMap<>();
         facilityMap.put("id", facility.getId());
-        facilityMap.put("ownerId", facility.getOwner().getAndroidId());
+        facilityMap.put("ownerId", facility.getOwner().getId());
 
         DocumentReference facilityRef = facilitiesCollection.document(facility.getId());
-        DocumentReference userRef = usersCollection.document(facility.getOwner().getAndroidId());
+        DocumentReference userRef = usersCollection.document(facility.getOwner().getId());
 
         // Prevent partial updates by using a batch write
-        WriteBatch batch = db.batch();
+        WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
         batch.set(facilityRef, facilityMap);
         batch.update(userRef, "facilityId", facility.getId());
 
@@ -131,19 +133,20 @@ public class GlobalRepository {
      * @param event The Event object to add.
      * @return A Task representing the add operation.
      */
-    public Task<Void> addEvent(@NonNull Event event) {
+    @NonNull
+    public static Task<Void> addEvent(@NonNull Event event) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
         // Prepare Event data
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("id", event.getId());
         eventMap.put("facilityId", event.getFacility().getId());
-        eventMap.put("ownerId", event.getFacility().getOwner().getAndroidId());
+        eventMap.put("ownerId", event.getFacility().getOwner().getId());
 
         DocumentReference eventRef = eventsCollection.document(event.getId());
         DocumentReference facilityRef = facilitiesCollection.document(event.getFacility().getId());
 
-        WriteBatch batch = db.batch();
+        WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
         batch.set(eventRef, eventMap);
         batch.update(facilityRef, "events", FieldValue.arrayUnion(event.getId()));
 
@@ -156,6 +159,54 @@ public class GlobalRepository {
                     Log.e("GlobalRepository", "Error adding Event: " + event.getId(), e);
                     taskCompletionSource.setException(e);
                 });
+
+        return taskCompletionSource.getTask();
+    }
+
+    @NonNull
+    public static Task<Event> getEvent(String eventId) {
+        TaskCompletionSource<Event> taskCompletionSource = new TaskCompletionSource<>();
+
+        eventsCollection.document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String facilityId = documentSnapshot.getString("facilityId");
+                        getFacility(facilityId)
+                                .addOnSuccessListener(facility -> {
+                                    Event event = new Event(facility, documentSnapshot);
+                                    taskCompletionSource.setResult(event);
+                                })
+                                .addOnFailureListener(taskCompletionSource::setException);
+                    } else {
+                        taskCompletionSource.setException(new Exception("Event not found"));
+                    }
+                })
+                .addOnFailureListener(taskCompletionSource::setException);
+
+        return taskCompletionSource.getTask();
+    }
+
+    @NonNull
+    public static Task<Facility> getFacility(String facilityId) {
+        TaskCompletionSource<Facility> taskCompletionSource = new TaskCompletionSource<>();
+
+        facilitiesCollection.document(facilityId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String ownerId = documentSnapshot.getString("ownerId");
+                        getUser(ownerId)
+                                .addOnSuccessListener(owner -> {
+                                    Facility facility = new Facility(owner, documentSnapshot);
+                                    taskCompletionSource.setResult(facility);
+                                })
+                                .addOnFailureListener(taskCompletionSource::setException);
+                    } else {
+                        taskCompletionSource.setException(new Exception("Facility not found"));
+                    }
+                })
+                .addOnFailureListener(taskCompletionSource::setException);
 
         return taskCompletionSource.getTask();
     }
