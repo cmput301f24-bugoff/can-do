@@ -133,7 +133,6 @@ public class Facility {
     }
 
     public void attachEventsListener() {
-        DocumentReference facilityRef = GlobalRepository.getFacilitiesCollection().document(id);
         Query eventsQuery = GlobalRepository.getEventsCollection();
 
         eventsListener = eventsQuery.addSnapshotListener((querySnapshot, e) -> {
