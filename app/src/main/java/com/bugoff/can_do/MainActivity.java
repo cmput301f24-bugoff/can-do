@@ -28,4 +28,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Authentication failed", e);
                 });
     }
+
+    public void databaseDemo(User user) {
+        // Create a facility
+        Facility facility = new Facility(user);
+        facility.setRemote();
+        // Create an event
+        Event event = new Event(facility);
+        event.setRemote();
+    }
 }
