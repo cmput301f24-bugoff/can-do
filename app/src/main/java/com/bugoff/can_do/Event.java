@@ -6,13 +6,19 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Event implements DatabaseEntity {
     private String id;
     private Facility facility;
+
+    private FirebaseFirestore db;
+    private ListenerRegistration listener;
 
     public Event(@NonNull Facility facility) {
         this.id = GlobalRepository.getEventsCollection().document().getId();
@@ -60,12 +66,51 @@ public class Event implements DatabaseEntity {
 
     @Override
     public void attachListener() {
+        DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
 
+        // Attach a snapshot listener to the Event document
+        listener = eventRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                Log.e("Firestore", "Error listening to event changes for event: " + id, e);
+                return;
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                // Update local fields with data from Firestore
+                String updatedFacilityId = documentSnapshot.getString("facilityId");
+
+                AtomicBoolean isChanged = new AtomicBoolean(false);
+
+                if (updatedFacilityId != null && !updatedFacilityId.equals(this.facility.getId())) {
+                    // Fetch the updated Facility object
+                    GlobalRepository.getFacility(updatedFacilityId)
+                            .addOnSuccessListener(facility -> {
+                                this.facility = facility;
+                                this.facility.addEvent(this); // Ensure bidirectional reference
+                                isChanged.set(true);
+                                onUpdate(); // Notify listeners about the update
+                            })
+                            .addOnFailureListener(error -> {
+                                Log.e("Firestore", "Error fetching updated facility for event: " + id, error);
+                            });
+                    // Early return since facility fetching is asynchronous
+                    return;
+                }
+
+                if (isChanged.get()) {
+                    onUpdate(); // Notify listeners about the update
+                }
+            }
+        });
     }
 
     @Override
     public void detachListener() {
-
+        if (listener != null) {
+            listener.remove();
+            listener = null;
+            Log.d("Firestore", "Listener detached for event: " + id);
+        }
     }
 
     @Override

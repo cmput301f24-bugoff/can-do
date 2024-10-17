@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    User currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
                     Log.d(TAG, "Authenticated User: " + user.getId());
+                    currentUser = user;
+                    currentUser.attachListener();
+                    databaseDemo(currentUser);
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
@@ -33,8 +37,13 @@ public class MainActivity extends AppCompatActivity {
         // Create a facility
         Facility facility = new Facility(user);
         facility.setRemote();
+        facility.attachListener();
         // Create an event
         Event event = new Event(facility);
         event.setRemote();
+        event.attachListener();
+        Event event2 = new Event(facility);
+        event2.setRemote();
+        event2.attachListener();
     }
 }

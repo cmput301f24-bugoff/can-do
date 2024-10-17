@@ -211,7 +211,7 @@ public class Facility implements DatabaseEntity {
     // This method is called whenever the events list is updated from Firestore
     private void onEventsUpdated() {
         // Notify other parts of the app that the events list has been updated
-        Log.d("Facility", "Events list updated: " + events);
+        Log.d("Facility", "Events list updated");
         // This triggers a UI update or notify a ViewModel etc...
     }
 }
