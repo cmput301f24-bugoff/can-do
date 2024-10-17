@@ -24,8 +24,6 @@ public class MainActivity extends AppCompatActivity {
                     // Handle successful authentication
                     Log.d(TAG, "Authenticated User: " + user.getId());
                     currentUser = user;
-                    currentUser.attachListener();
-                    databaseDemo(currentUser);
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
