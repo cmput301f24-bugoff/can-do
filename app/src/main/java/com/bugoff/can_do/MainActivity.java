@@ -3,8 +3,12 @@ package com.bugoff.can_do;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -29,7 +33,33 @@ public class MainActivity extends AppCompatActivity {
                     // Handle authentication failure
                     Log.e(TAG, "Authentication failed", e);
                 });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_home) {
+                    // Handle "Home" click
+                    Log.d(TAG, "Home clicked");
+                    return true;
+                } else if (id == R.id.nav_scan) {
+                    // Handle "Scan Activity" click
+                    Log.d(TAG, "Scan Activity clicked");
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    // Handle "Profile" click
+                    Log.d(TAG, "Profile clicked");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
+
+
 
     public void databaseDemo(User user) {
         // Create a facility
