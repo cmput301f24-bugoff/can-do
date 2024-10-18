@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
@@ -45,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Home clicked");
                     return true;
                 } else if (id == R.id.nav_scan) {
-                    // Handle "Scan Activity" click
                     Log.d(TAG, "Scan Activity clicked");
+                    Intent intent = new Intent(MainActivity.this, QrCodeScannerActivity.class);
+                    startActivity(intent);
                     return true;
                 } else if (id == R.id.nav_profile) {
                     // Handle "Profile" click
