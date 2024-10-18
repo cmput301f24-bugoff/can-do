@@ -1,6 +1,8 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.bugoff.can_do////PointingToDeclaration/app/com.bugoff.can_do/index.html
+$dokka.location:com.bugoff.can_do/CaptureActivityPortrait///PointingToDeclaration/app/com.bugoff.can_do/-capture-activity-portrait/index.html
+$dokka.location:com.bugoff.can_do/CaptureActivityPortrait/CaptureActivityPortrait/#/PointingToDeclaration/app/com.bugoff.can_do/-capture-activity-portrait/-capture-activity-portrait.html
 $dokka.location:com.bugoff.can_do/DatabaseEntity///PointingToDeclaration/app/com.bugoff.can_do/-database-entity/index.html
 $dokka.location:com.bugoff.can_do/DatabaseEntity/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/attach-listener.html
 $dokka.location:com.bugoff.can_do/DatabaseEntity/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-database-entity/detach-listener.html
@@ -54,6 +56,11 @@ $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
 $dokka.location:com.bugoff.can_do/MainActivity/databaseDemo/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/database-demo.html
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity///PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/index.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/QrCodeScannerActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/-qr-code-scanner-activity.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-create.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onPause/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-pause.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onResume/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-resume.html
 $dokka.location:com.bugoff.can_do/User///PointingToDeclaration/app/com.bugoff.can_do/-user/index.html
 $dokka.location:com.bugoff.can_do/User/User/#java.lang.String#java.lang.String#java.lang.Boolean#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
 $dokka.location:com.bugoff.can_do/User/User/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
