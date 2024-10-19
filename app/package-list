@@ -58,8 +58,10 @@ $dokka.location:com.bugoff.can_do/MainActivity/databaseDemo/#com.bugoff.can_do.U
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerActivity///PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/index.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerActivity/QrCodeScannerActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/-qr-code-scanner-activity.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/initializeScanner/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/initialize-scanner.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-create.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onPause/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-pause.html
+$dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onRequestPermissionsResult/#int#java.lang.String[]#int[]/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-request-permissions-result.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerActivity/onResume/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-activity/on-resume.html
 $dokka.location:com.bugoff.can_do/User///PointingToDeclaration/app/com.bugoff.can_do/-user/index.html
 $dokka.location:com.bugoff.can_do/User/User/#java.lang.String#java.lang.String#java.lang.Boolean#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user/-user.html
