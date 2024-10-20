@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,6 +34,9 @@ public class QrCodeScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_qr_code_scanner);
 
         barcodeView = findViewById(R.id.zxing_barcode_scanner);
+
+        barcodeView.getStatusView().setVisibility(View.GONE);
+        barcodeView.getViewFinder().setLaserVisibility(false);
 
         // Check if the camera permission is granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
