@@ -52,6 +52,9 @@ $dokka.location:com.bugoff.can_do/GlobalRepository/getFacilitiesCollection/#/Poi
 $dokka.location:com.bugoff.can_do/GlobalRepository/getFacility/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-facility.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-user.html
 $dokka.location:com.bugoff.can_do/GlobalRepository/getUsersCollection/#/PointingToDeclaration/app/com.bugoff.can_do/-global-repository/get-users-collection.html
+$dokka.location:com.bugoff.can_do/HomeActivity///PointingToDeclaration/app/com.bugoff.can_do/-home-activity/index.html
+$dokka.location:com.bugoff.can_do/HomeActivity/HomeActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/-home-activity.html
+$dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
 $dokka.location:com.bugoff.can_do/MainActivity/databaseDemo/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/database-demo.html
@@ -82,4 +85,7 @@ $dokka.location:com.bugoff.can_do/UserAuthenticator///PointingToDeclaration/app
 $dokka.location:com.bugoff.can_do/UserAuthenticator/UserAuthenticator/#/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/-user-authenticator.html
 $dokka.location:com.bugoff.can_do/UserAuthenticator/authenticateUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/authenticate-user.html
 $dokka.location:com.bugoff.can_do/UserAuthenticator/onUserNotFound/#java.lang.String#TaskCompletionSource<User>/PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/on-user-not-found.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/index.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 com.bugoff.can_do
