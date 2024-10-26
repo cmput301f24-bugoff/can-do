@@ -5,77 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/top_bar_section"
+    <Space
+        android:id="@+id/top_spacer"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/cardview_avatar"
+        android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/button_back"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:paddingHorizontal="10dp"
-            app:srcCompat="?attr/actionModeCloseDrawable" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button"
-            android:visibility="invisible" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button"
-            android:visibility="invisible" />
-    </LinearLayout>
+    </Space>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_avatar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:cardCornerRadius="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/menu_section"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        app:cardCornerRadius="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar_section">
+        app:layout_constraintTop_toBottomOf="@+id/top_spacer">
 
         <ImageView
             android:id="@+id/image_avatar"
-            style="r"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
 
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardview_avatar"
+        app:layout_constraintBottom_toTopOf="@+id/user_info"/>
+
+    <TextView
+        android:id="@+id/user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Here is a sample user info"
+        app:layout_constraintBottom_toTopOf="@+id/menu_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/menu_section"
         android:layout_width="350dp"
         android:layout_height="370dp"
+        app:cardBackgroundColor="#D8CBE9"
         app:cardCornerRadius="50dp"
-        app:cardBackgroundColor="#41C0A4F6"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_spacer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardview_avatar">
+        app:layout_constraintTop_toBottomOf="@+id/user_info">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -146,18 +132,15 @@
                     android:visibility="invisible" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:background="?android:attr/windowBackground"
-        app:menu="@layout/bottom_nav_menu"
+    <Space
+        android:id="@+id/bottom_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+    </Space>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
