@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,10 +41,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+                Fragment selectedFragment = null;
 
                 if (id == R.id.nav_home) {
                     // Handle "Home" click
                     Log.d(TAG, "Home clicked");
+                    selectedFragment = new HomeActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 } else if (id == R.id.nav_scan) {
                     Log.d(TAG, "Scan Activity clicked");
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_profile) {
                     // Handle "Profile" click
                     Log.d(TAG, "Profile clicked");
+                    selectedFragment = new UserProfileActivity();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 } else {
                     return false;
