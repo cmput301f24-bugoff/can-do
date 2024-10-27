@@ -1,6 +1,5 @@
 package com.bugoff.can_do;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -51,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.nav_scan) {
                     Log.d(TAG, "Scan Activity clicked");
-                    Intent intent = new Intent(MainActivity.this, QrCodeScannerActivity.class);
-                    startActivity(intent);
+                    selectedFragment = new QrCodeScannerFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 } else if (id == R.id.nav_profile) {
                     // Handle "Profile" click
