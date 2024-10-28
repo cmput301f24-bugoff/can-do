@@ -1,6 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/hs_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_hs_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="30dp">
+
+            <ImageView
+                android:id="@+id/hs_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:layout_width="225dp"
+            android:layout_height="match_parent" />
+
+<!-- have to change the srcCompat to notification bell icon drawable -->
+        <ImageButton
+            android:id="@+id/notif_hs_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="#0DFFFFFF"
+            android:scaleType="centerCrop"
+            app:srcCompat="@android:drawable/btn_star" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
+
+<!-- have to change the srcCompat to settings icon drawable -->
+        <ImageButton
+            android:id="@+id/settings_hs_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="#0DFFFFFF"
+            android:scaleType="centerCrop"
+            app:srcCompat="@android:drawable/btn_star" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/hs_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:text="Welcome to Can-Do!"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hs_top_layout" >
+    </TextView>
+
+
+<!-- create content.xml for ListView to show event image & details -->
+    <ListView
+        android:id="@+id/hs_events_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hs_title" >
+    </ListView>
+
+
+<!-- displays by default, but invisible when list is not empty -->
+    <TextView
+        android:id="@+id/hs_default_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textColor="#8C6B6B6B"
+        android:textSize="20sp"
+        android:padding="20dp"
+        android:text="You have no upcoming events..."
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/hs_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" >
+    </TextView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
