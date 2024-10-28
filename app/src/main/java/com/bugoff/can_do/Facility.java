@@ -24,6 +24,7 @@ public class Facility implements DatabaseEntity {
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
+    private Runnable onUpdateListener;
 
     public Facility(@NonNull User owner) {
         this.id = owner.getId(); // The id of the facility is the Android ID of the user
@@ -186,9 +187,6 @@ public class Facility implements DatabaseEntity {
         onEventsUpdated(); // Notify that the events have been updated
     }
 
-    @Override
-    public void onUpdate() {}
-
     // Stop listening to the events when it's no longer needed
     @Override
     public void detachListener() {
@@ -198,11 +196,20 @@ public class Facility implements DatabaseEntity {
         }
     }
 
-    // TODO: Implement this method for UI
-    // This method is called whenever the events list is updated from Firestore
     private void onEventsUpdated() {
-        // Notify other parts of the app that the events list has been updated
+        // Notify that the events list has been updated
         Log.d("Facility", "Events list updated");
-        // This triggers a UI update or notify a ViewModel etc...
+        onUpdate(); // Trigger the onUpdateListener
+    }
+
+    @Override
+    public void onUpdate() {
+        if (onUpdateListener != null) {
+            onUpdateListener.run();
+        }
+    }
+
+    public void setOnUpdateListener(Runnable listener) {
+        this.onUpdateListener = listener;
     }
 }

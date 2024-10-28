@@ -19,6 +19,7 @@ public class User implements DatabaseEntity {
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
+    private Runnable onUpdateListener;
 
     public User(String androidId) {
         this.id = androidId;
@@ -95,10 +96,6 @@ public class User implements DatabaseEntity {
     }
 
     @Override
-    public void onUpdate() {
-    }
-
-    @Override
     public void attachListener() {
         DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
 
@@ -156,5 +153,16 @@ public class User implements DatabaseEntity {
             listener = null;
             Log.d("Firestore", "Listener detached for user: " + id);
         }
+    }
+
+    @Override
+    public void onUpdate() {
+        if (onUpdateListener != null) {
+            onUpdateListener.run();
+        }
+    }
+
+    public void setOnUpdateListener(Runnable listener) {
+        this.onUpdateListener = listener;
     }
 }
