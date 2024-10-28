@@ -16,26 +16,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Event implements DatabaseEntity {
     private String id;
     private Facility facility;
+    private String name;
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
+    private Runnable onUpdateListener;
 
     public Event(@NonNull Facility facility) {
         this.id = GlobalRepository.getEventsCollection().document().getId();
         this.facility = facility;
         facility.addEvent(this);
+        this.name = "";
     }
 
     // Constructor from Firestore document
     public Event(@NonNull Facility facility, @NonNull DocumentSnapshot doc) {
         this.id = doc.getId();
         this.facility = facility;
+        this.name = doc.getString("name");
     }
 
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("facilityId", facility.getId());
+        map.put("name", name);
         return map;
     }
 
@@ -46,6 +51,14 @@ public class Event implements DatabaseEntity {
 
     public Facility getFacility() {
         return facility;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     // Method to save the facility to Firestore
@@ -115,6 +128,12 @@ public class Event implements DatabaseEntity {
 
     @Override
     public void onUpdate() {
+        if (onUpdateListener != null) {
+            onUpdateListener.run();
+        }
+    }
 
+    public void setOnUpdateListener(Runnable listener) {
+        this.onUpdateListener = listener;
     }
 }
