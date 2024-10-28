@@ -15,7 +15,6 @@ public class EventViewModel extends ViewModel {
         this.event = GlobalRepository.getEvent(eventId).getResult();
         this.eventName.setValue(event.getName());
         this.facilityId.setValue(event.getFacility().getId());
-        Facility facility = GlobalRepository.getFacility(event.getFacility().getId()).getResult();
 
         // Set onUpdateListener to update LiveData
         this.event.setOnUpdateListener(this::updateLiveData);
