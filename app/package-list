@@ -28,6 +28,14 @@ $dokka.location:com.bugoff.can_do/Event/setName/#java.lang.String/PointingToDecl
 $dokka.location:com.bugoff.can_do/Event/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do/-event/set-on-update-listener.html
 $dokka.location:com.bugoff.can_do/Event/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-event/set-remote.html
 $dokka.location:com.bugoff.can_do/Event/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-event/to-map.html
+$dokka.location:com.bugoff.can_do/EventViewModel///PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/index.html
+$dokka.location:com.bugoff.can_do/EventViewModel/EventViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/-event-view-model.html
+$dokka.location:com.bugoff.can_do/EventViewModel/getErrorMessage/#/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/get-error-message.html
+$dokka.location:com.bugoff.can_do/EventViewModel/getEventName/#/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/get-event-name.html
+$dokka.location:com.bugoff.can_do/EventViewModel/getFacilityId/#/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/get-facility-id.html
+$dokka.location:com.bugoff.can_do/EventViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/on-cleared.html
+$dokka.location:com.bugoff.can_do/EventViewModel/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/set-name.html
+$dokka.location:com.bugoff.can_do/EventViewModel/updateLiveData/#/PointingToDeclaration/app/com.bugoff.can_do/-event-view-model/update-live-data.html
 $dokka.location:com.bugoff.can_do/Facility///PointingToDeclaration/app/com.bugoff.can_do/-facility/index.html
 $dokka.location:com.bugoff.can_do/Facility/Facility/#com.bugoff.can_do.User/PointingToDeclaration/app/com.bugoff.can_do/-facility/-facility.html
 $dokka.location:com.bugoff.can_do/Facility/addEvent/#com.bugoff.can_do.Event/PointingToDeclaration/app/com.bugoff.can_do/-facility/add-event.html
@@ -45,6 +53,16 @@ $dokka.location:com.bugoff.can_do/Facility/setOnUpdateListener/#java.lang.Runnab
 $dokka.location:com.bugoff.can_do/Facility/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/set-remote.html
 $dokka.location:com.bugoff.can_do/Facility/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/to-map.html
 $dokka.location:com.bugoff.can_do/Facility/updateLocalEventIds/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-facility/update-local-event-ids.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel///PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/index.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/FacilityViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/-facility-view-model.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/addEvent/#com.bugoff.can_do.Event/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/add-event.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/getErrorMessage/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/get-error-message.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/getEvents/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/get-events.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/getFacilityId/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/get-facility-id.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/getOwner/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/get-owner.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/on-cleared.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/removeEvent/#com.bugoff.can_do.Event/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/remove-event.html
+$dokka.location:com.bugoff.can_do/FacilityViewModel/updateLiveData/#/PointingToDeclaration/app/com.bugoff.can_do/-facility-view-model/update-live-data.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper///PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/index.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper/FirestoreHelper/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/-firestore-helper.html
 $dokka.location:com.bugoff.can_do/FirestoreHelper/getDb/#/PointingToDeclaration/app/com.bugoff.can_do/-firestore-helper/get-db.html
@@ -97,5 +115,16 @@ $dokka.location:com.bugoff.can_do/UserAuthenticator/onUserNotFound/#java.lang.St
 $dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/index.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
+$dokka.location:com.bugoff.can_do/UserViewModel///PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/index.html
+$dokka.location:com.bugoff.can_do/UserViewModel/UserViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/-user-view-model.html
+$dokka.location:com.bugoff.can_do/UserViewModel/getErrorMessage/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/get-error-message.html
+$dokka.location:com.bugoff.can_do/UserViewModel/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/get-facility.html
+$dokka.location:com.bugoff.can_do/UserViewModel/getIsAdmin/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/get-is-admin.html
+$dokka.location:com.bugoff.can_do/UserViewModel/getUserName/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/get-user-name.html
+$dokka.location:com.bugoff.can_do/UserViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/on-cleared.html
+$dokka.location:com.bugoff.can_do/UserViewModel/setFacility/#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/set-facility.html
+$dokka.location:com.bugoff.can_do/UserViewModel/setIsAdmin/#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/set-is-admin.html
+$dokka.location:com.bugoff.can_do/UserViewModel/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/set-name.html
+$dokka.location:com.bugoff.can_do/UserViewModel/updateLiveData/#/PointingToDeclaration/app/com.bugoff.can_do/-user-view-model/update-live-data.html
 com.bugoff.can_do
 com.bugoff.can_do.organizer
