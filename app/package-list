@@ -1,5 +1,10 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:com.bugoff.can_do.organizer////PointingToDeclaration/app/com.bugoff.can_do.organizer/index.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit///PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/index.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/FacilityEdit/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/-facility-edit.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/on-create.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/userHasFacility/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/user-has-facility.html
 $dokka.location:com.bugoff.can_do////PointingToDeclaration/app/com.bugoff.can_do/index.html
 $dokka.location:com.bugoff.can_do/CaptureActivityPortrait///PointingToDeclaration/app/com.bugoff.can_do/-capture-activity-portrait/index.html
 $dokka.location:com.bugoff.can_do/CaptureActivityPortrait/CaptureActivityPortrait/#/PointingToDeclaration/app/com.bugoff.can_do/-capture-activity-portrait/-capture-activity-portrait.html
@@ -88,3 +93,4 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/a
 $dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 com.bugoff.can_do
+com.bugoff.can_do.organizer
