@@ -12,6 +12,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Facility implements DatabaseEntity {
     }
 
     public List<Event> getEvents() {
-        return events;
+        return Collections.unmodifiableList(events);
     }
 
     public void addEvent(@NonNull Event event) {
