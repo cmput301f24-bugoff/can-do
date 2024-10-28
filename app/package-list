@@ -22,7 +22,10 @@ $dokka.location:com.bugoff.can_do/Event/attachListener/#/PointingToDeclaration/
 $dokka.location:com.bugoff.can_do/Event/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do/-event/detach-listener.html
 $dokka.location:com.bugoff.can_do/Event/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do/-event/get-facility.html
 $dokka.location:com.bugoff.can_do/Event/getId/#/PointingToDeclaration/app/com.bugoff.can_do/-event/get-id.html
+$dokka.location:com.bugoff.can_do/Event/getName/#/PointingToDeclaration/app/com.bugoff.can_do/-event/get-name.html
 $dokka.location:com.bugoff.can_do/Event/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-event/on-update.html
+$dokka.location:com.bugoff.can_do/Event/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-event/set-name.html
+$dokka.location:com.bugoff.can_do/Event/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do/-event/set-on-update-listener.html
 $dokka.location:com.bugoff.can_do/Event/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-event/set-remote.html
 $dokka.location:com.bugoff.can_do/Event/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-event/to-map.html
 $dokka.location:com.bugoff.can_do/Facility///PointingToDeclaration/app/com.bugoff.can_do/-facility/index.html
@@ -38,6 +41,7 @@ $dokka.location:com.bugoff.can_do/Facility/getOwner/#/PointingToDeclaration/app
 $dokka.location:com.bugoff.can_do/Facility/loadExistingEvents/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/load-existing-events.html
 $dokka.location:com.bugoff.can_do/Facility/onEventsUpdated/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/on-events-updated.html
 $dokka.location:com.bugoff.can_do/Facility/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/on-update.html
+$dokka.location:com.bugoff.can_do/Facility/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do/-facility/set-on-update-listener.html
 $dokka.location:com.bugoff.can_do/Facility/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/set-remote.html
 $dokka.location:com.bugoff.can_do/Facility/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-facility/to-map.html
 $dokka.location:com.bugoff.can_do/Facility/updateLocalEventIds/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-facility/update-local-event-ids.html
@@ -83,6 +87,7 @@ $dokka.location:com.bugoff.can_do/User/onUpdate/#/PointingToDeclaration/app/com
 $dokka.location:com.bugoff.can_do/User/setFacility/#com.bugoff.can_do.Facility/PointingToDeclaration/app/com.bugoff.can_do/-user/set-facility.html
 $dokka.location:com.bugoff.can_do/User/setIsAdmin/#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do/-user/set-is-admin.html
 $dokka.location:com.bugoff.can_do/User/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user/set-name.html
+$dokka.location:com.bugoff.can_do/User/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do/-user/set-on-update-listener.html
 $dokka.location:com.bugoff.can_do/User/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do/-user/set-remote.html
 $dokka.location:com.bugoff.can_do/User/toMap/#/PointingToDeclaration/app/com.bugoff.can_do/-user/to-map.html
 $dokka.location:com.bugoff.can_do/UserAuthenticator///PointingToDeclaration/app/com.bugoff.can_do/-user-authenticator/index.html
