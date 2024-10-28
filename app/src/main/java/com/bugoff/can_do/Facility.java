@@ -20,8 +20,10 @@ import java.util.Map;
 public class Facility implements DatabaseEntity {
     // data fields
     private String id;
-    private User owner;
-    private List<Event> events;
+    private User owner; // Owner (organizer) of the facility
+    private String name;
+    private List<Event> events; // Events held at the facility
+    private String address; // Physical display address of the facility
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;

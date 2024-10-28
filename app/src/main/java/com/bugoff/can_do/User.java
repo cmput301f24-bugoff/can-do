@@ -8,14 +8,19 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class User implements DatabaseEntity {
     private String id;
     private String name;
+    private String email;
+    private String phoneNumber;
     private Boolean isAdmin;
-    private Facility facility;
+    private Facility facility; // Associated facility if the user is an organizer
+    private List<Event> eventsJoined; // Events where the user joined the waiting list
+    private List<Event> eventsEnrolled; // Events where the user is enrolled
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;

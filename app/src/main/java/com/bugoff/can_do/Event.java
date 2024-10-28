@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,14 +10,30 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Event implements DatabaseEntity {
-    private String id;
-    private Facility facility;
-    private String name;
+    // data fields
+    private String id; // Unique ID of the event
+    private Facility facility; // The facility where the event is held
+    private String name; // The name of the event
+    private String description; // The description of the event
+    private String qrCodeHash; // The hash of the QR code for the event
+    private Date registrationStartDate; // The start date and time for registration
+    private Date registrationEndDate; // The end date and time for registration
+    private Date eventStartDate; // The start date and time for the event
+    private Date eventEndDate; // The end date and time for the event
+    private Integer numberOfParticipants; // The number of participants to be selected for the event
+    private Boolean geolocationRequired; // Whether the event requires geo-location verification
+    private List<User> waitingListEntrants; // The list of users on the waiting list
+    private Map<User, Location> entrantsLocations; // The locations of the entrants
+    private Map<User, EntrantStatus> entrantStatuses; // The statuses of the entrants
+    private List<User> selectedEntrants; // Entrants selected in the lottery
+    private List<User> enrolledEntrants; // Entrants who accepted and enrolled
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;

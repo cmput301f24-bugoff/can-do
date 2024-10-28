@@ -9,4 +9,5 @@ public interface DatabaseEntity {
     void attachListener();
     void detachListener();
     void onUpdate();
+    void setOnUpdateListener(Runnable listener);
 }
