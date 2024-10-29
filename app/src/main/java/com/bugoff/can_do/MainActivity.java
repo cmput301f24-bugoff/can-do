@@ -10,6 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.user.User;
+import com.bugoff.can_do.user.UserViewModel;
+import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

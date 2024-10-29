@@ -1,9 +1,13 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.user;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.bugoff.can_do.database.DatabaseEntity;
+import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.database.GlobalRepository;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

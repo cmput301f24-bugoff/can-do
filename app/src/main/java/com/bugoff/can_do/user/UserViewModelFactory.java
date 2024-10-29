@@ -1,4 +1,4 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.user;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
