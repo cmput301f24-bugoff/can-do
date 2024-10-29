@@ -84,7 +84,7 @@ public class GlobalRepository {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
                         Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
-                        User user = new User(androidId, name, isAdmin, null);
+                        User user = new User(androidId, name, null, null, isAdmin, null);
                         taskCompletionSource.setResult(user);
                     } else {
                         taskCompletionSource.setException(new Exception("User not found"));
