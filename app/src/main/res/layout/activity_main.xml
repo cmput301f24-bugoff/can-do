@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:background="?android:attr/windowBackground"
-        app:menu="@layout/bottom_nav_menu"
+        app:menu="@layout/bottom_nav_menu_userview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

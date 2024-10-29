@@ -17,7 +17,7 @@ public class UserProfileActivity extends Fragment {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
         // If user clicks "im an organizer"
-        view.findViewById(R.id.button10).setOnClickListener(v -> {
+        view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FacilityEdit.class);
             startActivity(intent);
         });

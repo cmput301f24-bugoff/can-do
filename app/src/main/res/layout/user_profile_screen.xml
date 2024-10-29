@@ -82,19 +82,19 @@
                     android:id="@+id/name_button"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:text="Name" />
+                    android:text="Edit Name" />
 
                 <Button
                     android:id="@+id/email_button"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:text="Email" />
+                    android:text="Edit Email" />
 
                 <Button
                     android:id="@+id/pnumber_button"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:text="Phone Number" />
+                    android:text="Add Phone Number" />
 
                 <Button
                     android:id="@+id/notif_button"
@@ -115,7 +115,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/menu_layout">
 
                 <Button
-                    android:id="@+id/button10"
+                    android:id="@+id/organizer_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#00000000"
@@ -123,7 +123,7 @@
                     android:textColor="@color/black" />
 
                 <Button
-                    android:id="@+id/button17"
+                    android:id="@+id/admin_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#00000000"
