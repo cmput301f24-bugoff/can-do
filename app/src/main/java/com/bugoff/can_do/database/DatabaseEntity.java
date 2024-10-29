@@ -1,4 +1,4 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.database;
 
 import java.util.Map;
 

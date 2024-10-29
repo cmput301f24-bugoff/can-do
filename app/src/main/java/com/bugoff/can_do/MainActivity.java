@@ -8,12 +8,21 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.user.User;
+import com.bugoff.can_do.user.UserViewModel;
+import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    User currentUser;
+    private UserViewModel userViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
                     Log.d(TAG, "Authenticated User: " + user.getId());
-                    currentUser = user;
+
+                    // Initialize UserViewModel with authenticated user ID
+                    userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
+                            .get(UserViewModel.class);
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
@@ -70,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    public UserViewModel getUserViewModel() {
+        return userViewModel;
+    }
 
     public void databaseDemo(User user) {
         // Create a facility
