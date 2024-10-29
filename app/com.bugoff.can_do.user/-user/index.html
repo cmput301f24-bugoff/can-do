@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>User</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            app
+                    </a>
+            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":app:generateJavadoc/androidMain">JavaMain</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="app::com.bugoff.can_do.user/User///PointingToDeclaration//-2144975559">
+  <div class="breadcrumbs"><a href="../../../index.html">app</a><span class="delimiter">/</span><a href="../index.html">com.bugoff.can_do.user</a><span class="delimiter">/</span><span class="current">User</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>User</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace"><span class="token keyword">public </span><span class="token keyword">class </span><a href="index.html">User</a><span class="token keyword"> implements </span><a href="../../com.bugoff.can_do.database/-database-entity/index.html">DatabaseEntity</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="1544118245%2FConstructors%2F-2144975559" anchor-label="User" id="1544118245%2FConstructors%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-user.html"><span><span>User</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1544118245%2FConstructors%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="-user.html"><span class="token function">User</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> androidId</span></span><span class="token punctuation">)</span></div><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="-user.html"><span class="token function">User</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> id<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> name<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> email<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> phoneNumber<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Boolean.html">Boolean</a> isAdmin<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.facility/-facility/index.html">Facility</a> facility</span></span><span class="token punctuation">)</span></div><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="-user.html"><span class="token function">User</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span>DocumentSnapshot doc</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1333940303%2FProperties%2F-2144975559" anchor-label="db" id="-1333940303%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-1333940303%2FProperties%2F-2144975559"><span><span>db</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1333940303%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>FirebaseFirestore <a href="index.html#-1333940303%2FProperties%2F-2144975559">db</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="522116015%2FProperties%2F-2144975559" anchor-label="email" id="522116015%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#522116015%2FProperties%2F-2144975559"><span><span>email</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="522116015%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="index.html#522116015%2FProperties%2F-2144975559">email</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1797622065%2FProperties%2F-2144975559" anchor-label="eventsEnrolled" id="1797622065%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1797622065%2FProperties%2F-2144975559"><span>events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1797622065%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> <a href="index.html#1797622065%2FProperties%2F-2144975559">eventsEnrolled</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="561290349%2FProperties%2F-2144975559" anchor-label="eventsJoined" id="561290349%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#561290349%2FProperties%2F-2144975559"><span>events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="561290349%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> <a href="index.html#561290349%2FProperties%2F-2144975559">eventsJoined</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-936033364%2FProperties%2F-2144975559" anchor-label="facility" id="-936033364%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-936033364%2FProperties%2F-2144975559"><span><span>facility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-936033364%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="../../com.bugoff.can_do.facility/-facility/index.html">Facility</a> <a href="index.html#-936033364%2FProperties%2F-2144975559">facility</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-758797900%2FProperties%2F-2144975559" anchor-label="id" id="-758797900%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-758797900%2FProperties%2F-2144975559"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-758797900%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="index.html#-758797900%2FProperties%2F-2144975559">id</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-491517018%2FProperties%2F-2144975559" anchor-label="isAdmin" id="-491517018%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#-491517018%2FProperties%2F-2144975559"><span>is</span><wbr></wbr><span><span>Admin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-491517018%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Boolean.html">Boolean</a> <a href="index.html#-491517018%2FProperties%2F-2144975559">isAdmin</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2096247483%2FProperties%2F-2144975559" anchor-label="listener" id="2096247483%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#2096247483%2FProperties%2F-2144975559"><span><span>listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2096247483%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>ListenerRegistration <a href="index.html#2096247483%2FProperties%2F-2144975559">listener</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1840928196%2FProperties%2F-2144975559" anchor-label="name" id="1840928196%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#1840928196%2FProperties%2F-2144975559"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1840928196%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="index.html#1840928196%2FProperties%2F-2144975559">name</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="745562643%2FProperties%2F-2144975559" anchor-label="onUpdateListener" id="745562643%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#745562643%2FProperties%2F-2144975559"><span>on</span><wbr></wbr><span>Update</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="745562643%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Runnable.html">Runnable</a> <a href="index.html#745562643%2FProperties%2F-2144975559">onUpdateListener</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="989733588%2FProperties%2F-2144975559" anchor-label="phoneNumber" id="989733588%2FProperties%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="index.html#989733588%2FProperties%2F-2144975559"><span>phone</span><wbr></wbr><span><span>Number</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="989733588%2FProperties%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="index.html#989733588%2FProperties%2F-2144975559">phoneNumber</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1909665817%2FFunctions%2F-2144975559" anchor-label="addEventEnrolled" id="1909665817%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-event-enrolled.html"><span>add</span><wbr></wbr><span>Event</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1909665817%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="add-event-enrolled.html"><span class="token function">addEventEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a> event</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="657731165%2FFunctions%2F-2144975559" anchor-label="addEventJoined" id="657731165%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-event-joined.html"><span>add</span><wbr></wbr><span>Event</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="657731165%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="add-event-joined.html"><span class="token function">addEventJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a> event</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="166474614%2FFunctions%2F-2144975559" anchor-label="attachListener" id="166474614%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="attach-listener.html"><span>attach</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="166474614%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="attach-listener.html"><span class="token function">attachListener</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1934986981%2FFunctions%2F-2144975559" anchor-label="deserializeEventsEnrolled" id="-1934986981%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="deserialize-events-enrolled.html"><span>deserialize</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1934986981%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>void <a href="deserialize-events-enrolled.html"><span class="token function">deserializeEventsEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Object.html">Object</a> data</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1032691607%2FFunctions%2F-2144975559" anchor-label="deserializeEventsJoined" id="1032691607%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="deserialize-events-joined.html"><span>deserialize</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1032691607%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>void <a href="deserialize-events-joined.html"><span class="token function">deserializeEventsJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Object.html">Object</a> data</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1323832344%2FFunctions%2F-2144975559" anchor-label="detachListener" id="-1323832344%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="detach-listener.html"><span>detach</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1323832344%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="detach-listener.html"><span class="token function">detachListener</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-969023031%2FFunctions%2F-2144975559" anchor-label="getEmail" id="-969023031%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-email.html"><span>get</span><wbr></wbr><span><span>Email</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-969023031%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="get-email.html"><span class="token function">getEmail</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-553467817%2FFunctions%2F-2144975559" anchor-label="getEventsEnrolled" id="-553467817%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-events-enrolled.html"><span>get</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-553467817%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> <a href="get-events-enrolled.html"><span class="token function">getEventsEnrolled</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-580819693%2FFunctions%2F-2144975559" anchor-label="getEventsJoined" id="-580819693%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-events-joined.html"><span>get</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-580819693%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> <a href="get-events-joined.html"><span class="token function">getEventsJoined</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-612610222%2FFunctions%2F-2144975559" anchor-label="getFacility" id="-612610222%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-facility.html"><span>get</span><wbr></wbr><span><span>Facility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-612610222%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="../../com.bugoff.can_do.facility/-facility/index.html">Facility</a> <a href="get-facility.html"><span class="token function">getFacility</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2089806298%2FFunctions%2F-2144975559" anchor-label="getId" id="2089806298%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-id.html"><span>get</span><wbr></wbr><span><span>Id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2089806298%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="get-id.html"><span class="token function">getId</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1042936640%2FFunctions%2F-2144975559" anchor-label="getIsAdmin" id="1042936640%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-is-admin.html"><span>get</span><wbr></wbr><span>Is</span><wbr></wbr><span><span>Admin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1042936640%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Boolean.html">Boolean</a> <a href="get-is-admin.html"><span class="token function">getIsAdmin</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-839572374%2FFunctions%2F-2144975559" anchor-label="getName" id="-839572374%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-name.html"><span>get</span><wbr></wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-839572374%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="get-name.html"><span class="token function">getName</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1818055314%2FFunctions%2F-2144975559" anchor-label="getPhoneNumber" id="-1818055314%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-phone-number.html"><span>get</span><wbr></wbr><span>Phone</span><wbr></wbr><span><span>Number</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1818055314%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> <a href="get-phone-number.html"><span class="token function">getPhoneNumber</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="154795623%2FFunctions%2F-2144975559" anchor-label="onUpdate" id="154795623%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-update.html"><span>on</span><wbr></wbr><span><span>Update</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="154795623%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="on-update.html"><span class="token function">onUpdate</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2063927930%2FFunctions%2F-2144975559" anchor-label="removeEventEnrolled" id="2063927930%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-event-enrolled.html"><span>remove</span><wbr></wbr><span>Event</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2063927930%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="remove-event-enrolled.html"><span class="token function">removeEventEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a> event</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="304819454%2FFunctions%2F-2144975559" anchor-label="removeEventJoined" id="304819454%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-event-joined.html"><span>remove</span><wbr></wbr><span>Event</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="304819454%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="remove-event-joined.html"><span class="token function">removeEventJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a> event</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-715690127%2FFunctions%2F-2144975559" anchor-label="serializeEventsEnrolled" id="-715690127%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="serialize-events-enrolled.html"><span>serialize</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-715690127%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token operator">&gt;</span> <a href="serialize-events-enrolled.html"><span class="token function">serializeEventsEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> events</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1586759349%2FFunctions%2F-2144975559" anchor-label="serializeEventsJoined" id="1586759349%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="serialize-events-joined.html"><span>serialize</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1586759349%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token operator">&gt;</span> <a href="serialize-events-joined.html"><span class="token function">serializeEventsJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> events</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1436094928%2FFunctions%2F-2144975559" anchor-label="setEmail" id="1436094928%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-email.html"><span>set</span><wbr></wbr><span><span>Email</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1436094928%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-email.html"><span class="token function">setEmail</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> email</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1257172339%2FFunctions%2F-2144975559" anchor-label="setEventsEnrolled" id="1257172339%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-events-enrolled.html"><span>set</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1257172339%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-events-enrolled.html"><span class="token function">setEventsEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> eventsEnrolled</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1217862967%2FFunctions%2F-2144975559" anchor-label="setEventsJoined" id="1217862967%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-events-joined.html"><span>set</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1217862967%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-events-joined.html"><span class="token function">setEventsJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="../../com.bugoff.can_do.event/-event/index.html">Event</a><span class="token operator">&gt;</span> eventsJoined</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1201328004%2FFunctions%2F-2144975559" anchor-label="setFacility" id="-1201328004%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-facility.html"><span>set</span><wbr></wbr><span><span>Facility</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1201328004%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-facility.html"><span class="token function">setFacility</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="../../com.bugoff.can_do.facility/-facility/index.html">Facility</a> facility</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1957338722%2FFunctions%2F-2144975559" anchor-label="setIsAdmin" id="1957338722%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-is-admin.html"><span>set</span><wbr></wbr><span>Is</span><wbr></wbr><span><span>Admin</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1957338722%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-is-admin.html"><span class="token function">setIsAdmin</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Boolean.html">Boolean</a> isAdmin</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1349341401%2FFunctions%2F-2144975559" anchor-label="setName" id="1349341401%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-name.html"><span>set</span><wbr></wbr><span><span>Name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1349341401%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-name.html"><span class="token function">setName</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> name</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1161874020%2FFunctions%2F-2144975559" anchor-label="setOnUpdateListener" id="-1161874020%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-on-update-listener.html"><span>set</span><wbr></wbr><span>On</span><wbr></wbr><span>Update</span><wbr></wbr><span><span>Listener</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1161874020%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-on-update-listener.html"><span class="token function">setOnUpdateListener</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/Runnable.html">Runnable</a> listener</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2130396555%2FFunctions%2F-2144975559" anchor-label="setPhoneNumber" id="-2130396555%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-phone-number.html"><span>set</span><wbr></wbr><span>Phone</span><wbr></wbr><span><span>Number</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2130396555%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-phone-number.html"><span class="token function">setPhoneNumber</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a> phoneNumber</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1945216381%2FFunctions%2F-2144975559" anchor-label="setRemote" id="-1945216381%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-remote.html"><span>set</span><wbr></wbr><span><span>Remote</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1945216381%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span>void <a href="set-remote.html"><span class="token function">setRemote</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-396040694%2FFunctions%2F-2144975559" anchor-label="toMap" id="-396040694%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-map.html"><span>to</span><wbr></wbr><span><span>Map</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-396040694%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">public </span><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/Map.html">Map</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token punctuation">, </span><a href="https://developer.android.com/reference/kotlin/java/lang/Object.html">Object</a><span class="token operator">&gt;</span> <a href="to-map.html"><span class="token function">toMap</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2039215187%2FFunctions%2F-2144975559" anchor-label="updateEventsEnrolled" id="-2039215187%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-events-enrolled.html"><span>update</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Enrolled</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2039215187%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>void <a href="update-events-enrolled.html"><span class="token function">updateEventsEnrolled</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token operator">&gt;</span> eventIds</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2101092521%2FFunctions%2F-2144975559" anchor-label="updateEventsJoined" id="2101092521%2FFunctions%2F-2144975559" data-filterable-set=":app:generateJavadoc/androidMain"></a>
+          <div class="table-row" data-filterable-current=":app:generateJavadoc/androidMain" data-filterable-set=":app:generateJavadoc/androidMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-events-joined.html"><span>update</span><wbr></wbr><span>Events</span><wbr></wbr><span><span>Joined</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2101092521%2FFunctions%2F-2144975559"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":app:generateJavadoc/androidMain"><div class="symbol monospace block"><span class="token keyword">private </span><span class="token keyword"></span>void <a href="update-events-joined.html"><span class="token function">updateEventsJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword"></span><a href="https://developer.android.com/reference/kotlin/java/util/List.html">List</a><span class="token operator">&lt;</span><a href="https://developer.android.com/reference/kotlin/java/lang/String.html">String</a><span class="token operator">&gt;</span> eventIds</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2024 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
