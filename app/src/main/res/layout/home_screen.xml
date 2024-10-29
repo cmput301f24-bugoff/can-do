@@ -43,7 +43,7 @@
             android:layout_gravity="center"
             android:background="#0DFFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_notification_bell" />
+            app:srcCompat="@drawable/notifications_24px" />
 
         <Space
             android:layout_width="10dp"
@@ -57,7 +57,7 @@
             android:layout_gravity="center"
             android:background="#0DFFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_settings" />
+            app:srcCompat="@drawable/settings_24px" />
     </LinearLayout>
 
 
