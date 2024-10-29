@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Event implements DatabaseEntity {
@@ -82,15 +83,107 @@ public class Event implements DatabaseEntity {
     }
 
     private List<User> deserializeUserList(Object data) {
-        return new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        if (data instanceof List<?>) {
+            List<?> userIds = (List<?>) data;
+            for (Object userIdObj : userIds) {
+                if (userIdObj instanceof String) {
+                    String userId = (String) userIdObj;
+                    GlobalRepository.getUsersCollection().document(userId).get()
+                            .addOnSuccessListener(doc -> {
+                                if (doc.exists()) {
+                                    String name = doc.getString("name");
+                                    Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
+                                    User user = new User(userId, name, null, null, isAdmin, this.facility);
+                                    users.add(user);
+                                    onUpdate();
+                                } else {
+                                    Log.w("Event", "No such user with ID: " + userId);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Event", "Error fetching user with ID: " + userId, e);
+                            });
+                }
+            }
+        }
+        return users;
     }
 
     private Map<User, Location> deserializeEntrantsLocations(Object data) {
-        return new HashMap<>();
+        Map<User, Location> entrantsLoc = new HashMap<>();
+        if (data instanceof Map<?, ?>) {
+            Map<?, ?> dataMap = (Map<?, ?>) data;
+            for (Map.Entry<?, ?> entry : dataMap.entrySet()) {
+                if (entry.getKey() instanceof String && entry.getValue() instanceof Map<?, ?>) {
+                    String userId = (String) entry.getKey();
+                    Map<?, ?> locMap = (Map<?, ?>) entry.getValue();
+                    Double latitude = locMap.get("latitude") instanceof Number ? ((Number) Objects.requireNonNull(locMap.get("latitude"))).doubleValue() : null;
+                    Double longitude = locMap.get("longitude") instanceof Number ? ((Number) Objects.requireNonNull(locMap.get("longitude"))).doubleValue() : null;
+
+                    if (latitude != null && longitude != null) {
+                        GlobalRepository.getUsersCollection().document(userId).get()
+                                .addOnSuccessListener(doc -> {
+                                    if (doc.exists()) {
+                                        String name = doc.getString("name");
+                                        Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
+                                        User user = new User(userId, name, null, null, isAdmin, this.facility);
+
+                                        Location location = new Location("");
+                                        location.setLatitude(latitude);
+                                        location.setLongitude(longitude);
+                                        entrantsLoc.put(user, location);
+                                        onUpdate();
+                                    } else {
+                                        Log.w("Event", "No such user with ID: " + userId);
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Event", "Error fetching user with ID: " + userId, e);
+                                });
+                    }
+                }
+            }
+        }
+        return entrantsLoc;
     }
 
     private Map<User, EntrantStatus> deserializeEntrantStatuses(Object data) {
-        return new HashMap<>();
+        Map<User, EntrantStatus> entrantStatusMap = new HashMap<>();
+        if (data instanceof Map<?, ?>) {
+            Map<?, ?> dataMap = (Map<?, ?>) data;
+            for (Map.Entry<?, ?> entry : dataMap.entrySet()) {
+                if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                    String userId = (String) entry.getKey();
+                    String statusStr = (String) entry.getValue();
+                    EntrantStatus status;
+                    try {
+                        status = EntrantStatus.valueOf(statusStr);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("Event", "Invalid EntrantStatus: " + statusStr, e);
+                        continue;
+                    }
+
+                    GlobalRepository.getUsersCollection().document(userId).get()
+                            .addOnSuccessListener(doc -> {
+                                if (doc.exists()) {
+                                    String name = doc.getString("name");
+                                    Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
+                                    User user = new User(userId, name, null, null, isAdmin, this.facility);
+
+                                    entrantStatusMap.put(user, status);
+                                    onUpdate();
+                                } else {
+                                    Log.w("Event", "No such user with ID: " + userId);
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Event", "Error fetching user with ID: " + userId, e);
+                            });
+                }
+            }
+        }
+        return entrantStatusMap;
     }
 
     @Override

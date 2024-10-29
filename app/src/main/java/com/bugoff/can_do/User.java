@@ -401,6 +401,7 @@ public class User implements DatabaseEntity {
         }
     }
 
+    @Override
     public void setOnUpdateListener(Runnable listener) {
         this.onUpdateListener = listener;
     }
