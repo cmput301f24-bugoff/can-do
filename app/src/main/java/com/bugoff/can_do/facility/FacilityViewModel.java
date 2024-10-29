@@ -1,8 +1,12 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.facility;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

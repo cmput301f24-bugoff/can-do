@@ -1,8 +1,10 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.event;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.bugoff.can_do.database.GlobalRepository;
 
 public class EventViewModel extends ViewModel {
     private final Event event;
