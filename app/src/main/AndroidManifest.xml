@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".organizer.FacilityEdit" />
+        <activity android:name=".organizer.OrganizerTransition" />
+        <activity android:name=".organizer.OrganizerHome" />
 
 
     </application>
