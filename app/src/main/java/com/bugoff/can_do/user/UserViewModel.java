@@ -11,7 +11,7 @@ import com.bugoff.can_do.database.GlobalRepository;
 import java.util.List;
 
 public class UserViewModel extends ViewModel {
-    private final User user;
+    private User user;
     private final MutableLiveData<String> userName = new MutableLiveData<>();
     private final MutableLiveData<String> email = new MutableLiveData<>();
     private final MutableLiveData<String> phoneNumber = new MutableLiveData<>();
@@ -22,21 +22,20 @@ public class UserViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public UserViewModel(String userId) {
-        // Initialize User fetched from repository
-        this.user = GlobalRepository.getUser(userId).getResult();
-        this.userName.setValue(user.getName());
-        this.email.setValue(user.getEmail());
-        this.phoneNumber.setValue(user.getPhoneNumber());
-        this.isAdmin.setValue(user.getIsAdmin());
-        this.facility.setValue(user.getFacility());
-        this.eventsJoined.setValue(user.getEventsJoined());
-        this.eventsEnrolled.setValue(user.getEventsEnrolled());
-
-        // Set onUpdateListener to update LiveData
-        this.user.setOnUpdateListener(this::updateLiveData);
-
-        // Attach Firestore listener
-        this.user.attachListener();
+        // Fetch user asynchronously
+        GlobalRepository.getUser(userId)
+                .addOnSuccessListener(fetchedUser -> {
+                    this.user = fetchedUser;
+                    userName.setValue(user.getName());
+                    isAdmin.setValue(user.getIsAdmin());
+                    facility.setValue(user.getFacility());
+                    // Set listeners
+                    this.user.setOnUpdateListener(this::updateLiveData);
+                    this.user.attachListener();
+                })
+                .addOnFailureListener(e -> {
+                    errorMessage.setValue(e.getMessage());
+                });
     }
 
     private void updateLiveData() {
