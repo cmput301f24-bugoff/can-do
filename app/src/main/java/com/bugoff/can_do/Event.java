@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Event implements DatabaseEntity {
-    // data fields
+    // Data fields
     private String id; // Unique ID of the event
     private Facility facility; // The facility where the event is held
     private String name; // The name of the event
@@ -39,11 +40,25 @@ public class Event implements DatabaseEntity {
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
 
+    // Default constructor
     public Event(@NonNull Facility facility) {
         this.id = GlobalRepository.getEventsCollection().document().getId();
         this.facility = facility;
         facility.addEvent(this);
         this.name = "";
+        this.description = "";
+        this.qrCodeHash = "";
+        this.registrationStartDate = new Date();
+        this.registrationEndDate = new Date();
+        this.eventStartDate = new Date();
+        this.eventEndDate = new Date();
+        this.numberOfParticipants = 0;
+        this.geolocationRequired = false;
+        this.waitingListEntrants = new ArrayList<>();
+        this.entrantsLocations = new HashMap<>();
+        this.entrantStatuses = new HashMap<>();
+        this.selectedEntrants = new ArrayList<>();
+        this.enrolledEntrants = new ArrayList<>();
     }
 
     // Constructor from Firestore document
@@ -51,6 +66,31 @@ public class Event implements DatabaseEntity {
         this.id = doc.getId();
         this.facility = facility;
         this.name = doc.getString("name");
+        this.description = doc.getString("description");
+        this.qrCodeHash = doc.getString("qrCodeHash");
+        this.registrationStartDate = doc.getDate("registrationStartDate");
+        this.registrationEndDate = doc.getDate("registrationEndDate");
+        this.eventStartDate = doc.getDate("eventStartDate");
+        this.eventEndDate = doc.getDate("eventEndDate");
+        this.numberOfParticipants = doc.getLong("numberOfParticipants") != null ? doc.getLong("numberOfParticipants").intValue() : 0;
+        this.geolocationRequired = doc.getBoolean("geolocationRequired");
+        this.waitingListEntrants = deserializeUserList(doc.get("waitingListEntrants"));
+        this.entrantsLocations = deserializeEntrantsLocations(doc.get("entrantsLocations"));
+        this.entrantStatuses = deserializeEntrantStatuses(doc.get("entrantStatuses"));
+        this.selectedEntrants = deserializeUserList(doc.get("selectedEntrants"));
+        this.enrolledEntrants = deserializeUserList(doc.get("enrolledEntrants"));
+    }
+
+    private List<User> deserializeUserList(Object data) {
+        return new ArrayList<>();
+    }
+
+    private Map<User, Location> deserializeEntrantsLocations(Object data) {
+        return new HashMap<>();
+    }
+
+    private Map<User, EntrantStatus> deserializeEntrantStatuses(Object data) {
+        return new HashMap<>();
     }
 
     @Override
@@ -58,7 +98,53 @@ public class Event implements DatabaseEntity {
         Map<String, Object> map = new HashMap<>();
         map.put("facilityId", facility.getId());
         map.put("name", name);
+        map.put("description", description);
+        map.put("qrCodeHash", qrCodeHash);
+        map.put("registrationStartDate", registrationStartDate);
+        map.put("registrationEndDate", registrationEndDate);
+        map.put("eventStartDate", eventStartDate);
+        map.put("eventEndDate", eventEndDate);
+        map.put("numberOfParticipants", numberOfParticipants);
+        map.put("geolocationRequired", geolocationRequired);
+        map.put("waitingListEntrants", serializeUserList(waitingListEntrants));
+        map.put("entrantsLocations", serializeEntrantsLocations(entrantsLocations));
+        map.put("entrantStatuses", serializeEntrantStatuses(entrantStatuses));
+        map.put("selectedEntrants", serializeUserList(selectedEntrants));
+        map.put("enrolledEntrants", serializeUserList(enrolledEntrants));
         return map;
+    }
+
+    private List<Map<String, Object>> serializeUserList(List<User> users) {
+        // Convert User objects to a serializable format
+        List<Map<String, Object>> serializedList = new ArrayList<>();
+        for (User user : users) {
+            serializedList.add(user.toMap());
+        }
+        return serializedList;
+    }
+
+    private Map<String, Object> serializeEntrantsLocations(Map<User, Location> entrantsLocations) {
+        Map<String, Object> serializedMap = new HashMap<>();
+        for (Map.Entry<User, Location> entry : entrantsLocations.entrySet()) {
+            Location location = entry.getValue();
+            Map<String, Object> locationMap = new HashMap<>();
+
+            // Extract relevant data from Android Location object
+            locationMap.put("latitude", location.getLatitude());
+            locationMap.put("longitude", location.getLongitude());
+
+            serializedMap.put(entry.getKey().getId(), locationMap);
+        }
+        return serializedMap;
+    }
+
+    private Map<String, Object> serializeEntrantStatuses(Map<User, EntrantStatus> entrantStatuses) {
+        // Convert Map<User, EntrantStatus> to a serializable format
+        Map<String, Object> serializedMap = new HashMap<>();
+        for (Map.Entry<User, EntrantStatus> entry : entrantStatuses.entrySet()) {
+            serializedMap.put(entry.getKey().getId(), entry.getValue().name());  // Store enum as a String
+        }
+        return serializedMap;
     }
 
     @Override
@@ -70,6 +156,10 @@ public class Event implements DatabaseEntity {
         return facility;
     }
 
+    public void setFacility(Facility facility) {
+        this.facility = facility;
+    }
+
     public String getName() {
         return name;
     }
@@ -78,7 +168,111 @@ public class Event implements DatabaseEntity {
         this.name = name;
     }
 
-    // Method to save the facility to Firestore
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getQrCodeHash() {
+        return qrCodeHash;
+    }
+
+    public void setQrCodeHash(String qrCodeHash) {
+        this.qrCodeHash = qrCodeHash;
+    }
+
+    public Date getRegistrationStartDate() {
+        return registrationStartDate;
+    }
+
+    public void setRegistrationStartDate(Date registrationStartDate) {
+        this.registrationStartDate = registrationStartDate;
+    }
+
+    public Date getRegistrationEndDate() {
+        return registrationEndDate;
+    }
+
+    public void setRegistrationEndDate(Date registrationEndDate) {
+        this.registrationEndDate = registrationEndDate;
+    }
+
+    public Date getEventStartDate() {
+        return eventStartDate;
+    }
+
+    public void setEventStartDate(Date eventStartDate) {
+        this.eventStartDate = eventStartDate;
+    }
+
+    public Date getEventEndDate() {
+        return eventEndDate;
+    }
+
+    public void setEventEndDate(Date eventEndDate) {
+        this.eventEndDate = eventEndDate;
+    }
+
+    public Integer getNumberOfParticipants() {
+        return numberOfParticipants;
+    }
+
+    public void setNumberOfParticipants(Integer numberOfParticipants) {
+        this.numberOfParticipants = numberOfParticipants;
+    }
+
+    public Boolean getGeolocationRequired() {
+        return geolocationRequired;
+    }
+
+    public void setGeolocationRequired(Boolean geolocationRequired) {
+        this.geolocationRequired = geolocationRequired;
+    }
+
+    public List<User> getWaitingListEntrants() {
+        return waitingListEntrants;
+    }
+
+    public void setWaitingListEntrants(List<User> waitingListEntrants) {
+        this.waitingListEntrants = waitingListEntrants;
+    }
+
+    public Map<User, Location> getEntrantsLocations() {
+        return entrantsLocations;
+    }
+
+    public void setEntrantsLocations(Map<User, Location> entrantsLocations) {
+        this.entrantsLocations = entrantsLocations;
+    }
+
+    public Map<User, EntrantStatus> getEntrantStatuses() {
+        return entrantStatuses;
+    }
+
+    public void setEntrantStatuses(Map<User, EntrantStatus> entrantStatuses) {
+        this.entrantStatuses = entrantStatuses;
+    }
+
+    public List<User> getSelectedEntrants() {
+        return selectedEntrants;
+    }
+
+    public void setSelectedEntrants(List<User> selectedEntrants) {
+        this.selectedEntrants = selectedEntrants;
+    }
+
+    public List<User> getEnrolledEntrants() {
+        return enrolledEntrants;
+    }
+
+    public void setEnrolledEntrants(List<User> enrolledEntrants) {
+        this.enrolledEntrants = enrolledEntrants;
+    }
+
+    // Method to save the event to Firestore
     @Override
     public void setRemote() {
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
@@ -127,6 +321,24 @@ public class Event implements DatabaseEntity {
                     return;
                 }
 
+                // Update other fields
+                this.name = documentSnapshot.getString("name");
+                this.description = documentSnapshot.getString("description");
+                this.qrCodeHash = documentSnapshot.getString("qrCodeHash");
+                this.registrationStartDate = documentSnapshot.getDate("registrationStartDate");
+                this.registrationEndDate = documentSnapshot.getDate("registrationEndDate");
+                this.eventStartDate = documentSnapshot.getDate("eventStartDate");
+                this.eventEndDate = documentSnapshot.getDate("eventEndDate");
+                this.numberOfParticipants = documentSnapshot.getLong("numberOfParticipants") != null ? documentSnapshot.getLong("numberOfParticipants").intValue() : 0;
+                this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
+
+                // Deserialize complex fields
+                this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));
+                this.entrantsLocations = deserializeEntrantsLocations(documentSnapshot.get("entrantsLocations"));
+                this.entrantStatuses = deserializeEntrantStatuses(documentSnapshot.get("entrantStatuses"));
+                this.selectedEntrants = deserializeUserList(documentSnapshot.get("selectedEntrants"));
+                this.enrolledEntrants = deserializeUserList(documentSnapshot.get("enrolledEntrants"));
+
                 if (isChanged.get()) {
                     onUpdate(); // Notify listeners about the update
                 }
@@ -150,6 +362,7 @@ public class Event implements DatabaseEntity {
         }
     }
 
+    @Override
     public void setOnUpdateListener(Runnable listener) {
         this.onUpdateListener = listener;
     }
