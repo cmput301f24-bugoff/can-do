@@ -35,7 +35,7 @@
             android:layout_width="225dp"
             android:layout_height="match_parent" />
 
-<!-- have to change the srcCompat to notification bell icon drawable -->
+        <!-- have to change the srcCompat to notification bell icon drawable -->
         <ImageButton
             android:id="@+id/notif_hs_button"
             android:layout_width="40dp"
@@ -43,13 +43,13 @@
             android:layout_gravity="center"
             android:background="#0DFFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@android:drawable/btn_star" />
+            app:srcCompat="@drawable/ic_notification_bell" />
 
         <Space
             android:layout_width="10dp"
             android:layout_height="match_parent" />
 
-<!-- have to change the srcCompat to settings icon drawable -->
+        <!-- have to change the srcCompat to settings icon drawable -->
         <ImageButton
             android:id="@+id/settings_hs_button"
             android:layout_width="40dp"
@@ -57,7 +57,7 @@
             android:layout_gravity="center"
             android:background="#0DFFFFFF"
             android:scaleType="centerCrop"
-            app:srcCompat="@android:drawable/btn_star" />
+            app:srcCompat="@drawable/ic_settings" />
     </LinearLayout>
 
 
@@ -75,7 +75,7 @@
     </TextView>
 
 
-<!-- create content.xml for ListView to show event image & details -->
+    <!-- create content.xml for ListView to show event image & details -->
     <ListView
         android:id="@+id/hs_events_list"
         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
     </ListView>
 
 
-<!-- displays by default, but invisible when list is not empty -->
+    <!-- displays by default, but invisible when list is not empty -->
     <TextView
         android:id="@+id/hs_default_subtitle"
         android:layout_width="wrap_content"
