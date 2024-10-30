@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,16 +29,14 @@ public class HomeActivity extends Fragment {
         notifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Change to Notification Icon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Make Notifications Screen!", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Functionality of settings button on HomeScreen
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Change to Settings Icon!", Toast.LENGTH_SHORT).show();
-            }
+        view.findViewById(R.id.settings_hs_button).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
+            startActivity(intent);
         });
 
         return view;
