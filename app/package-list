@@ -255,6 +255,9 @@ $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclar
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity///PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/index.html
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity/NotificationSettingsActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/-notification-settings-activity.html
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/on-create.html
+$dokka.location:com.bugoff.can_do/NotificationsActivity///PointingToDeclaration/app/com.bugoff.can_do/-notifications-activity/index.html
+$dokka.location:com.bugoff.can_do/NotificationsActivity/NotificationsActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-notifications-activity/-notifications-activity.html
+$dokka.location:com.bugoff.can_do/NotificationsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-notifications-activity/on-create.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment///PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/index.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/QrCodeScannerFragment/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/-qr-code-scanner-fragment.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/initializeScanner/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/initialize-scanner.html
