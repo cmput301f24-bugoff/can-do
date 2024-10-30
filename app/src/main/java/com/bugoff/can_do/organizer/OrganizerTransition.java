@@ -52,7 +52,7 @@ public class OrganizerTransition extends AppCompatActivity {
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
     private void navigateToNextActivity() {
-        Intent intent = new Intent(this, OrganizerHome.class); // Replace NewActivity with the target activity class
+        Intent intent = new Intent(this, OrganizerMain.class); // Replace NewActivity with the target activity class
         startActivity(intent);
         finish();
     }
@@ -79,7 +79,7 @@ public class OrganizerTransition extends AppCompatActivity {
                 .update(facilityData)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(OrganizerTransition.this, "Facility saved successfully!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(OrganizerTransition.this, OrganizerHome.class)); // Replace with your target activity
+                    startActivity(new Intent(OrganizerTransition.this, OrganizerMain.class)); // Replace with your target activity
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -88,7 +88,7 @@ public class OrganizerTransition extends AppCompatActivity {
                             .set(facilityData, SetOptions.merge())
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(OrganizerTransition.this, "Facility created successfully!", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(OrganizerTransition.this, OrganizerHome.class)); // Replace with your target activity
+                                startActivity(new Intent(OrganizerTransition.this, OrganizerMain.class)); // Replace with your target activity
                                 finish();
                             })
                             .addOnFailureListener(error -> Toast.makeText(OrganizerTransition.this, "Failed to save facility", Toast.LENGTH_SHORT).show());
