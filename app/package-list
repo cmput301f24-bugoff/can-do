@@ -252,6 +252,9 @@ $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclarat
 $dokka.location:com.bugoff.can_do/MainActivity/databaseDemo/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/database-demo.html
 $dokka.location:com.bugoff.can_do/MainActivity/getUserViewModel/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-user-view-model.html
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/NotificationSettingsActivity///PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/index.html
+$dokka.location:com.bugoff.can_do/NotificationSettingsActivity/NotificationSettingsActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/-notification-settings-activity.html
+$dokka.location:com.bugoff.can_do/NotificationSettingsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/on-create.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment///PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/index.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/QrCodeScannerFragment/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/-qr-code-scanner-fragment.html
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/initializeScanner/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/initialize-scanner.html
@@ -261,6 +264,10 @@ $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/onResume/#/PointingToDec
 $dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/index.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
+$dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
+$dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
+$dokka.location:com.bugoff.can_do/switch_on_off/switch_on_off/#/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/switch_on_off.html
+$dokka.location:com.bugoff.can_do/switch_on_off/updateSwitchColors/#SwitchCompat#boolean/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/update-switch-colors.html
 com.bugoff.can_do
 com.bugoff.can_do.database
 com.bugoff.can_do.event
