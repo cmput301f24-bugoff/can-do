@@ -33,6 +33,6 @@
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".NotificationSettingsActivity" />
 
-
+        <activity android:name=".NotificationsActivity" />
     </application>
 </manifest>
