@@ -348,7 +348,7 @@ public class Event implements DatabaseEntity {
     }
 
     public Map<User, EntrantStatus> getEntrantStatuses() {
-        return entrantStatuses;
+        return Collections.unmodifiableMap(entrantStatuses);
     }
 
     public void setEntrantStatuses(Map<User, EntrantStatus> entrantStatuses) {
