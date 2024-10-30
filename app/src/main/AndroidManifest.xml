@@ -27,7 +27,7 @@
         </activity>
 
         <activity android:name=".organizer.OrganizerTransition" />
-        <activity android:name=".organizer.OrganizerHome" />
+        <activity android:name=".organizer.OrganizerMain" />
 
 
     </application>
