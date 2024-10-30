@@ -1,42 +1,57 @@
 package com.bugoff.can_do.facility;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FacilityViewModel extends ViewModel {
-    private final Facility facility;
+    private Facility facility;
     private final MutableLiveData<String> facilityId = new MutableLiveData<>();
     private final MutableLiveData<User> owner = new MutableLiveData<>();
+    private final MutableLiveData<String> name = new MutableLiveData<>();
+    private final MutableLiveData<String> address = new MutableLiveData<>();
     private final MutableLiveData<List<Event>> events = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public FacilityViewModel(String facilityId) {
-        // Initialize Facility with owner fetched from repository
-        User ownerUser = GlobalRepository.getUser(facilityId).getResult(); // facilityId is the Android ID of the owner
-        this.facility = new Facility(ownerUser);
-        this.facilityId.setValue(facility.getId());
-        this.owner.setValue(facility.getOwner());
-        this.events.setValue(facility.getEvents());
-
-        // Set onUpdateListener to update LiveData
-        this.facility.setOnUpdateListener(this::updateLiveData);
-
-        // Attach Firestore listener
-        this.facility.attachListener();
+        // Fetch Facility asynchronously
+        GlobalRepository.getFacilitiesCollection().document(facilityId).get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        facility = new Facility(doc);
+                        // Set LiveData values based on the fetched facility
+                        this.facilityId.setValue(facility.getId());
+                        // Owner and events are fetched asynchronously within Facility
+                        // Observe changes
+                        facility.setOnUpdateListener(this::updateLiveData);
+                        facility.attachListener();
+                    } else {
+                        errorMessage.setValue("Facility does not exist.");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    errorMessage.setValue(e.getMessage());
+                    Log.e("FacilityViewModel", "Error fetching facility", e);
+                });
     }
 
     private void updateLiveData() {
-        facilityId.postValue(facility.getId());
-        owner.postValue(facility.getOwner());
-        events.postValue(facility.getEvents());
+        if (facility != null) {
+            facilityId.postValue(facility.getId());
+            owner.postValue(facility.getOwner());
+            name.postValue(facility.getName());
+            address.postValue(facility.getAddress());
+            events.postValue(facility.getEvents());
+        }
     }
 
     public LiveData<String> getFacilityId() {
@@ -47,6 +62,14 @@ public class FacilityViewModel extends ViewModel {
         return owner;
     }
 
+    public LiveData<String> getName() {
+        return name;
+    }
+
+    public LiveData<String> getAddress() {
+        return address;
+    }
+
     public LiveData<List<Event>> getEvents() {
         return events;
     }
@@ -55,20 +78,39 @@ public class FacilityViewModel extends ViewModel {
         return errorMessage;
     }
 
-    // Methods to interact with Facility
+    public void setName(String newName) {
+        if (facility != null) {
+            facility.setName(newName);
+            facility.setRemote();
+        }
+    }
+
+    public void setAddress(String newAddress) {
+        if (facility != null) {
+            facility.setAddress(newAddress);
+            facility.setRemote();
+        }
+    }
+
     public void addEvent(Event event) {
-        facility.addEvent(event);
+        if (facility != null) {
+            facility.addEvent(event);
+            // No need to call setRemote() here as it's handled inside addEvent()
+        }
     }
 
     public void removeEvent(Event event) {
-        facility.getEvents().remove(event);
-        facility.setRemote();
-        events.postValue(facility.getEvents());
+        if (facility != null) {
+            facility.removeEvent(event);
+            // LiveData is updated within the Facility's onUpdateListener
+        }
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
-        facility.detachListener();
+        if (facility != null) {
+            facility.detachListener();
+        }
     }
 }
