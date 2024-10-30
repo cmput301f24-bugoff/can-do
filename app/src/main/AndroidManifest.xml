@@ -29,5 +29,9 @@
         <activity android:name=".organizer.FacilityEdit" />
 
 
+        <!-- Add your NotificationSettingsActivity here -->
+        <activity android:name=".NotificationSettingsActivity" />
+
+
     </application>
 </manifest>
