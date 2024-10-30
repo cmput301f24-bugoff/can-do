@@ -1,0 +1,158 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Top spacer for padding -->
+    <Space
+        android:id="@+id/top_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Avatar CardView -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_avatar"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        app:cardCornerRadius="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_spacer">
+
+        <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- User Name TextView -->
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organizer Name"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardview_avatar"
+        app:layout_constraintBottom_toTopOf="@+id/user_info" />
+
+    <!-- User Info TextView -->
+    <TextView
+        android:id="@+id/user_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Organizer-specific info here"
+        app:layout_constraintBottom_toTopOf="@+id/menu_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+    <!-- Menu Section CardView -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menu_section"
+        android:layout_width="350dp"
+        android:layout_height="420dp"
+        app:cardBackgroundColor="#D8CBE9"
+        app:cardCornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_spacer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_info">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Menu Layout containing profile options -->
+        <LinearLayout
+            android:id="@+id/menu_layout"
+            android:layout_width="match_parent"
+            android:layout_height="325dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/switching_user_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Existing Buttons -->
+        <Button
+            android:id="@+id/name_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Edit Name" />
+
+        <Button
+            android:id="@+id/email_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Edit Email" />
+
+        <Button
+            android:id="@+id/pnumber_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Add Phone Number" />
+
+        <Button
+            android:id="@+id/notif_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Notification Settings" />
+
+        <!-- New Manage Facility Button -->
+        <Button
+            android:id="@+id/manage_facility_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Manage Facility" />
+    </LinearLayout>
+
+    <!-- User Type Switching Section -->
+    <LinearLayout
+        android:id="@+id/switching_user_section"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_layout">
+
+        <Button
+            android:id="@+id/attendee_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:text="I'm an attendee"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/admin_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:text="I'm an admin"
+            android:textColor="@color/black"
+            android:visibility="invisible" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <Space
+        android:id="@+id/bottom_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
