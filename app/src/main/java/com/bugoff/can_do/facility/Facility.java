@@ -167,6 +167,12 @@ public class Facility implements DatabaseEntity {
         setRemote();
     }
 
+    public void removeEvent(Event event) {
+        events.remove(event);
+        event.detachListener();
+        setRemote();
+    }
+
     // Method to save the facility to Firestore
     @Override
     public void setRemote() {
