@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?android:attr/windowBackground"
+    android:layout_marginTop="32dp"> <!-- Added top margin -->
+
+    <!-- Action bar-like back navigation and title container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Back button -->
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrow_back_24px"
+            android:contentDescription="Back"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification Settings"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Push Notifications Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_push_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Push notifications"
+        android:textSize="16sp"
+        android:checked="true"
+        app:switchMinWidth="56dp"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/purple" />
+
+    <!-- Organizer Notifications Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_organizer_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Organizer notifications"
+        android:textSize="16sp"
+        android:checked="true"
+        app:switchMinWidth="56dp"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/purple" />
+
+    <!-- Admin Notifications Switch -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_admin_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin notifications"
+        android:textSize="16sp"
+        android:checked="true"
+        app:switchMinWidth="56dp"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/purple" />
+
+</LinearLayout>

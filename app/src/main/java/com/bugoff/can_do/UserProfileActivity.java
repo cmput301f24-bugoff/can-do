@@ -22,6 +22,12 @@ public class UserProfileActivity extends Fragment {
             startActivity(intent);
         });
 
+        // If user clicks "Notification Settings"
+        view.findViewById(R.id.notif_button).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
+            startActivity(intent);
+        });
+
         return view;
     }
 }

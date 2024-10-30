@@ -30,5 +30,9 @@
         <activity android:name=".organizer.OrganizerMain" />
 
 
+        <!-- Add your NotificationSettingsActivity here -->
+        <activity android:name=".NotificationSettingsActivity" />
+
+
     </application>
 </manifest>
