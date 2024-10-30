@@ -14,23 +14,15 @@ import androidx.fragment.app.Fragment;
 
 public class HomeActivity extends Fragment {
 
-    ImageButton notifButton;
-    ImageButton settingsButton;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_screen, container, false);
 
-        notifButton = view.findViewById(R.id.notif_hs_button);
-        settingsButton = view.findViewById(R.id.settings_hs_button);
-
         // Functionality of notifications button on HomeScreen
-        notifButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Make Notifications Screen!", Toast.LENGTH_SHORT).show();
-            }
+        view.findViewById(R.id.notif_hs_button).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), NotificationsActivity.class);
+            startActivity(intent);
         });
 
         // Functionality of settings button on HomeScreen
