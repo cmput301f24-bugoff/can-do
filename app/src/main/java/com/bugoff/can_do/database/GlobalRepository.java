@@ -1,9 +1,12 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.database;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.CollectionReference;
@@ -84,7 +87,7 @@ public class GlobalRepository {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
                         Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
-                        User user = new User(androidId, name, isAdmin, null);
+                        User user = new User(androidId, name, null, null, isAdmin, null);
                         taskCompletionSource.setResult(user);
                     } else {
                         taskCompletionSource.setException(new Exception("User not found"));

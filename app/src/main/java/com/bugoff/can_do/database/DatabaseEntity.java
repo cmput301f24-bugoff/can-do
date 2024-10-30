@@ -1,7 +1,8 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.database;
 
 import java.util.Map;
 
+// Some of the things that are needed for all entities in the database, NOT INCLUSIVE
 public interface DatabaseEntity {
     String getId();
     Map<String, Object> toMap();
@@ -9,4 +10,5 @@ public interface DatabaseEntity {
     void attachListener();
     void detachListener();
     void onUpdate();
+    void setOnUpdateListener(Runnable listener);
 }

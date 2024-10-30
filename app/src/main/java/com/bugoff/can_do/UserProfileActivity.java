@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.bugoff.can_do.organizer.FacilityEdit;
+import com.bugoff.can_do.organizer.OrganizerTransition;
 
 public class UserProfileActivity extends Fragment {
     @Nullable
@@ -18,7 +18,7 @@ public class UserProfileActivity extends Fragment {
 
         // If user clicks "im an organizer"
         view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), FacilityEdit.class);
+            Intent intent = new Intent(getActivity(), OrganizerTransition.class);
             startActivity(intent);
         });
 
