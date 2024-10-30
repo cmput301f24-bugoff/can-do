@@ -135,6 +135,9 @@ $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/navigateToNextAc
 $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-transition/on-create.html
 $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/promptUserToCreateFacility/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-transition/prompt-user-to-create-facility.html
 $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/saveFacilityAndProceed/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-transition/save-facility-and-proceed.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment///PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/index.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/ProfileFragment/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/-profile-fragment.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.user////PointingToDeclaration/app/com.bugoff.can_do.user/index.html
 $dokka.location:com.bugoff.can_do.user/User///PointingToDeclaration/app/com.bugoff.can_do.user/-user/index.html
 $dokka.location:com.bugoff.can_do.user/User/User/#DocumentSnapshot/PointingToDeclaration/app/com.bugoff.can_do.user/-user/-user.html
