@@ -42,7 +42,8 @@ public class OrganizerMain extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.nav_profile_organizer) {
                     Log.d(TAG, "Profile clicked");
-                    // Replace with your profile fragment or activity
+                    selectedFragmentOrganizer = new ProfileFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_organizer, selectedFragmentOrganizer).commit();
                     return true;
                 } else {
                     return false;
