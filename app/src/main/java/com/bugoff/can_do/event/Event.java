@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -331,7 +332,7 @@ public class Event implements DatabaseEntity {
     }
 
     public List<User> getWaitingListEntrants() {
-        return waitingListEntrants;
+        return Collections.unmodifiableList(waitingListEntrants);
     }
 
     public void setWaitingListEntrants(List<User> waitingListEntrants) {
@@ -339,7 +340,7 @@ public class Event implements DatabaseEntity {
     }
 
     public Map<User, Location> getEntrantsLocations() {
-        return entrantsLocations;
+        return Collections.unmodifiableMap(entrantsLocations);
     }
 
     public void setEntrantsLocations(Map<User, Location> entrantsLocations) {
@@ -355,7 +356,7 @@ public class Event implements DatabaseEntity {
     }
 
     public List<User> getSelectedEntrants() {
-        return selectedEntrants;
+        return Collections.unmodifiableList(selectedEntrants);
     }
 
     public void setSelectedEntrants(List<User> selectedEntrants) {
@@ -363,7 +364,7 @@ public class Event implements DatabaseEntity {
     }
 
     public List<User> getEnrolledEntrants() {
-        return enrolledEntrants;
+        return Collections.unmodifiableList(enrolledEntrants);
     }
 
     public void setEnrolledEntrants(List<User> enrolledEntrants) {
