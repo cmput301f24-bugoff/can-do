@@ -23,8 +23,10 @@ $dokka.location:com.bugoff.can_do.database/GlobalRepository/getEvent/#java.lang.
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getEventsCollection/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-events-collection.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getFacilitiesCollection/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-facilities-collection.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getFacility/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-facility.html
+$dokka.location:com.bugoff.can_do.database/GlobalRepository/getLoggedInUser/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-logged-in-user.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-user.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getUsersCollection/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-users-collection.html
+$dokka.location:com.bugoff.can_do.database/GlobalRepository/setLoggedInUser/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/set-logged-in-user.html
 $dokka.location:com.bugoff.can_do.database/UserAuthenticator///PointingToDeclaration/app/com.bugoff.can_do.database/-user-authenticator/index.html
 $dokka.location:com.bugoff.can_do.database/UserAuthenticator/UserAuthenticator/#/PointingToDeclaration/app/com.bugoff.can_do.database/-user-authenticator/-user-authenticator.html
 $dokka.location:com.bugoff.can_do.database/UserAuthenticator/authenticateUser/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.database/-user-authenticator/authenticate-user.html
