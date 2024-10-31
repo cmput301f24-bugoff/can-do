@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bugoff.can_do.organizer.OrganizerTransition;
+
+import java.util.Objects;
 
 public class UserProfileActivity extends Fragment {
     @Nullable
@@ -28,6 +31,48 @@ public class UserProfileActivity extends Fragment {
             startActivity(intent);
         });
 
+        view.findViewById(R.id.name_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editNameDialog();
+            }
+        });
+
+        view.findViewById(R.id.email_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editEmailDialog();
+            }
+        });
+
         return view;
+    }
+
+    private void editNameDialog() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder
+                .setView(nameView)
+                .setTitle("Edit Name")
+                .setNegativeButton("CANCEL", null)
+                .create()
+                .show();
+    }
+
+    private void editEmailDialog() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder
+                .setView(emailView)
+                .setTitle("Edit Email")
+                .setNegativeButton("CANCEL", null)
+                .create()
+                .show();
     }
 }
