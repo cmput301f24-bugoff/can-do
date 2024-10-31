@@ -67,11 +67,7 @@ public class GlobalRepository {
     public static Task<Void> addUser(@NonNull User user) {
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("id", user.getId());
-        userMap.put("name", user.getName());
-        userMap.put("isAdmin", user.getIsAdmin());
-        // users by default will not have a facility
+        Map<String, Object> userMap = user.toMap();
 
         usersCollection.document(user.getId())
                 .set(userMap)
@@ -81,12 +77,6 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
-    /**
-     * Retrieves a user from Firestore by Android ID.
-     *
-     * @param androidId The Android ID of the user.
-     * @return A Task that resolves to the User if found.
-     */
     @NonNull
     public static Task<User> getUser(String androidId) {
         TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
@@ -95,9 +85,8 @@ public class GlobalRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("name");
-                        Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
-                        User user = new User(androidId, name, null, null, isAdmin, null);
+                        // Use the updated User constructor that handles deserialization
+                        User user = new User(documentSnapshot);
                         taskCompletionSource.setResult(user);
                     } else {
                         taskCompletionSource.setException(new Exception("User not found"));
