@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context="organizer.CreateEventFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Event Name -->
+        <EditText
+            android:id="@+id/editTextEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Name"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Event Description -->
+        <EditText
+            android:id="@+id/editTextEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Description"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Registration Start Date -->
+        <TextView
+            android:id="@+id/textViewRegStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration Start Date"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonRegStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Registration Start Date"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Registration End Date -->
+        <TextView
+            android:id="@+id/textViewRegEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registration End Date"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonRegEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Registration End Date"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Event Start Date -->
+        <TextView
+            android:id="@+id/textViewEventStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Start Date"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonEventStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Event Start Date"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Event End Date -->
+        <TextView
+            android:id="@+id/textViewEventEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event End Date"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonEventEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Event End Date"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Number of Participants -->
+        <EditText
+            android:id="@+id/editTextNumParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number of Participants"
+            android:inputType="number"
+            android:padding="10dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Geolocation Required -->
+        <CheckBox
+            android:id="@+id/checkBoxGeolocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Geolocation Required"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Create Event Button -->
+        <Button
+            android:id="@+id/buttonCreateEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:background="@color/purple_500"
+            android:textColor="@android:color/white"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</ScrollView>
