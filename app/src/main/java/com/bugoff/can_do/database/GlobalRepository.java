@@ -23,6 +23,16 @@ public class GlobalRepository {
     private static CollectionReference facilitiesCollection;
     private static CollectionReference eventsCollection;
 
+    private static User loggedInUser;
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+
     // Constructor to initialize Firestore
     public GlobalRepository() {
         FirebaseFirestore db = FirestoreHelper.getInstance().getDb();

@@ -183,6 +183,7 @@ public class Facility implements DatabaseEntity {
         facilityRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "Facility successfully saved or updated.");
+                    onUpdate();
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "Error saving or updating facility", e);
