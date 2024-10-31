@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
                     // Initialize UserViewModel with authenticated user ID
                     userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
                             .get(UserViewModel.class);
+
+                    GlobalRepository.setLoggedInUser(user);
                 })
                 .addOnFailureListener(e -> {
                     // Handle authentication failure
