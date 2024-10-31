@@ -1,110 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context="organizer.CreateEventFragment">
+    android:padding="16dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <!-- Event Name -->
         <EditText
             android:id="@+id/editTextEventName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Event Name"
-            android:inputType="textPersonName"
-            android:padding="10dp"
-            android:layout_marginBottom="16dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Event Description -->
         <EditText
             android:id="@+id/editTextEventDescription"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Event Description"
-            android:inputType="textMultiLine"
-            android:padding="10dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextEventName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Registration Start Date -->
-        <TextView
-            android:id="@+id/textViewRegStart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Registration Start Date"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
-
+        <!-- Registration Start Date and Time -->
         <Button
             android:id="@+id/buttonRegStartDate"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Select Registration Start Date"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextEventDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonRegStartTime"
+            app:layout_constraintHorizontal_chainStyle="spread" />
 
-        <!-- Registration End Date -->
-        <TextView
-            android:id="@+id/textViewRegEnd"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/buttonRegStartTime"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Registration End Date"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:text="Select Time"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextEventDescription"
+            app:layout_constraintStart_toEndOf="@id/buttonRegStartDate"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Registration End Date and Time -->
         <Button
             android:id="@+id/buttonRegEndDate"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Select Registration End Date"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonRegStartDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonRegEndTime"
+            app:layout_constraintHorizontal_chainStyle="spread" />
 
-        <!-- Event Start Date -->
-        <TextView
-            android:id="@+id/textViewEventStart"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/buttonRegEndTime"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Event Start Date"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:text="Select Time"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonRegStartTime"
+            app:layout_constraintStart_toEndOf="@id/buttonRegEndDate"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Event Start Date and Time -->
         <Button
             android:id="@+id/buttonEventStartDate"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Select Event Start Date"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Event End Date -->
-        <TextView
-            android:id="@+id/textViewEventEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event End Date"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonRegEndDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonEventStartTime"
+            app:layout_constraintHorizontal_chainStyle="spread" />
 
         <Button
+            android:id="@+id/buttonEventStartTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Select Time"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonRegEndTime"
+            app:layout_constraintStart_toEndOf="@id/buttonEventStartDate"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Event End Date and Time -->
+        <Button
             android:id="@+id/buttonEventEndDate"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Select Event End Date"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonEventStartDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonEventEndTime"
+            app:layout_constraintHorizontal_chainStyle="spread" />
+
+        <Button
+            android:id="@+id/buttonEventEndTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Select Time"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonEventStartTime"
+            app:layout_constraintStart_toEndOf="@id/buttonEventEndDate"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Number of Participants -->
         <EditText
             android:id="@+id/editTextNumParticipants"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Number of Participants"
             android:inputType="number"
-            android:padding="10dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/buttonEventEndDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Geolocation Required -->
         <CheckBox
@@ -112,17 +140,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Geolocation Required"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/editTextNumParticipants"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Create Event Button -->
         <Button
             android:id="@+id/buttonCreateEvent"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Create Event"
-            android:background="@color/purple_500"
-            android:textColor="@android:color/white"
-            android:padding="12dp" />
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/checkBoxGeolocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

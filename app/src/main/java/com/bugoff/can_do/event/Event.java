@@ -35,7 +35,7 @@ public class Event implements DatabaseEntity {
     private Date registrationEndDate; // The end date and time for registration
     private Date eventStartDate; // The start date and time for the event
     private Date eventEndDate; // The end date and time for the event
-    private Integer numberOfParticipants; // The number of participants to be selected for the event
+    private Integer maxNumberOfParticipants; // The number of participants to be selected for the event
     private Boolean geolocationRequired; // Whether the event requires geo-location verification
     private List<User> waitingListEntrants; // The list of users on the waiting list
     private Map<User, Location> entrantsLocations; // The locations of the entrants
@@ -51,7 +51,6 @@ public class Event implements DatabaseEntity {
     public Event(@NonNull Facility facility) {
         this.id = GlobalRepository.getEventsCollection().document().getId();
         this.facility = facility;
-        facility.addEvent(this);
         this.name = "";
         this.description = "";
         this.qrCodeHash = "";
@@ -59,13 +58,14 @@ public class Event implements DatabaseEntity {
         this.registrationEndDate = new Date();
         this.eventStartDate = new Date();
         this.eventEndDate = new Date();
-        this.numberOfParticipants = 0;
+        this.maxNumberOfParticipants = 0;
         this.geolocationRequired = false;
         this.waitingListEntrants = new ArrayList<>();
         this.entrantsLocations = new HashMap<>();
         this.entrantStatuses = new HashMap<>();
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
+        facility.addEvent(this); // Ensure bidirectional reference
     }
 
     // Constructor from Firestore document
@@ -79,13 +79,43 @@ public class Event implements DatabaseEntity {
         this.registrationEndDate = doc.getDate("registrationEndDate");
         this.eventStartDate = doc.getDate("eventStartDate");
         this.eventEndDate = doc.getDate("eventEndDate");
-        this.numberOfParticipants = doc.getLong("numberOfParticipants") != null ? doc.getLong("numberOfParticipants").intValue() : 0;
-        this.geolocationRequired = doc.getBoolean("geolocationRequired");
-        this.waitingListEntrants = deserializeUserList(doc.get("waitingListEntrants"));
-        this.entrantsLocations = deserializeEntrantsLocations(doc.get("entrantsLocations"));
-        this.entrantStatuses = deserializeEntrantStatuses(doc.get("entrantStatuses"));
-        this.selectedEntrants = deserializeUserList(doc.get("selectedEntrants"));
-        this.enrolledEntrants = deserializeUserList(doc.get("enrolledEntrants"));
+        this.maxNumberOfParticipants = doc.getLong("maxNumberOfParticipants") != null ? Objects.requireNonNull(doc.getLong("maxNumberOfParticipants")).intValue() : 0;
+        this.geolocationRequired = doc.getBoolean("geolocationRequired") != null ? doc.getBoolean("geolocationRequired") : Boolean.FALSE;
+
+        // Initialize user lists
+        this.waitingListEntrants = new ArrayList<>();
+        this.entrantsLocations = new HashMap<>();
+        this.entrantStatuses = new HashMap<>();
+        this.selectedEntrants = new ArrayList<>();
+        this.enrolledEntrants = new ArrayList<>();
+
+        // Deserialize complex fields
+        deserializeUserList(doc.get("waitingListEntrants"));
+        deserializeEntrantsLocations(doc.get("entrantsLocations"));
+        deserializeEntrantStatuses(doc.get("entrantStatuses"));
+        deserializeUserList(doc.get("selectedEntrants"));
+        deserializeUserList(doc.get("enrolledEntrants"));
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("facilityId", facility.getId());
+        map.put("name", name);
+        map.put("description", description);
+        map.put("qrCodeHash", qrCodeHash);
+        map.put("registrationStartDate", registrationStartDate);
+        map.put("registrationEndDate", registrationEndDate);
+        map.put("eventStartDate", eventStartDate);
+        map.put("eventEndDate", eventEndDate);
+        map.put("maxNumberOfParticipants", maxNumberOfParticipants);
+        map.put("geolocationRequired", geolocationRequired);
+        map.put("waitingListEntrants", serializeUserList(waitingListEntrants));
+        map.put("entrantsLocations", serializeEntrantsLocations(entrantsLocations));
+        map.put("entrantStatuses", serializeEntrantStatuses(entrantStatuses));
+        map.put("selectedEntrants", serializeUserList(selectedEntrants));
+        map.put("enrolledEntrants", serializeUserList(enrolledEntrants));
+        return map;
     }
 
     private List<User> deserializeUserList(Object data) {
@@ -192,27 +222,6 @@ public class Event implements DatabaseEntity {
         return entrantStatusMap;
     }
 
-    @Override
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("facilityId", facility.getId());
-        map.put("name", name);
-        map.put("description", description);
-        map.put("qrCodeHash", qrCodeHash);
-        map.put("registrationStartDate", registrationStartDate);
-        map.put("registrationEndDate", registrationEndDate);
-        map.put("eventStartDate", eventStartDate);
-        map.put("eventEndDate", eventEndDate);
-        map.put("numberOfParticipants", numberOfParticipants);
-        map.put("geolocationRequired", geolocationRequired);
-        map.put("waitingListEntrants", serializeUserList(waitingListEntrants));
-        map.put("entrantsLocations", serializeEntrantsLocations(entrantsLocations));
-        map.put("entrantStatuses", serializeEntrantStatuses(entrantStatuses));
-        map.put("selectedEntrants", serializeUserList(selectedEntrants));
-        map.put("enrolledEntrants", serializeUserList(enrolledEntrants));
-        return map;
-    }
-
     private List<Map<String, Object>> serializeUserList(@NonNull List<User> users) {
         // Convert User objects to a serializable format
         List<Map<String, Object>> serializedList = new ArrayList<>();
@@ -315,12 +324,12 @@ public class Event implements DatabaseEntity {
         this.eventEndDate = eventEndDate;
     }
 
-    public Integer getNumberOfParticipants() {
-        return numberOfParticipants;
+    public Integer getMaxNumberOfParticipants() {
+        return maxNumberOfParticipants;
     }
 
-    public void setNumberOfParticipants(Integer numberOfParticipants) {
-        this.numberOfParticipants = numberOfParticipants;
+    public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {
+        this.maxNumberOfParticipants = maxNumberOfParticipants;
     }
 
     public Boolean getGeolocationRequired() {
@@ -428,7 +437,7 @@ public class Event implements DatabaseEntity {
                 this.registrationEndDate = documentSnapshot.getDate("registrationEndDate");
                 this.eventStartDate = documentSnapshot.getDate("eventStartDate");
                 this.eventEndDate = documentSnapshot.getDate("eventEndDate");
-                this.numberOfParticipants = documentSnapshot.getLong("numberOfParticipants") != null ? documentSnapshot.getLong("numberOfParticipants").intValue() : 0;
+                this.maxNumberOfParticipants = documentSnapshot.getLong("maxNumberOfParticipants") != null ? documentSnapshot.getLong("maxNumberOfParticipants").intValue() : 0;
                 this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
 
                 // Deserialize complex fields
