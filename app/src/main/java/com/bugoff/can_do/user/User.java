@@ -57,7 +57,6 @@ public class User implements DatabaseEntity {
         this.eventsEnrolled = new ArrayList<>();
     }
 
-    // Updated Constructor from Firestore document
     public User(@NonNull DocumentSnapshot doc) {
         this.id = doc.getId();
         this.name = doc.getString("name");
@@ -65,27 +64,20 @@ public class User implements DatabaseEntity {
         this.phoneNumber = doc.getString("phoneNumber");
         this.isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
 
-        String facilityId = doc.getString("facilityId");
-        if (facilityId != null) {
-            // Fetch the Facility object asynchronously
-            GlobalRepository.getFacility(facilityId)
-                    .addOnSuccessListener(facility -> {
-                        this.facility = facility;
-                        facility.setOwner(this); // Ensure bidirectional reference
-                        onUpdate(); // Notify listeners about the update
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("Firestore", "Error fetching facility for user: " + id, e);
-                    });
-        } else {
-            this.facility = null;
-        }
+        this.facility = new Facility(this); // placeholder
 
         this.eventsJoined = new ArrayList<>();
         this.eventsEnrolled = new ArrayList<>();
 
         deserializeEventsJoined(doc.get("eventsJoined"));
         deserializeEventsEnrolled(doc.get("eventsEnrolled"));
+    }
+
+    // Add a method to set the Facility post-construction
+    public void linkFacility(@NonNull Facility facility) {
+        this.facility = facility;
+        facility.setOwner(this); // Establish bidirectional reference
+        onUpdate(); // Notify listeners about the update
     }
 
     @Override

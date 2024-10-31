@@ -28,7 +28,7 @@ public class EventViewModel extends ViewModel {
     private final MutableLiveData<Date> registrationEndDate = new MutableLiveData<>();
     private final MutableLiveData<Date> eventStartDate = new MutableLiveData<>();
     private final MutableLiveData<Date> eventEndDate = new MutableLiveData<>();
-    private final MutableLiveData<Integer> numberOfParticipants = new MutableLiveData<>();
+    private final MutableLiveData<Integer> maxNumberOfParticipants = new MutableLiveData<>();
     private final MutableLiveData<Boolean> geolocationRequired = new MutableLiveData<>();
     private final MutableLiveData<List<User>> waitingListEntrants = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Map<String, Location>> entrantsLocations = new MutableLiveData<>(new HashMap<>());
@@ -51,7 +51,7 @@ public class EventViewModel extends ViewModel {
                         registrationEndDate.setValue(event.getRegistrationEndDate());
                         eventStartDate.setValue(event.getEventStartDate());
                         eventEndDate.setValue(event.getEventEndDate());
-                        numberOfParticipants.setValue(event.getNumberOfParticipants());
+                        maxNumberOfParticipants.setValue(event.getMaxNumberOfParticipants());
                         geolocationRequired.setValue(event.getGeolocationRequired());
                         waitingListEntrants.setValue(event.getWaitingListEntrants());
                         entrantsLocations.setValue(serializeEntrantsLocations(event.getEntrantsLocations()));
@@ -81,7 +81,7 @@ public class EventViewModel extends ViewModel {
             registrationEndDate.postValue(event.getRegistrationEndDate());
             eventStartDate.postValue(event.getEventStartDate());
             eventEndDate.postValue(event.getEventEndDate());
-            numberOfParticipants.postValue(event.getNumberOfParticipants());
+            maxNumberOfParticipants.postValue(event.getMaxNumberOfParticipants());
             geolocationRequired.postValue(event.getGeolocationRequired());
             waitingListEntrants.postValue(event.getWaitingListEntrants());
             entrantsLocations.postValue(serializeEntrantsLocations(event.getEntrantsLocations()));
@@ -115,7 +115,7 @@ public class EventViewModel extends ViewModel {
     public LiveData<Date> getRegistrationEndDate() { return registrationEndDate; }
     public LiveData<Date> getEventStartDate() { return eventStartDate; }
     public LiveData<Date> getEventEndDate() { return eventEndDate; }
-    public LiveData<Integer> getNumberOfParticipants() { return numberOfParticipants; }
+    public LiveData<Integer> getMaxNumberOfParticipants() { return maxNumberOfParticipants; }
     public LiveData<Boolean> getGeolocationRequired() { return geolocationRequired; }
     public LiveData<List<User>> getWaitingListEntrants() { return waitingListEntrants; }
     public LiveData<Map<String, Location>> getEntrantsLocations() { return entrantsLocations; }
@@ -171,9 +171,9 @@ public class EventViewModel extends ViewModel {
         }
     }
 
-    public void setNumberOfParticipants(Integer numberOfParticipants) {
+    public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {
         if (event != null) {
-            event.setNumberOfParticipants(numberOfParticipants);
+            event.setMaxNumberOfParticipants(maxNumberOfParticipants);
             event.setRemote();
         }
     }
