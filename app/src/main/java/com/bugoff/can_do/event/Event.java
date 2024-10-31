@@ -213,7 +213,7 @@ public class Event implements DatabaseEntity {
         return map;
     }
 
-    private List<Map<String, Object>> serializeUserList(List<User> users) {
+    private List<Map<String, Object>> serializeUserList(@NonNull List<User> users) {
         // Convert User objects to a serializable format
         List<Map<String, Object>> serializedList = new ArrayList<>();
         for (User user : users) {

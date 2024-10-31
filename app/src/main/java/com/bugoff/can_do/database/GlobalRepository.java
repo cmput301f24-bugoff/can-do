@@ -200,7 +200,8 @@ public class GlobalRepository {
                         String ownerId = documentSnapshot.getString("ownerId");
                         getUser(ownerId)
                                 .addOnSuccessListener(owner -> {
-                                    Facility facility = new Facility(owner); // will automatically load events
+                                    Facility facility = new Facility(owner); // Create facility without linking
+                                    owner.linkFacility(facility); // Link user and facility after creation
                                     taskCompletionSource.setResult(facility);
                                 })
                                 .addOnFailureListener(taskCompletionSource::setException);
