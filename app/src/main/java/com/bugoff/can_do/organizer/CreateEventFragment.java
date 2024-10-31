@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
@@ -92,7 +93,7 @@ public class CreateEventFragment extends Fragment {
         buttonEventStartTime = view.findViewById(R.id.buttonEventStartTime);
         buttonEventEndDate = view.findViewById(R.id.buttonEventEndDate);
         buttonEventEndTime = view.findViewById(R.id.buttonEventEndTime);
-        editTextNumParticipants = view.findViewById(R.id.editTextNumParticipants);
+        editTextNumParticipants = view.findViewById(R.id.editTextMaxNumParticipants);
         checkBoxGeolocation = view.findViewById(R.id.checkBoxGeolocation);
         buttonCreateEvent = view.findViewById(R.id.buttonCreateEvent);
     }
@@ -287,8 +288,6 @@ public class CreateEventFragment extends Fragment {
 
         // Retrieve the current user and their facility
         User currentUser = GlobalRepository.getLoggedInUser();
-        Log.d(TAG, "createEvent: " + currentUser);
-        Log.d(TAG, "createEvent: " + currentUser.getFacility());
         if (currentUser == null || currentUser.getFacility() == null) {
             Toast.makeText(getContext(), "User or Facility not found", Toast.LENGTH_SHORT).show();
             return;
@@ -311,18 +310,14 @@ public class CreateEventFragment extends Fragment {
         GlobalRepository.addEvent(newEvent).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-                navigateToOrganizerMain();
-                // TODO: Navigate to inside the event
+                navigateToOrganizerMain(); // TODO: maybe navigate to inside the event instead
             } else {
-                Toast.makeText(getContext(), "Failed to create event: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Failed to create event: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("CreateEventFragment", "Error creating event", task.getException());
             }
         });
     }
 
-    /**
-     * Navigates back to the Organizer Main activity or fragment.
-     */
     private void navigateToOrganizerMain() {
         Intent intent = new Intent(getActivity(), OrganizerMain.class);
         startActivity(intent);

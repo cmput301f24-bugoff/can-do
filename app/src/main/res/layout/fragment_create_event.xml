@@ -124,10 +124,10 @@
 
         <!-- Number of Participants -->
         <EditText
-            android:id="@+id/editTextNumParticipants"
+            android:id="@+id/editTextMaxNumParticipants"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Number of Participants"
+            android:hint="Max Number of Participants"
             android:inputType="number"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@id/buttonEventEndDate"
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:text="Geolocation Required"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/editTextNumParticipants"
+            app:layout_constraintTop_toBottomOf="@id/editTextMaxNumParticipants"
             app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Create Event Button -->
