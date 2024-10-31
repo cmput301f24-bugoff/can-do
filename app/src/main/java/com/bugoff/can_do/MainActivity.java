@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         UserAuthenticator.authenticateUser(androidId)
                 .addOnSuccessListener(user -> {
                     // Handle successful authentication
-                    Log.d(TAG, "Authenticated User: " + user.getId() + " with Facility: " + user.getFacility());
+                    Log.d(TAG, "Authenticated User: " + user.getId());
 
                     // Initialize UserViewModel with authenticated user ID
                     userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
