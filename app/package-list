@@ -135,6 +135,7 @@ $dokka.location:com.bugoff.can_do.event/EventsListViewModel/fetchEvents/#/Pointi
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel/getErrorMessage/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/get-error-message.html
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel/getEventsList/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/get-events-list.html
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/on-cleared.html
+$dokka.location:com.bugoff.can_do.event/EventsListViewModel/refreshEventsList/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/refresh-events-list.html
 $dokka.location:com.bugoff.can_do.facility////PointingToDeclaration/app/com.bugoff.can_do.facility/index.html
 $dokka.location:com.bugoff.can_do.facility/Facility///PointingToDeclaration/app/com.bugoff.can_do.facility/-facility/index.html
 $dokka.location:com.bugoff.can_do.facility/Facility/Facility/#DocumentSnapshot/PointingToDeclaration/app/com.bugoff.can_do.facility/-facility/-facility.html
