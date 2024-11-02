@@ -2,6 +2,7 @@ package com.bugoff.can_do.event;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,17 +10,15 @@ import androidx.lifecycle.ViewModel;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nullable;
 
 public class EventsListViewModel extends ViewModel {
 
@@ -29,6 +28,9 @@ public class EventsListViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     private ListenerRegistration listenerRegistration;
+
+    // Keep track of Event listeners to detach them when ViewModel is cleared
+    private final List<ListenerRegistration> eventListeners = new ArrayList<>();
 
     public EventsListViewModel() {
         fetchEvents();
@@ -73,9 +75,13 @@ public class EventsListViewModel extends ViewModel {
                                         Facility eventFacility = task.getResult();
                                         if (eventFacility != null) {
                                             Event event = new Event(eventFacility, doc);
-                                            synchronized (fetchedEvents) {
-                                                fetchedEvents.add(event);
-                                            }
+                                            fetchedEvents.add(event);
+
+                                            // Set up onUpdateListener for each Event
+                                            event.setOnUpdateListener(() -> {
+                                                // Trigger LiveData update when any Event is updated
+                                                refreshEventsList();
+                                            });
                                         } else {
                                             Log.w(TAG, "Facility not found for event: " + doc.getId());
                                         }
@@ -98,6 +104,17 @@ public class EventsListViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Refreshes the events list LiveData to notify observers of any changes.
+     */
+    private void refreshEventsList() {
+        if (eventsList.getValue() != null) {
+            // Create a new list to trigger LiveData observers
+            List<Event> updatedList = new ArrayList<>(eventsList.getValue());
+            eventsList.postValue(updatedList);
+        }
+    }
+
     public LiveData<List<Event>> getEventsList() {
         return eventsList;
     }
@@ -111,6 +128,10 @@ public class EventsListViewModel extends ViewModel {
         super.onCleared();
         if (listenerRegistration != null) {
             listenerRegistration.remove();
+        }
+        // Detach all Event listeners
+        for (ListenerRegistration reg : eventListeners) {
+            reg.remove();
         }
     }
 }

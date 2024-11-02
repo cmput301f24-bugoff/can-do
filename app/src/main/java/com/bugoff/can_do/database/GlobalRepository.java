@@ -197,6 +197,12 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Fetches a Facility from Firestore using the facilityId.
+     *
+     * @param facilityId The ID of the Facility to fetch.
+     * @return A Task representing the fetch operation, containing the Facility.
+     */
     @NonNull
     public static Task<Facility> getFacility(String facilityId) {
         TaskCompletionSource<Facility> taskCompletionSource = new TaskCompletionSource<>();
@@ -205,14 +211,9 @@ public class GlobalRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String ownerId = documentSnapshot.getString("ownerId");
-                        getUser(ownerId)
-                                .addOnSuccessListener(owner -> {
-                                    Facility facility = new Facility(owner); // Create facility without linking
-                                    owner.linkFacility(facility); // Link user and facility after creation
-                                    taskCompletionSource.setResult(facility);
-                                })
-                                .addOnFailureListener(taskCompletionSource::setException);
+                        // Initialize Facility using the DocumentSnapshot constructor
+                        Facility facility = new Facility(documentSnapshot);
+                        taskCompletionSource.setResult(facility);
                     } else {
                         taskCompletionSource.setException(new Exception("Facility not found"));
                     }

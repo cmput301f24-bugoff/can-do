@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bugoff.can_do.R;
 
 import java.text.SimpleDateFormat;
@@ -85,8 +84,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     " | Event: " + eventStart + " - " + eventEnd;
             textViewDates.setText(dates);
 
-            // TODO: Show current number of participants out of max number of participants
-            // textViewParticipants.setText(participants);
+            // Display current number of participants out of max number of participants
+            String participants = event.getEnrolledEntrants().size() + " / " + event.getMaxNumberOfParticipants();
+            textViewParticipants.setText(participants);
 
             // Set click listener
             itemView.setOnClickListener(v -> listener.onItemClick(event));
