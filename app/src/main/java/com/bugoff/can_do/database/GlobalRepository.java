@@ -137,31 +137,39 @@ public class GlobalRepository {
      */
     @NonNull
     public static Task<Void> addEvent(@NonNull Event event) {
+        // Create a TaskCompletionSource to handle the asynchronous task
         TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-        // Prepare Event data
-        Map<String, Object> eventMap = new HashMap<>();
-        eventMap.put("id", event.getId());
-        eventMap.put("facilityId", event.getFacility().getId());
-        eventMap.put("ownerId", event.getFacility().getOwner().getId());
+        // Serialize all Event fields into a Map using the toMap() method
+        Map<String, Object> eventMap = event.toMap();
 
+        // Get references to the Event document and the corresponding Facility document
         DocumentReference eventRef = eventsCollection.document(event.getId());
         DocumentReference facilityRef = facilitiesCollection.document(event.getFacility().getId());
 
+        // Create a Firestore batch to perform atomic writes
         WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
+
+        // Set the Event document with the serialized data
         batch.set(eventRef, eventMap);
+
+        // Update the Facility's "events" array to include the new Event ID
         batch.update(facilityRef, "events", FieldValue.arrayUnion(event.getId()));
 
+        // Commit the batch
         batch.commit()
                 .addOnSuccessListener(aVoid -> {
+                    // Log success and complete the task
                     Log.d("GlobalRepository", "Event added successfully: " + event.getId());
                     taskCompletionSource.setResult(null);
                 })
                 .addOnFailureListener(e -> {
+                    // Log the error and set the exception for the task
                     Log.e("GlobalRepository", "Error adding Event: " + event.getId(), e);
                     taskCompletionSource.setException(e);
                 });
 
+        // Return the Task to allow callers to attach listeners
         return taskCompletionSource.getTask();
     }
 
@@ -189,6 +197,12 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Fetches a Facility from Firestore using the facilityId.
+     *
+     * @param facilityId The ID of the Facility to fetch.
+     * @return A Task representing the fetch operation, containing the Facility.
+     */
     @NonNull
     public static Task<Facility> getFacility(String facilityId) {
         TaskCompletionSource<Facility> taskCompletionSource = new TaskCompletionSource<>();
@@ -197,13 +211,9 @@ public class GlobalRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String ownerId = documentSnapshot.getString("ownerId");
-                        getUser(ownerId)
-                                .addOnSuccessListener(owner -> {
-                                    Facility facility = new Facility(owner); // will automatically load events
-                                    taskCompletionSource.setResult(facility);
-                                })
-                                .addOnFailureListener(taskCompletionSource::setException);
+                        // Initialize Facility using the DocumentSnapshot constructor
+                        Facility facility = new Facility(documentSnapshot);
+                        taskCompletionSource.setResult(facility);
                     } else {
                         taskCompletionSource.setException(new Exception("Facility not found"));
                     }

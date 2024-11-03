@@ -118,6 +118,7 @@ public class Facility implements DatabaseEntity {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
         map.put("ownerId", owner.getId());
         map.put("name", name);
         map.put("address", address);
@@ -130,6 +131,7 @@ public class Facility implements DatabaseEntity {
     }
 
     public void setOwner(User user) {
+        Log.d("Facility", "Setting owner to: " + user.getId());
         this.owner = user;
         setRemote();
     }
@@ -163,7 +165,6 @@ public class Facility implements DatabaseEntity {
 
     public void addEvent(@NonNull Event event) {
         events.add(event);
-        event.setRemote();
         setRemote();
     }
 

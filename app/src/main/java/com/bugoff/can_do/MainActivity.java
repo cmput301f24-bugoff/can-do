@@ -12,9 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
-import com.bugoff.can_do.event.Event;
-import com.bugoff.can_do.facility.Facility;
-import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -86,19 +83,5 @@ public class MainActivity extends AppCompatActivity {
 
     public UserViewModel getUserViewModel() {
         return userViewModel;
-    }
-
-    public void databaseDemo(User user) {
-        // Create a facility
-        Facility facility = new Facility(user);
-        facility.setRemote();
-        facility.attachListener();
-        // Create an event
-        Event event = new Event(facility);
-        event.setRemote();
-        event.attachListener();
-        Event event2 = new Event(facility);
-        event2.setRemote();
-        event2.attachListener();
     }
 }
