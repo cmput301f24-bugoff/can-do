@@ -11,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 
-import java.util.Objects;
-
 public class UserProfileActivity extends Fragment {
     @Nullable
     @Override
@@ -45,6 +43,17 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
+        view.findViewById(R.id.pnumber_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (phone number is null) {
+//                    addPNumberDialog();
+//                } else {
+//                    editPNumberDialog();
+//                }
+            }
+        });
+
         return view;
     }
 
@@ -74,5 +83,13 @@ public class UserProfileActivity extends Fragment {
                 .setNegativeButton("CANCEL", null)
                 .create()
                 .show();
+    }
+
+    private void addPNumberDialog() {
+        // add phone number function here
+    }
+
+    private void editPNumberDialog() {
+        // edit phone number function here
     }
 }
