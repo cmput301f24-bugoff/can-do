@@ -26,6 +26,11 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        // If user clicks "Manage Facility"
+        view.findViewById(R.id.manage_facility_button).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FacilityEdit.class);
+            startActivity(intent);
+        });
         return view;
     }
 }
