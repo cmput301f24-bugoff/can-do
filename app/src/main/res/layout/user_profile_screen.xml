@@ -90,11 +90,27 @@
                     android:layout_height="wrap_content"
                     android:text="Edit Email" />
 
-                <Button
-                    android:id="@+id/pnumber_button"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:text="Add Phone Number" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/add_pnumber_button"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Add Phone Number"
+                        android:visibility="visible"/>
+
+                    <Button
+                        android:id="@+id/edit_pnumber_button"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Edit Phone Number"
+                        android:visibility="invisible"/>
+
+                </FrameLayout>
 
                 <Button
                     android:id="@+id/notif_button"
