@@ -312,8 +312,10 @@ $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/onPause/#/PointingToDecl
 $dokka.location:com.bugoff.can_do/QrCodeScannerFragment/onResume/#/PointingToDeclaration/app/com.bugoff.can_do/-qr-code-scanner-fragment/on-resume.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/index.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/addPNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/add-p-number-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editEmailDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-email-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editNameDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-name-dialog.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/editPNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-p-number-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
 $dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
