@@ -65,8 +65,10 @@ public class UserProfileActivity extends Fragment {
 
         builder
                 .setView(nameView)
-                .setTitle("Edit Name")
-                .setNegativeButton("CANCEL", null)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    dialog.dismiss();
+                })
                 .create()
                 .show();
     }
@@ -79,8 +81,10 @@ public class UserProfileActivity extends Fragment {
 
         builder
                 .setView(emailView)
-                .setTitle("Edit Email")
-                .setNegativeButton("CANCEL", null)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    dialog.dismiss();
+                })
                 .create()
                 .show();
     }
