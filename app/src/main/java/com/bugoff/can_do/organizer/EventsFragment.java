@@ -1,5 +1,6 @@
 package com.bugoff.can_do.organizer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.event.EventAdapter;
+import com.bugoff.can_do.organizer.EventDetailsActivity;
 import com.bugoff.can_do.event.EventsListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -74,6 +76,9 @@ public class EventsFragment extends Fragment {
     }
 
     private void onEventClicked(Event event) {
-        // TODO: Implement event item click handling
+        Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+        intent.putExtra("selected_event_id", event.getId());
+        startActivity(intent);
     }
+
 }
