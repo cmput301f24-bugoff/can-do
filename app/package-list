@@ -205,6 +205,12 @@ $dokka.location:com.bugoff.can_do.organizer/EventsFragment///PointingToDeclarati
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment/EventsFragment/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/-events-fragment.html
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment/onEventClicked/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/on-event-clicked.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit///PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/index.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/FacilityEdit/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/-facility-edit.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/areFieldsValid/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/are-fields-valid.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/loadFacilityData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/load-facility-data.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/on-create.html
+$dokka.location:com.bugoff.can_do.organizer/FacilityEdit/saveFacilityData/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-facility-edit/save-facility-data.html
 $dokka.location:com.bugoff.can_do.organizer/OrganizerMain///PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-main/index.html
 $dokka.location:com.bugoff.can_do.organizer/OrganizerMain/OrganizerMain/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-main/-organizer-main.html
 $dokka.location:com.bugoff.can_do.organizer/OrganizerMain/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-main/on-create.html
