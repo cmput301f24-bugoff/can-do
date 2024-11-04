@@ -28,6 +28,7 @@
 
         <activity android:name=".organizer.OrganizerTransition" />
         <activity android:name=".organizer.OrganizerMain" />
+        <activity android:name=".organizer.FacilityEdit" />
 
 
         <!-- Add your NotificationSettingsActivity here -->
