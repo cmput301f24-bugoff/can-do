@@ -17,6 +17,11 @@ public class UserProfileActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
+        // If user already added a phone number, change visibility to "Edit Phone Number" button
+            //-- if condition here --//
+        // view.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
+        // view.findViewById(R.id.edit_pnumber_button).setVisibility(View.VISIBLE);
+
         // If user clicks "im an organizer"
         view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), OrganizerTransition.class);
@@ -43,14 +48,16 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
-        view.findViewById(R.id.pnumber_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.add_pnumber_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (phone number is null) {
-//                    addPNumberDialog();
-//                } else {
-//                    editPNumberDialog();
-//                }
+                //-- create if condition here --//
+
+                // If no phone number added yet
+                addPNumberDialog();
+
+                // Else if there is already a phone number; to edit
+                // editPNumberDialog()
             }
         });
 
@@ -90,10 +97,37 @@ public class UserProfileActivity extends Fragment {
     }
 
     private void addPNumberDialog() {
-        // add phone number function here
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder
+                .setView(pnumberView)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
     }
 
     private void editPNumberDialog() {
-        // edit phone number function here
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+
+        pnumberView.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
+        pnumberView.findViewById(R.id.input_edit_pnumber).setVisibility(View.VISIBLE);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder
+                .setView(pnumberView)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
     }
 }
