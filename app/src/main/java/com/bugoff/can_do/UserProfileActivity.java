@@ -22,18 +22,19 @@ public class UserProfileActivity extends Fragment {
         // view.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
         // view.findViewById(R.id.edit_pnumber_button).setVisibility(View.VISIBLE);
 
-        // If user clicks "im an organizer"
+        // User clicks "I'm an organizer"
         view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), OrganizerTransition.class);
             startActivity(intent);
         });
 
-        // If user clicks "Notification Settings"
+        // User clicks "Notification Settings"
         view.findViewById(R.id.notif_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
             startActivity(intent);
         });
 
+        // User clicks "Edit Name"
         view.findViewById(R.id.name_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +42,7 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
+        // User clicks "Edit Email"
         view.findViewById(R.id.email_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +50,7 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
+        // User clicks "Add Phone Number" or "Edit Phone Number"
         view.findViewById(R.id.add_pnumber_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +61,22 @@ public class UserProfileActivity extends Fragment {
 
                 // Else if there is already a phone number; to edit
                 // editPNumberDialog()
+            }
+        });
+
+        // User clicks button to remove profile picture
+        view.findViewById(R.id.remove_profile_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //-- code for removing profile then generate default profile picture --//
+            }
+        });
+
+        // User clicks avatar to change or add profile picture
+        view.findViewById(R.id.image_avatar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //-- code for adding or editing profile picture --//
             }
         });
 
