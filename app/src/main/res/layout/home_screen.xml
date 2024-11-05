@@ -32,10 +32,24 @@
         </androidx.cardview.widget.CardView>
 
         <Space
-            android:layout_width="225dp"
+            android:layout_width="185dp"
             android:layout_height="match_parent" />
 
         <!-- have to change the srcCompat to notification bell icon drawable -->
+        <ImageButton
+            android:id="@+id/org_qr_scanner"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/qr_code_scanner_24px" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="match_parent" />
+
         <ImageButton
             android:id="@+id/notif_hs_button"
             android:layout_width="40dp"
