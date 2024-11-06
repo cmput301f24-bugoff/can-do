@@ -298,6 +298,9 @@ $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
 $dokka.location:com.bugoff.can_do/MainActivity/getUserViewModel/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-user-view-model.html
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/NotificationAdapter///PointingToDeclaration/app/com.bugoff.can_do/-notification-adapter/index.html
+$dokka.location:com.bugoff.can_do/NotificationAdapter/NotificationAdapter/#Context#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-notification-adapter/-notification-adapter.html
+$dokka.location:com.bugoff.can_do/NotificationAdapter/getView/#int#View#ViewGroup/PointingToDeclaration/app/com.bugoff.can_do/-notification-adapter/get-view.html
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity///PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/index.html
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity/NotificationSettingsActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/-notification-settings-activity.html
 $dokka.location:com.bugoff.can_do/NotificationSettingsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-notification-settings-activity/on-create.html
