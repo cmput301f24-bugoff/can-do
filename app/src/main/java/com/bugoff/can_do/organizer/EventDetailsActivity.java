@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugoff.can_do.R;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -36,10 +37,10 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String eventName = documentSnapshot.getString("name");
-                        String eventDate = documentSnapshot.getString("date");
+                        Timestamp eventDate = documentSnapshot.getTimestamp("eventStartDate");
                         // Update your TextViews with the event details
                         eventNameTextView.setText(eventName);
-                        eventDateTextView.setText(eventDate);
+                        eventDateTextView.setText(eventDate.toDate().toString());
                     } else {
                         Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
                     }
