@@ -18,6 +18,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private List<Event> eventList;
     private OnItemClickListener listener;
 
+    public EventAdapter() {
+
+    }
+
     // Interface for handling item clicks
     public interface OnItemClickListener {
         void onItemClick(Event event);

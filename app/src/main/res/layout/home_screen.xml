@@ -90,15 +90,15 @@
 
 
     <!-- create content.xml for ListView to show event image & details -->
-    <ListView
-        android:id="@+id/hs_events_list"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_home_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hs_title" >
-    </ListView>
+        app:layout_constraintTop_toBottomOf="@+id/hs_title" />
+
 
 
     <!-- displays by default, but invisible when list is not empty -->
