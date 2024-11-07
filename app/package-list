@@ -201,6 +201,10 @@ $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupDateTimePic
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/showDatePickerDialog/#com.bugoff.can_do.organizer.CreateEventFragment.DateSelectedListener/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/show-date-picker-dialog.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/showTimePickerDialog/#com.bugoff.can_do.organizer.CreateEventFragment.TimeSelectedListener/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/show-time-picker-dialog.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/updateButtonText/#Button#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/update-button-text.html
+$dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity///PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/index.html
+$dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/EventDetailsActivity/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/-event-details-activity.html
+$dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/fetchEventDetails/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/fetch-event-details.html
+$dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/on-create.html
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment///PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/index.html
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment/EventsFragment/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/-events-fragment.html
 $dokka.location:com.bugoff.can_do.organizer/EventsFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-events-fragment/on-create-view.html
