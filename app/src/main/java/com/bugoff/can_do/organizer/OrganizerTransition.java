@@ -44,6 +44,7 @@ public class OrganizerTransition extends AppCompatActivity {
                         Toast.makeText(this, "Failed to check facility data", Toast.LENGTH_SHORT).show()
                 );
     }
+
     private void promptUserToCreateFacility() {
         setContentView(R.layout.activity_facility_edit);
 
@@ -53,6 +54,7 @@ public class OrganizerTransition extends AppCompatActivity {
         Button continueButton = findViewById(R.id.saveFacilityButton);
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
+
     private void navigateToNextActivity() {
         Intent intent = new Intent(this, OrganizerMain.class); // Replace NewActivity with the target activity class
         startActivity(intent);
@@ -80,6 +82,7 @@ public class OrganizerTransition extends AppCompatActivity {
         if (facility == null) {
             facility = new Facility(currentUser);
             currentUser.setFacility(facility); // Ensure bidirectional reference
+            currentUser.setRemote(); // Persist the facilityId to Firestore
         }
 
         // Set the facility properties

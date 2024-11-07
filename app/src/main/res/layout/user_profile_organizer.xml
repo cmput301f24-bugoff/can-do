@@ -96,7 +96,7 @@
             android:text="Edit Email" />
 
         <Button
-            android:id="@+id/pnumber_button"
+            android:id="@+id/add_pnumber_button"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:text="Add Phone Number" />

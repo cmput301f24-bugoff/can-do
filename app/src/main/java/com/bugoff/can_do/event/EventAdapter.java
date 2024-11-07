@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bugoff.can_do.R;
 
 import java.text.SimpleDateFormat;
@@ -84,8 +83,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             String dates = "Registration: " + registrationStart + " - " + registrationEnd +
                     " | Event: " + eventStart + " - " + eventEnd;
             textViewDates.setText(dates);
-
-            String participants = event.getMaxNumberOfParticipants() + " / " + event.getMaxNumberOfParticipants() + " Participants";
             textViewParticipants.setText(participants);
 
             // Set click listener

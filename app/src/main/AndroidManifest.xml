@@ -28,11 +28,12 @@
 
         <activity android:name=".organizer.OrganizerTransition" />
         <activity android:name=".organizer.OrganizerMain" />
+        <activity android:name=".organizer.FacilityEdit" />
 
 
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".NotificationSettingsActivity" />
 
-        <activity android:name=".NotificationsActivity" />
+        <activity android:name=".NotificationsActivity" android:exported="true"/>
     </application>
 </manifest>

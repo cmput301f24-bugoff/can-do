@@ -5,14 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Name"
-        android:textSize="22dp"
-        android:padding="20dp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="#56457A"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_add_pnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Phone Number"
+            android:textSize="22dp"
+            android:padding="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#56457A"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/title_edit_pnumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Phone Number"
+            android:textSize="22dp"
+            android:padding="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#56457A"
+            android:visibility="invisible"/>
+    </FrameLayout>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -27,13 +45,24 @@
             android:background="@color/background_fill" >
 
             <EditText
-                android:id="@+id/input_first_name"
+                android:id="@+id/input_add_pnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_margin="8dp"
-                android:text="FirstName"
-                android:textSize="20sp" />
+                android:hint="Enter phone number"
+                android:textSize="20sp"
+                android:visibility="visible"/>
+
+            <EditText
+                android:id="@+id/input_edit_pnumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_margin="8dp"
+                android:text="1234567890"
+                android:textSize="20sp"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -59,20 +88,31 @@
             android:background="@color/background_fill" >
 
             <EditText
-                android:id="@+id/input_last_name"
+                android:id="@+id/input_verify_pnumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_margin="8dp"
-                android:text="LastName"
+                android:hint="Verify phone number"
                 android:textSize="20sp" />
 
             <ImageView
+                android:id="@+id/verify_incorrect_pnumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="315dp"
                 android:layout_marginTop="20dp"
-                app:srcCompat="@drawable/edit_24px" />
+                android:visibility="visible"
+                app:srcCompat="?android:attr/alertDialogIcon" />
+
+            <ImageView
+                android:id="@+id/verify_correct_pnumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="315dp"
+                android:layout_marginTop="20dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/check_24px" />
 
         </FrameLayout>
 
