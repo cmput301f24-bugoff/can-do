@@ -196,6 +196,7 @@ $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/onCreateView/#La
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setDate/#java.util.Date#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/set-date.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setTime/#java.util.Date#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/set-time.html
+$dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupBackButton/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/setup-back-button.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupCreateEventButton/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/setup-create-event-button.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupDateTimePickers/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/setup-date-time-pickers.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/showDatePickerDialog/#com.bugoff.can_do.organizer.CreateEventFragment.DateSelectedListener/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/show-date-picker-dialog.html
