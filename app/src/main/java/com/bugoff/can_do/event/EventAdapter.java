@@ -85,8 +85,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     " | Event: " + eventStart + " - " + eventEnd;
             textViewDates.setText(dates);
 
-            // TODO: Show current number of participants out of max number of participants
-            // textViewParticipants.setText(participants);
+            String participants = event.getMaxNumberOfParticipants() + " / " + event.getMaxNumberOfParticipants() + " Participants";
+            textViewParticipants.setText(participants);
 
             // Set click listener
             itemView.setOnClickListener(v -> listener.onItemClick(event));
