@@ -331,6 +331,7 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/addPNumberDialog/#/Pointin
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editEmailDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-email-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editNameDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-name-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editPNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-p-number-dialog.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/generateAvatar/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/generate-avatar.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
 $dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
