@@ -31,6 +31,8 @@
         <activity android:name=".organizer.FacilityEdit" />
 
         <activity android:name=".organizer.EventDetailsActivity" />
+        <activity android:name=".user.EventDetailActivityEntrant" />
+
 
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".NotificationSettingsActivity" />
