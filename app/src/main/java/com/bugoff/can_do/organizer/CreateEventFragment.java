@@ -305,6 +305,7 @@ public class CreateEventFragment extends Fragment {
         newEvent.setEventEndDate(eventEndDate);
         newEvent.setMaxNumberOfParticipants(maxNumParticipants);
         newEvent.setGeolocationRequired(isGeolocationRequired);
+        newEvent.setQrCodeHash("cando-" + newEvent.getId());
 
         // Save the Event to Firestore using GlobalRepository
         GlobalRepository.addEvent(newEvent).addOnCompleteListener(task -> {

@@ -30,6 +30,7 @@
         <activity android:name=".organizer.OrganizerMain" />
         <activity android:name=".organizer.FacilityEdit" />
 
+        <activity android:name=".organizer.EventDetailsActivity" />
 
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".NotificationSettingsActivity" />
