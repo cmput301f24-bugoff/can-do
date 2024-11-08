@@ -126,9 +126,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             Toast.makeText(this, "Successfully left the waiting list.", Toast.LENGTH_SHORT).show();
         });
 
-        leaveWaitingListButton.setOnClickListener(v -> {
-        });
-
         editGraphButton.setOnClickListener(v -> {
             // Handle edit graph action
             Toast.makeText(this, "Edit Graph clicked", Toast.LENGTH_SHORT).show();

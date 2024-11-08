@@ -28,7 +28,7 @@ public class OrganizerMain extends AppCompatActivity {
 
                 if (id == R.id.nav_home_organizer) {
                     Log.d(TAG, "Home clicked");
-                    // Replace with your home fragment or activity
+                    // Replace with home fragment or activity
                     return true;
                 } else if (id == R.id.nav_events_organizer) {
                     Log.d(TAG, "Events clicked");
