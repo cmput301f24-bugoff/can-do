@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"> <!-- Added top margin -->
+    android:layout_height="match_parent">
 
     <!-- Action bar-like back navigation and title container -->
-
     <LinearLayout
         android:id="@+id/notif_set_top_layout"
         android:layout_width="match_parent"
@@ -45,42 +44,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notif_set_top_layout">
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_admin_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Admin notifications"
             android:textSize="16sp"
-            app:switchMinWidth="56dp"
-            app:thumbTint="@color/white"
-            app:trackTint="@color/purple" />
+            app:useMaterialThemeColors="true" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_organizer_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Organizer notifications"
             android:textSize="16sp"
-            app:switchMinWidth="56dp"
-            app:thumbTint="@color/white"
-            app:trackTint="@color/purple" />
+            app:useMaterialThemeColors="false" />
 
-        <androidx.appcompat.widget.SwitchCompat
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_push_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="Push notifications"
             android:textSize="16sp"
-            app:switchMinWidth="56dp"
-            app:thumbTint="@color/white"
-            app:trackTint="@color/purple" />
+            app:useMaterialThemeColors="true" />
     </LinearLayout>
-
-    <!-- Organizer Notifications Switch -->
-
-    <!-- Admin Notifications Switch -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

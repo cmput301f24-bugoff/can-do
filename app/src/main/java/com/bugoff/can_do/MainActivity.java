@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.user.QrCodeScannerFragment;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

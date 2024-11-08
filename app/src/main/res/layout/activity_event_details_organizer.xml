@@ -20,5 +20,11 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Add more TextViews or Views for other event details -->
+    <ImageView
+        android:id="@+id/idIVQrcode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="50dp" />
+
+
 </LinearLayout>

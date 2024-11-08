@@ -173,6 +173,15 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Retrieves an Event object from the database based on its ID.
+     *
+     * @param eventId The ID of the event to retrieve.
+     * @return A {@link Task} that represents the asynchronous operation of retrieving the event.
+     *         If the event is found, the task will be successful and the result will contain the Event object.
+     *         If the event is not found or an error occurs during retrieval, the task will fail with an exception.
+     * @throws NullPointerException If the provided eventId is null.
+     */
     @NonNull
     public static Task<Event> getEvent(String eventId) {
         TaskCompletionSource<Event> taskCompletionSource = new TaskCompletionSource<>();
