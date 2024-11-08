@@ -24,7 +24,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+/**
+ * Represents a facility in the system.
+ *
+ * <p>A Facility has an owner (User), a name, an address, and a list of events.
+ * It implements the DatabaseEntity interface, meaning it can be serialized and
+ * deserialized to/from a database.</p>
+ */
 public class Facility implements DatabaseEntity {
     // data fields
     private String id;
@@ -36,7 +42,13 @@ public class Facility implements DatabaseEntity {
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
-
+    /**
+     * Constructs a new Facility with the specified owner.
+     *
+     * <p>The facility's ID is set to the owner's ID, and the owner is linked to this facility.</p>
+     *
+     * @param owner The owner (organizer) of the facility. Must not be null.
+     */
     public Facility(@NonNull User owner) {
         this.id = owner.getId(); // The id of the facility is the Android ID of the user
         this.owner = owner;
@@ -46,8 +58,13 @@ public class Facility implements DatabaseEntity {
         this.events = new ArrayList<>();
         this.db = FirestoreHelper.getInstance().getDb();
     }
-
-    // Constructor from Firestore document
+    /**
+     * Constructs a Facility from a Firestore document.
+     *
+     * <p>The events are deserialized asynchronously.</p>
+     *
+     * @param doc The Firestore DocumentSnapshot representing the facility. Must not be null.
+     */
     public Facility(@NonNull DocumentSnapshot doc) {
         this.id = doc.getId();
         this.owner = deserializeUser(doc.getString("ownerId"));
@@ -59,7 +76,12 @@ public class Facility implements DatabaseEntity {
         // Deserialize events asynchronously
         deserializeEvents(doc.get("events"));
     }
-
+    /**
+     * Deserializes a User object from a given user ID.
+     *
+     * @param userId The ID of the user to deserialize.
+     * @return The User object corresponding to the given ID, or null if not found.
+     */
     private User deserializeUser(String userId) {
         if (userId != null) {
             // Fetch the User object asynchronously
@@ -73,7 +95,11 @@ public class Facility implements DatabaseEntity {
         }
         return null; // Actual user will be set asynchronously
     }
-
+    /**
+     * Deserializes events from Firestore data.
+     *
+     * @param data The Firestore data representing event IDs.
+     */
     private void deserializeEvents(Object data) {
         if (data instanceof List<?>) {
             List<?> eventIds = (List<?>) data;
@@ -101,7 +127,12 @@ public class Facility implements DatabaseEntity {
         }
     }
 
-    // Serialization helper methods
+    /**
+     * Serializes a list of events into a list of event IDs.
+     *
+     * @param events The list of Event objects to serialize.
+     * @return A list of event IDs corresponding to the given events.
+     */
     private List<String> serializeEvents(List<Event> events) {
         List<String> eventIds = new ArrayList<>();
         for (Event event : events) {
@@ -109,12 +140,20 @@ public class Facility implements DatabaseEntity {
         }
         return eventIds;
     }
-
+    /**
+     * Gets the unique identifier of the facility.
+     *
+     * @return The facility's unique identifier.
+     */
     @Override
     public String getId() {
         return id;
     }
-
+    /**
+     * Converts the Facility object into a Map suitable for serialization to a database.
+     *
+     * @return A Map containing the Facility's data fields as key-value pairs.
+     */
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -125,55 +164,104 @@ public class Facility implements DatabaseEntity {
         map.put("events", serializeEvents(events));
         return map;
     }
-
+    /**
+     * Gets the owner of the facility.
+     *
+     * @return The User who owns the facility.
+     */
     public User getOwner() {
         return owner;
     }
-
+    /**
+     * Sets the owner of the facility and updates the remote database.
+     *
+     * <p>This method also logs the owner's ID and synchronizes the change with the database.</p>
+     *
+     * @param user The new owner to set for the facility.
+     */
     public void setOwner(User user) {
         Log.d("Facility", "Setting owner to: " + user.getId());
         this.owner = user;
         setRemote();
     }
-
+    /**
+     * Gets the name of the facility.
+     *
+     * @return The name of the facility.
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * Sets the name of the facility and updates the remote database.
+     *
+     * @param name The new name to set for the facility.
+     */
     public void setName(String name) {
         this.name = name;
         setRemote();
     }
-
+    /**
+     * Gets an unmodifiable list of events held at the facility.
+     *
+     * @return An unmodifiable List of Event objects.
+     */
     public List<Event> getEvents() {
         return Collections.unmodifiableList(events);
     }
-
+    /**
+     * Sets the list of events held at the facility and updates the remote database.
+     *
+     * @param events The new list of events to associate with the facility.
+     */
     public void setEvents(List<Event> events) {
         this.events = events;
         setRemote();
     }
-
+    /**
+     * Gets the physical address of the facility.
+     *
+     * @return The facility's address.
+     */
     public String getAddress() {
         return address;
     }
-
+    /**
+     * Sets the physical address of the facility and updates the remote database.
+     *
+     * @param address The new address to set for the facility.
+     */
     public void setAddress(String address) {
         this.address = address;
         setRemote();
     }
-
+    /**
+     * Adds an event to the facility's list of events and updates the remote database.
+     *
+     * @param event The Event to add to the facility. Must not be null.
+     */
     public void addEvent(@NonNull Event event) {
         events.add(event);
         setRemote();
     }
-
+    /**
+     * Removes an event from the facility's list of events and updates the remote database.
+     *
+     * <p>This method also detaches any listeners associated with the removed event.</p>
+     *
+     * @param event The Event to remove from the facility.
+     */
     public void removeEvent(Event event) {
         events.remove(event);
         event.detachListener();
         setRemote();
     }
-
+    /**
+     * Saves or updates the facility in the remote Firestore database.
+     *
+     * <p>This method serializes the facility's data and sends it to Firestore with merge options
+     * to allow partial updates.</p>
+     */
     // Method to save the facility to Firestore
     @Override
     public void setRemote() {
@@ -190,7 +278,11 @@ public class Facility implements DatabaseEntity {
                     Log.e("Firestore", "Error saving or updating facility", e);
                 });
     }
-
+    /**
+     * Retrieves a list of event IDs associated with the facility.
+     *
+     * @return A List of event IDs as Strings.
+     */
     @NonNull
     private List<String> getEventIds() {
         List<String> eventIds = new ArrayList<>();
@@ -199,7 +291,12 @@ public class Facility implements DatabaseEntity {
         }
         return eventIds;
     }
-
+    /**
+     * Attaches a real-time listener to the facility document in Firestore.
+     *
+     * <p>The listener will monitor changes to the facility's document in Firestore
+     * and update the facility's properties accordingly.</p>
+     */
     @Override
     public void attachListener() {
         DocumentReference facilityRef = GlobalRepository.getFacilitiesCollection().document(id);
@@ -242,7 +339,15 @@ public class Facility implements DatabaseEntity {
             }
         });
     }
-
+    /**
+     * Fetches events from Firestore in batches using the 'whereIn' query.
+     *
+     * <p>This method processes the provided list of event IDs in batches of 10 to optimize
+     * Firestore queries. Each batch is fetched asynchronously, and any events retrieved are
+     * added to the facility's event list.</p>
+     *
+     * @param eventIds The list of event IDs to fetch.
+     */
     // Method to fetch events in batches using whereIn
     private void fetchRemoteEventsInBatches(@NonNull List<String> eventIds) {
         // Process in batches of 10
@@ -269,7 +374,15 @@ public class Facility implements DatabaseEntity {
         }
         // onEventsLoaded();
     }
-
+    /**
+     * Updates the local events list based on a provided list of event IDs.
+     *
+     * <p>This method determines which events need to be added or removed from the facility.
+     * Any events that are no longer associated with the facility are removed, while new events
+     * are fetched and added asynchronously.</p>
+     *
+     * @param eventIds The list of event IDs that represent the current state of events for the facility.
+     */
     // Update local events based on the list of event IDs
     private void updateLocalEventIds(@NonNull List<String> eventIds) {
         // Determine which events to add or remove
@@ -313,7 +426,12 @@ public class Facility implements DatabaseEntity {
                     });
         }
     }
-
+    /**
+     * Detaches the real-time listener from the facility document in Firestore.
+     *
+     * <p>This method is called when the facility no longer needs to be monitored, such as when
+     * the app is closed or the ViewModel is cleared, to prevent memory leaks.</p>
+     */
     // Stop listening to the events when it's no longer needed
     @Override
     public void detachListener() {
@@ -322,20 +440,36 @@ public class Facility implements DatabaseEntity {
             listener = null;
         }
     }
-
+    /**
+     * Notifies listeners that the events list has been updated.
+     *
+     * <p>This method logs the update and triggers the onUpdateListener to notify any attached listeners.</p>
+     */
     private void onEventsUpdated() {
         // Notify that the events list has been updated
         Log.d("Facility", "Events list updated");
         onUpdate(); // Trigger the onUpdateListener
     }
-
+    /**
+     * Triggers the onUpdateListener when the facility's data is updated.
+     *
+     * <p>This method is called whenever any property of the facility changes,
+     * such as the name, address, or events list.</p>
+     */
     @Override
     public void onUpdate() {
         if (onUpdateListener != null) {
             onUpdateListener.run();
         }
     }
-
+    /**
+     * Sets a listener to be called when the facility is updated.
+     *
+     * <p>This listener can be used by other components to respond to changes
+     * in the facility's data, such as refreshing the UI when events are modified.</p>
+     *
+     * @param listener A Runnable to execute on facility updates.
+     */
     @Override
     public void setOnUpdateListener(Runnable listener) {
         this.onUpdateListener = listener;

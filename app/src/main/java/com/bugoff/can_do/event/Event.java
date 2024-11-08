@@ -122,7 +122,7 @@ public class Event implements DatabaseEntity {
     /**
      * Deserialize a list of user IDs from Firestore and populate the provided list.
      *
-     * @param data The raw data from Firestore.
+     * @param data       The raw data from Firestore.
      * @param targetList The list to populate with user IDs.
      */
     private void deserializeUserList(Object data, List<String> targetList) {
@@ -140,7 +140,7 @@ public class Event implements DatabaseEntity {
     /**
      * Deserialize entrants' locations from Firestore and populate the provided map.
      *
-     * @param data The raw data from Firestore.
+     * @param data      The raw data from Firestore.
      * @param targetMap The map to populate with user IDs and their locations.
      */
     private void deserializeEntrantsLocations(Object data, Map<String, Location> targetMap) {
@@ -166,7 +166,7 @@ public class Event implements DatabaseEntity {
     /**
      * Deserialize entrant statuses from Firestore and populate the provided map.
      *
-     * @param data The raw data from Firestore.
+     * @param data      The raw data from Firestore.
      * @param targetMap The map to populate with user IDs and their statuses.
      */
     private void deserializeEntrantStatuses(Object data, Map<String, EntrantStatus> targetMap) {
@@ -446,7 +446,15 @@ public class Event implements DatabaseEntity {
         }
     }
 
-    // Method to save the event to Firestore
+    /**
+     * Saves the current event data to Firestore. This method transforms the current
+     * event object into a Map format compatible with Firestore and updates the event
+     * document with the specified ID in the "Events" Firestore collection.
+     *
+     * If the save operation is successful, a log entry is generated indicating
+     * the event was updated successfully. In case of a failure, an error message
+     * is logged.
+     */
     @Override
     public void setRemote() {
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
@@ -460,35 +468,46 @@ public class Event implements DatabaseEntity {
                 });
     }
 
+    /**
+     * Attaches a snapshot listener to the Firestore document corresponding to this
+     * event. This listener will monitor real-time changes in the event document and
+     * automatically update the local instance fields whenever changes are detected in
+     * Firestore.
+     *
+     * Upon detecting a change:
+     * - If there is an updated facility ID, it fetches the updated Facility object,
+     *   ensuring a bidirectional reference between Event and Facility.
+     * - Other event details such as name, description, dates, and participant limits
+     *   are also updated locally.
+     *
+     * If there are changes, it calls `onUpdate()` to notify any listeners of these updates.
+     * Error handling includes logging failures to fetch the updated facility or
+     * listen to event changes.
+     */
     @Override
     public void attachListener() {
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
-        // Attach a snapshot listener to the Event document
         listener = eventRef.addSnapshotListener((documentSnapshot, e) -> {
             if (e != null) {
                 Log.e("Firestore", "Error listening to event changes for event: " + id, e);
                 return;
             }
             if (documentSnapshot != null && documentSnapshot.exists()) {
-                // Update local fields with data from Firestore
                 String updatedFacilityId = documentSnapshot.getString("facilityId");
                 AtomicBoolean isChanged = new AtomicBoolean(false);
                 if (updatedFacilityId != null && !updatedFacilityId.equals(this.facility.getId())) {
-                    // Fetch the updated Facility object
                     GlobalRepository.getFacility(updatedFacilityId)
                             .addOnSuccessListener(facility -> {
                                 this.facility = facility;
-                                this.facility.addEvent(this); // Ensure bidirectional reference
+                                this.facility.addEvent(this);
                                 isChanged.set(true);
-                                onUpdate(); // Notify listeners about the update
+                                onUpdate();
                             })
                             .addOnFailureListener(error -> {
                                 Log.e("Firestore", "Error fetching updated facility for event: " + id, error);
                             });
-                    // Early return since facility fetching is asynchronous
                     return;
                 }
-                // Update other fields
                 this.name = documentSnapshot.getString("name");
                 this.description = documentSnapshot.getString("description");
                 this.qrCodeHash = documentSnapshot.getString("qrCodeHash");
@@ -496,9 +515,11 @@ public class Event implements DatabaseEntity {
                 this.registrationEndDate = documentSnapshot.getDate("registrationEndDate");
                 this.eventStartDate = documentSnapshot.getDate("eventStartDate");
                 this.eventEndDate = documentSnapshot.getDate("eventEndDate");
-                this.maxNumberOfParticipants = documentSnapshot.getLong("maxNumberOfParticipants") != null ? documentSnapshot.getLong("maxNumberOfParticipants").intValue() : 0;
+                this.maxNumberOfParticipants = documentSnapshot.getLong("maxNumberOfParticipants") != null
+                        ? documentSnapshot.getLong("maxNumberOfParticipants").intValue()
+                        : 0;
                 this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
-                this.imageUrl = documentSnapshot.getString("imageUrl"); // Update imageUrl
+                this.imageUrl = documentSnapshot.getString("imageUrl");
 
                 // Deserialize complex fields
                 this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));
@@ -506,13 +527,21 @@ public class Event implements DatabaseEntity {
                 this.entrantStatuses = deserializeEntrantStatuses(documentSnapshot.get("entrantStatuses"));
                 this.selectedEntrants = deserializeUserList(documentSnapshot.get("selectedEntrants"));
                 this.enrolledEntrants = deserializeUserList(documentSnapshot.get("enrolledEntrants"));
+
                 if (isChanged.get()) {
-                    onUpdate(); // Notify listeners about the update
+                    onUpdate();
                 }
             }
         });
     }
 
+    /**
+     * Detaches the snapshot listener from the Firestore document. This stops real-time
+     * updates for this event instance, helping to reduce network usage and unnecessary
+     * updates if the event is no longer being monitored.
+     *
+     * After detaching, a log entry is generated to confirm the listener was removed.
+     */
     @Override
     public void detachListener() {
         if (listener != null) {
@@ -522,6 +551,11 @@ public class Event implements DatabaseEntity {
         }
     }
 
+    /**
+     * Invokes the `onUpdateListener` if it's set. This method is used to notify
+     * any external components that a change has occurred in this event instance,
+     * allowing for real-time updates to UI or other elements based on event changes.
+     */
     @Override
     public void onUpdate() {
         if (onUpdateListener != null) {
@@ -529,8 +563,16 @@ public class Event implements DatabaseEntity {
         }
     }
 
+    /**
+     * Registers an `onUpdateListener` for this event instance. The listener will be
+     * triggered whenever there is an update in the event's data, allowing the caller
+     * to handle updates through a custom Runnable action.
+     *
+     * @param listener A Runnable that defines the actions to be executed on update.
+     */
     @Override
     public void setOnUpdateListener(Runnable listener) {
         this.onUpdateListener = listener;
     }
+
 }
