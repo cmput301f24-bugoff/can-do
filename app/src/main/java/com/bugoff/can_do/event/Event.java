@@ -46,6 +46,7 @@ public class Event implements DatabaseEntity {
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
+    private String imageUrl; // Added field for the image URL
 
     // Default constructor
     public Event(@NonNull Facility facility) {
@@ -65,6 +66,7 @@ public class Event implements DatabaseEntity {
         this.entrantStatuses = new HashMap<>();
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
+        this.imageUrl = "";
         facility.addEvent(this); // Ensure bidirectional reference
     }
 
@@ -81,7 +83,7 @@ public class Event implements DatabaseEntity {
         this.eventEndDate = doc.getDate("eventEndDate");
         this.maxNumberOfParticipants = doc.getLong("maxNumberOfParticipants") != null ? Objects.requireNonNull(doc.getLong("maxNumberOfParticipants")).intValue() : 0;
         this.geolocationRequired = doc.getBoolean("geolocationRequired") != null ? doc.getBoolean("geolocationRequired") : Boolean.FALSE;
-
+        this.imageUrl = doc.getString("imageUrl"); // Retrieve imageUrl from Firestore
         // Initialize user lists
         this.waitingListEntrants = new ArrayList<>();
         this.entrantsLocations = new HashMap<>();
@@ -115,6 +117,7 @@ public class Event implements DatabaseEntity {
         map.put("entrantStatuses", serializeEntrantStatuses(entrantStatuses));
         map.put("selectedEntrants", serializeUserList(selectedEntrants));
         map.put("enrolledEntrants", serializeUserList(enrolledEntrants));
+        map.put("imageUrl", imageUrl); // Include imageUrl in the map
         return map;
     }
 
@@ -260,6 +263,14 @@ public class Event implements DatabaseEntity {
         return id;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public Facility getFacility() {
         return facility;
     }
@@ -275,6 +286,7 @@ public class Event implements DatabaseEntity {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getDescription() {
         return description;
@@ -439,6 +451,7 @@ public class Event implements DatabaseEntity {
                 this.eventEndDate = documentSnapshot.getDate("eventEndDate");
                 this.maxNumberOfParticipants = documentSnapshot.getLong("maxNumberOfParticipants") != null ? documentSnapshot.getLong("maxNumberOfParticipants").intValue() : 0;
                 this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
+                this.imageUrl = documentSnapshot.getString("imageUrl"); // Update imageUrl
 
                 // Deserialize complex fields
                 this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));

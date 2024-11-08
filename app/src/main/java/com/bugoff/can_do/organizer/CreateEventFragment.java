@@ -1,9 +1,16 @@
 package com.bugoff.can_do.organizer;
 
+import static android.app.PendingIntent.getActivity;
+
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +21,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -32,9 +41,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
-
+    private Button buttonUploadImage;
+    private Uri imageUri; // To store the selected image URI
     private EditText editTextEventName;
     private EditText editTextEventDescription;
     private Button buttonRegStartDate;
@@ -73,16 +87,65 @@ public class CreateEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_event, container, false);
     }
-
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
         setupDateTimePickers();
         setupCreateEventButton();
+        setupImagePicker();
     }
 
+    private void setupImagePicker() {
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            imageUri = data.getData();
+                            Toast.makeText(getContext(), "Image selected", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
+        buttonUploadImage.setOnClickListener(v -> openImagePicker());
+    }
+    private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("event_images/" + event.getId() + ".jpg");
+
+        UploadTask uploadTask = imageRef.putFile(imageUri);
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String imageUrl = uri.toString();
+                event.setImageUrl(imageUrl);
+                saveEventToDatabase(event);
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+        });
+    }
+    private void saveEventToDatabase(Event event) {
+        GlobalRepository.addEvent(event).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+                navigateToOrganizerMain();
+            } else {
+                Toast.makeText(getContext(), "Failed to create event: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("CreateEventFragment", "Error creating event", task.getException());
+            }
+        });
+    }
+
+
     private void initializeViews(@NonNull View view) {
+        buttonUploadImage = view.findViewById(R.id.buttonUploadPicture);
         editTextEventName = view.findViewById(R.id.editTextEventName);
         editTextEventDescription = view.findViewById(R.id.editTextEventDescription);
         buttonRegStartDate = view.findViewById(R.id.buttonRegStartDate);
@@ -227,6 +290,11 @@ public class CreateEventFragment extends Fragment {
         buttonCreateEvent.setOnClickListener(v -> createEvent());
     }
 
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        imagePickerLauncher.launch(intent);
+    }
+
     private void createEvent() {
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
@@ -306,6 +374,7 @@ public class CreateEventFragment extends Fragment {
         newEvent.setMaxNumberOfParticipants(maxNumParticipants);
         newEvent.setGeolocationRequired(isGeolocationRequired);
         newEvent.setQrCodeHash("cando-" + newEvent.getId());
+        newEvent.setImageUrl(String.valueOf(imageUri));
 
         // Save the Event to Firestore using GlobalRepository
         GlobalRepository.addEvent(newEvent).addOnCompleteListener(task -> {
@@ -318,6 +387,7 @@ public class CreateEventFragment extends Fragment {
             }
         });
     }
+
 
     private void navigateToOrganizerMain() {
         Intent intent = new Intent(getActivity(), OrganizerMain.class);
