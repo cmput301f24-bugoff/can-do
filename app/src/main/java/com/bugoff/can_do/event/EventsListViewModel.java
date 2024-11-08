@@ -20,6 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * ViewModel responsible for managing and providing a list of events for the current user's facility.
+ * Retrieves data from Firebase and listens for real-time updates. Exposes LiveData objects
+ * for observing the list of events and error messages.
+ */
 public class EventsListViewModel extends ViewModel {
 
     private static final String TAG = "EventsListViewModel";
@@ -28,14 +33,19 @@ public class EventsListViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     private ListenerRegistration listenerRegistration;
+    private final List<ListenerRegistration> eventListeners = new ArrayList<>(); // Event listeners to detach upon clearing
 
-    // Keep track of Event listeners to detach them when ViewModel is cleared
-    private final List<ListenerRegistration> eventListeners = new ArrayList<>();
-
+    /**
+     * Constructs a new EventsListViewModel and initiates the fetch of event data.
+     */
     public EventsListViewModel() {
         fetchEvents();
     }
 
+    /**
+     * Fetches the list of events associated with the current user's facility and updates the LiveData.
+     * If the user or their associated facility is null, sets an error message in LiveData.
+     */
     private void fetchEvents() {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null || currentUser.getFacility() == null) {
@@ -68,6 +78,7 @@ public class EventsListViewModel extends ViewModel {
                             final int total = documents.size();
                             final AtomicInteger counter = new AtomicInteger(0);
 
+                            // Process each document to fetch event data and its facility
                             for (DocumentSnapshot doc : documents) {
                                 String facilityId = doc.getString("facilityId");
                                 GlobalRepository.getFacility(facilityId).addOnCompleteListener(task -> {
@@ -77,11 +88,8 @@ public class EventsListViewModel extends ViewModel {
                                             Event event = new Event(eventFacility, doc);
                                             fetchedEvents.add(event);
 
-                                            // Set up onUpdateListener for each Event
-                                            event.setOnUpdateListener(() -> {
-                                                // Trigger LiveData update when any Event is updated
-                                                refreshEventsList();
-                                            });
+                                            // Set up onUpdateListener for each Event to update LiveData when Event changes
+                                            event.setOnUpdateListener(() -> refreshEventsList());
                                         } else {
                                             Log.w(TAG, "Facility not found for event: " + doc.getId());
                                         }
@@ -89,9 +97,8 @@ public class EventsListViewModel extends ViewModel {
                                         Log.e(TAG, "Error fetching facility for event: " + doc.getId(), task.getException());
                                     }
 
-                                    // Increment the counter and check if all tasks are completed
+                                    // When all documents are processed, update LiveData
                                     if (counter.incrementAndGet() == total) {
-                                        // All tasks have completed
                                         eventsList.postValue(new ArrayList<>(fetchedEvents));
                                     }
                                 });
@@ -106,23 +113,38 @@ public class EventsListViewModel extends ViewModel {
 
     /**
      * Refreshes the events list LiveData to notify observers of any changes.
+     * This is typically called when an event in the list is updated.
      */
     private void refreshEventsList() {
         if (eventsList.getValue() != null) {
-            // Create a new list to trigger LiveData observers
+            // Create a new list instance to trigger LiveData observers
             List<Event> updatedList = new ArrayList<>(eventsList.getValue());
             eventsList.postValue(updatedList);
         }
     }
 
+    /**
+     * Returns the LiveData object representing the list of events.
+     *
+     * @return A LiveData object containing the list of events.
+     */
     public LiveData<List<Event>> getEventsList() {
         return eventsList;
     }
 
+    /**
+     * Returns the LiveData object containing error messages.
+     *
+     * @return A LiveData object with the error message, or null if no error occurred.
+     */
     public LiveData<String> getErrorMessage() {
         return errorMessage;
     }
 
+    /**
+     * Cleans up resources when the ViewModel is no longer needed.
+     * Removes the Firebase listener registration for events and any Event listeners.
+     */
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -135,3 +157,4 @@ public class EventsListViewModel extends ViewModel {
         }
     }
 }
+

@@ -22,6 +22,10 @@ import com.bugoff.can_do.user.UserAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment to display details of a selected event, including a list of users associated with the event.
+ * Shows a RecyclerView of users, and manages visibility of a progress bar and empty state message.
+ */
 public class EventSelectedFragment extends Fragment {
 
     private static final String TAG = "EventSelectedFragment";
@@ -33,15 +37,22 @@ public class EventSelectedFragment extends Fragment {
 
     private List<User> userList = new ArrayList<>();
 
-    private String eventId;
+    private String eventId; // ID of the selected event, used to fetch relevant data
 
-    private EventViewModel viewModel;
+    private EventViewModel viewModel; // ViewModel to manage event data
 
+    /**
+     * Default constructor required for fragment instantiation.
+     */
     public EventSelectedFragment() {
         // Required empty public constructor
     }
 
-    // If passing arguments
+    /**
+     * Initializes the fragment, extracting the event ID from arguments if available.
+     *
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +65,26 @@ public class EventSelectedFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     *
+     * @param inflater           LayoutInflater used to inflate views in the fragment.
+     * @param container          Parent view that the fragment's UI will attach to.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     * @return The root view of the inflated layout.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event_selected, container, false);
     }
 
+    /**
+     * Sets up the RecyclerView, initializes the ViewModel, and observes LiveData when the view is created.
+     *
+     * @param view               The root view of the fragment's layout.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -68,12 +92,12 @@ public class EventSelectedFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar_selected);
         emptyTextView = view.findViewById(R.id.text_view_empty_selected);
 
-        // Initialize RecyclerView
+        // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userAdapter = new UserAdapter(userList);
         recyclerView.setAdapter(userAdapter);
 
-        // Initialize ViewModel
+        // Initialize ViewModel using a factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
@@ -96,7 +120,7 @@ public class EventSelectedFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         });
 
-        // Observe error messages
+        // Observe error messages from ViewModel
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 progressBar.setVisibility(View.GONE);
