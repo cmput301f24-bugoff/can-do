@@ -1,0 +1,547 @@
+@startuml UML_Class_Diagram
+left to right direction
+
+skinparam class {
+    BackgroundColor<<interface>> LightYellow
+    BackgroundColor<<abstract>> LightBlue
+    ArrowColor Black
+    FontSize 12
+}
+
+package "Entities" {
+    interface DatabaseEntity {
+        + String getId()
+        + Map<String, Object> toMap()
+        + void setRemote()
+        + void attachListener()
+        + void detachListener()
+        + void onUpdate()
+        + void setOnUpdateListener(Runnable listener)
+    }
+
+    class Event {
+        - String id
+        - Facility facility
+        - String name
+        - String description
+        - String qrCodeHash
+        - Date registrationStartDate
+        - Date registrationEndDate
+        - Date eventStartDate
+        - Date eventEndDate
+        - Integer maxNumberOfParticipants
+        - Boolean geolocationRequired
+        - List<String> waitingListEntrants
+        - Map<String, Location> entrantsLocations
+        - Map<String, EntrantStatus> entrantStatuses
+        - List<String> selectedEntrants
+        - List<String> enrolledEntrants
+        - FirebaseFirestore db
+        - ListenerRegistration listener
+        - Runnable onUpdateListener
+        - String imageUrl
+        + Event(Facility facility)
+        + Event(Facility facility, DocumentSnapshot doc)
+        + Map<String, Object> toMap()
+        + void setRemote()
+        + void attachListener()
+        + void detachListener()
+        + void onUpdate()
+        + void setOnUpdateListener(Runnable listener)
+        - void deserializeUserList(Object data, List<String> targetList)
+        - void deserializeEntrantsLocations(Object data, Map<String, Location> targetMap)
+        - void deserializeEntrantStatuses(Object data, Map<String, EntrantStatus> targetMap)
+        + void addWaitingListEntrant(String userId)
+        + void removeWaitingListEntrant(String userId)
+        + void updateEntrantStatus(String userId, EntrantStatus status)
+        + void addSelectedEntrant(String userId)
+        + void removeSelectedEntrant(String userId)
+        + void enrollEntrant(String userId)
+    }
+
+    class Facility {
+        - String id
+        - User owner
+        - String name
+        - List<Event> events
+        - String address
+        - FirebaseFirestore db
+        - ListenerRegistration listener
+        - Runnable onUpdateListener
+        + Facility(User owner)
+        + Facility(DocumentSnapshot doc)
+        + String getId()
+        + Map<String, Object> toMap()
+        + void setRemote()
+        + void attachListener()
+        + void detachListener()
+        + void onUpdate()
+        + void setOnUpdateListener(Runnable listener)
+        + void setOwner(User user)
+        + void setName(String name)
+        + void setEvents(List<Event> events)
+        + void setAddress(String address)
+        + void addEvent(Event event)
+        + void removeEvent(Event event)
+        - void deserializeEvents(Object data)
+        - User deserializeUser(String userId)
+        - void updateLocalEventIds(List<String> eventIds)
+        - void fetchRemoteEventsInBatches(List<String> eventIds)
+    }
+
+    class User {
+        - String id
+        - String name
+        - String email
+        - String phoneNumber
+        - Boolean isAdmin
+        - Facility facility
+        - List<String> eventsJoined
+        - List<String> eventsEnrolled
+        - FirebaseFirestore db
+        - ListenerRegistration listener
+        - Runnable onUpdateListener
+        + User(String androidId)
+        + User(String id, String name, String email, String phoneNumber, Boolean isAdmin, Facility facility)
+        + User(DocumentSnapshot doc)
+        + void linkFacility(Facility facility)
+        + String getId()
+        + Map<String, Object> toMap()
+        + void setName(String name)
+        + void setEmail(String email)
+        + void setPhoneNumber(String phoneNumber)
+        + void setIsAdmin(Boolean isAdmin)
+        + void setFacility(Facility facility)
+        + void setEventsJoined(List<String> eventsJoined)
+        + void addEventJoined(String eventId)
+        + void removeEventJoined(String eventId)
+        + void setEventsEnrolled(List<String> eventsEnrolled)
+        + void addEventEnrolled(String eventId)
+        + void removeEventEnrolled(String eventId)
+        + void setRemote()
+        + void attachListener()
+        + void detachListener()
+        + void onUpdate()
+        + void setOnUpdateListener(Runnable listener)
+    }
+
+    class Notification {
+        - String id
+        - String type
+        - String content
+        + Notification()
+        + Notification(String id, String type, String content)
+    }
+}
+
+package "Helpers" {
+    class FirestoreHelper {
+        - static FirestoreHelper instance
+        - FirebaseFirestore db
+        + FirestoreHelper()
+        + static synchronized FirestoreHelper getInstance()
+        + FirebaseFirestore getDb()
+    }
+
+    class GlobalRepository {
+        - static CollectionReference usersCollection
+        - static CollectionReference facilitiesCollection
+        - static CollectionReference eventsCollection
+        - static User loggedInUser
+        + GlobalRepository()
+        + static User getLoggedInUser()
+        + static void setLoggedInUser(User user)
+        + FirebaseFirestore getDb()
+        + static CollectionReference getUsersCollection()
+        + static CollectionReference getFacilitiesCollection()
+        + static CollectionReference getEventsCollection()
+        + static Task<Void> addUser(User user)
+        + static Task<User> getUser(String androidId)
+        + static Task<Void> addFacility(Facility facility)
+        + static Task<Void> addEvent(Event event)
+        + static Task<Event> getEvent(String eventId)
+        + static Task<Facility> getFacility(String facilityId)
+    }
+
+    class UserAuthenticator {
+        + static Task<User> authenticateUser(String androidId)
+        - static void onUserNotFound(String androidId, TaskCompletionSource<User> taskCompletionSource)
+    }
+
+    class HandleQRScan {
+        - static final String TAG = "HandleQRScan"
+        + static void processQRCode(String qrCode, Context context)
+        - static void fetchEvent(String eventId, Context context)
+    }
+}
+
+package "Adapters" {
+    class EventAdapter {
+        - List<Event> eventList
+        - OnItemClickListener listener
+        + EventAdapter(List<Event> eventList, OnItemClickListener listener)
+        + void setEventList(List<Event> eventList)
+        + EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        + void onBindViewHolder(EventViewHolder holder, int position)
+        + int getItemCount()
+    }
+
+    class UserAdapter {
+        - List<User> users
+        + UserAdapter(List<User> users)
+        + void setUsers(List<User> users)
+        + UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        + void onBindViewHolder(UserViewHolder holder, int position)
+        + int getItemCount()
+    }
+
+    class NotificationAdapter {
+        - Context context
+        - List<String> notifications
+        + NotificationAdapter(Context context, List<String> notifications)
+        + View getView(int position, View convertView, ViewGroup parent)
+    }
+}
+
+package "ViewHolders" {
+    class EventViewHolder {
+        + void bind(Event event)
+    }
+
+    class UserViewHolder {
+        + void bind(User user)
+    }
+}
+
+package "ViewModels" {
+    class EventsListViewModel {
+        - MutableLiveData<List<Event>> eventsList
+        - MutableLiveData<String> errorMessage
+        - ListenerRegistration listenerRegistration
+        - List<ListenerRegistration> eventListeners
+        + EventsListViewModel()
+        - void fetchEvents()
+        - void refreshEventsList()
+        + LiveData<List<Event>> getEventsList()
+        + LiveData<String> getErrorMessage()
+        + void onCleared()
+    }
+
+    class EventViewModel {
+        - Event event
+        - MutableLiveData<String> eventName
+        - MutableLiveData<Facility> facility
+        - MutableLiveData<String> description
+        - MutableLiveData<Map<String, User>> waitingListUsers
+        - MutableLiveData<Map<String, User>> selectedEntrantsUsers
+        - MutableLiveData<Map<String, User>> enrolledEntrantsUsers
+        + EventViewModel(String eventId)
+        - void updateLiveData()
+        - void fetchUsersForList(List<String> userIds, MutableLiveData<Map<String, User>> targetLiveData)
+        + void addWaitingListEntrant(String userId)
+        + void removeWaitingListEntrant(String userId)
+        + void updateEntrantStatus(String userId, EntrantStatus status)
+        + void addSelectedEntrant(String userId)
+        + void removeSelectedEntrant(String userId)
+        + void enrollEntrant(String userId)
+        + void onCleared()
+    }
+
+    class FacilityViewModel {
+        - Facility facility
+        - MutableLiveData<String> facilityId
+        - MutableLiveData<User> owner
+        - MutableLiveData<String> name
+        - MutableLiveData<String> address
+        - MutableLiveData<List<Event>> events
+        - MutableLiveData<String> errorMessage
+        + FacilityViewModel(String facilityId)
+        - void updateLiveData()
+        + LiveData<String> getFacilityId()
+        + LiveData<User> getOwner()
+        + LiveData<String> getName()
+        + LiveData<String> getAddress()
+        + LiveData<List<Event>> getEvents()
+        + LiveData<String> getErrorMessage()
+        + void setName(String newName)
+        + void setAddress(String newAddress)
+        + void addEvent(Event event)
+        + void removeEvent(Event event)
+        + void onCleared()
+    }
+
+    class UserViewModel {
+        - User user
+        - MutableLiveData<String> userName
+        - MutableLiveData<String> email
+        - MutableLiveData<String> phoneNumber
+        - MutableLiveData<Boolean> isAdmin
+        - MutableLiveData<Facility> facility
+        - MutableLiveData<List<String>> eventsJoined
+        - MutableLiveData<List<String>> eventsEnrolled
+        - MutableLiveData<List<Event>> eventsJoinedDetails
+        - MutableLiveData<List<Event>> eventsEnrolledDetails
+        - MutableLiveData<String> errorMessage
+        + UserViewModel(String userId)
+        - void updateLiveData()
+        - void fetchEventsDetails(List<String> eventIds, MutableLiveData<List<Event>> targetLiveData)
+        + LiveData<String> getUserName()
+        + LiveData<String> getEmail()
+        + LiveData<String> getPhoneNumber()
+        + LiveData<Boolean> getIsAdmin()
+        + LiveData<Facility> getFacility()
+        + LiveData<List<String>> getEventsJoined()
+        + LiveData<List<String>> getEventsEnrolled()
+        + LiveData<List<Event>> getEventsJoinedDetails()
+        + LiveData<List<Event>> getEventsEnrolledDetails()
+        + LiveData<String> getErrorMessage()
+        + void setName(String name)
+        + void setEmail(String email)
+        + void setPhoneNumber(String phoneNumber)
+        + void setIsAdmin(Boolean isAdmin)
+        + void linkFacility(Facility facility)
+        + void onCleared()
+    }
+}
+
+package "Factories" {
+    class EventViewModelFactory {
+        - final String eventId
+        + EventViewModelFactory(String eventId)
+        + <T extends ViewModel> T create(Class<T> modelClass)
+    }
+
+    class FacilityViewModelFactory {
+        - final String facilityId
+        + FacilityViewModelFactory(String facilityId)
+        + <T extends ViewModel> T create(Class<T> modelClass)
+    }
+
+    class UserViewModelFactory {
+        - final String userId
+        + UserViewModelFactory(String userId)
+        + <T extends ViewModel> T create(Class<T> modelClass)
+    }
+}
+
+package "Fragments" {
+    class EventWaitlistFragment {
+        - RecyclerView recyclerView
+        - UserAdapter userAdapter
+        - ProgressBar progressBar
+        - TextView emptyTextView
+        - List<User> userList
+        - String eventId
+        - EventViewModel viewModel
+        + void onCreate(Bundle savedInstanceState)
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        + void onViewCreated(View view, Bundle savedInstanceState)
+    }
+
+    class CreateEventFragment {
+        - Button buttonUploadImage
+        - Uri imageUri
+        - EditText editTextEventName
+        - EditText editTextEventDescription
+        - Button buttonRegStartDate
+        - Button buttonRegStartTime
+        - Button buttonRegEndDate
+        - Button buttonRegEndTime
+        - Button buttonEventStartDate
+        - Button buttonEventStartTime
+        - Button buttonEventEndDate
+        - Button buttonEventEndTime
+        - EditText editTextNumParticipants
+        - CheckBox checkBoxGeolocation
+        - Button buttonCreateEvent
+        - Date registrationStartDate
+        - Date registrationEndDate
+        - Date eventStartDate
+        - Date eventEndDate
+        - SimpleDateFormat dateFormat
+        - SimpleDateFormat timeFormat
+        - SimpleDateFormat dateTimeFormat
+        - ActivityResultLauncher<Intent> imagePickerLauncher
+        + CreateEventFragment()
+        + static CreateEventFragment newInstance()
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        + void onViewCreated(View view, Bundle savedInstanceState)
+        - void setupImagePicker()
+        - void uploadImageToFirebaseStorage(Uri imageUri, Event event)
+        - void saveEventToDatabase(Event event)
+        - void initializeViews(View view)
+        - void setupDateTimePickers()
+        - void showDatePickerDialog(DateSelectedListener listener)
+        - void showTimePickerDialog(TimeSelectedListener listener)
+        - void updateButtonText(Button button, Date date)
+        - Date setDate(Date original, Date selectedDate)
+        - Date setTime(Date original, Date selectedTime)
+        - void setupCreateEventButton()
+        - void openImagePicker()
+        - void createEvent()
+        - void navigateToOrganizerMain()
+    }
+
+    class QrCodeScannerFragment {
+        - static final String TAG = "QrCodeScannerFragment"
+        - static final int CAMERA_PERMISSION_REQUEST_CODE = 100
+        - DecoratedBarcodeView barcodeView
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        - void initializeScanner()
+        - BarcodeCallback callback
+    }
+
+    class ProfileFragment {
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    }
+
+    class EventsFragment {
+        - RecyclerView recyclerViewEvents
+        - EventAdapter eventAdapter
+        - FloatingActionButton fabAddEvent
+        - EventsListViewModel eventsListViewModel
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        - void onEventClicked(Event event)
+    }
+}
+
+package "Activities" {
+    class EventDetailsActivity {
+        - FirebaseFirestore db
+        - TextView eventNameTextView
+        - TextView eventDateTextView
+        - TextView eventDescriptionTextView
+        - TextView eventLocationTextView
+        - ListView entrantsListView
+        - ImageView eventImageView
+        - ImageView qrCodeImageView
+        - String eventId
+        - String eventLocation
+        - String eventDescription
+        - String eventName
+        + void onCreate(Bundle savedInstanceState)
+        - void fetchEventDetails(String eventId)
+        - void fetchEntrants()
+        - void openMapToLocation()
+        - void shareEventDetails()
+        - void generateQRCode(String text)
+    }
+
+    class NotificationsActivity {
+        + void onCreate(Bundle savedInstanceState)
+    }
+
+    class NotificationSettingsActivity {
+        + void onCreate(Bundle savedInstanceState)
+    }
+
+    class HomeActivity {
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    }
+
+    class MainActivity {
+        - static final String TAG = "MainActivity"
+        - UserViewModel userViewModel
+        + void onCreate(Bundle savedInstanceState)
+    }
+
+    class OrganizerMain {
+        - static final String TAG = "OrganizerMain"
+        + void onCreate(Bundle savedInstanceState)
+    }
+
+    class OrganizerTransition {
+        - FirebaseFirestore db
+        - String androidId
+        + void onCreate(Bundle savedInstanceState)
+        - void checkUserFacility()
+        - void promptUserToCreateFacility()
+        - void navigateToNextActivity()
+        - void saveFacilityAndProceed()
+    }
+
+    class UserProfileActivity {
+        + View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        - Bitmap generateAvatar(String letter)
+        - void editNameDialog()
+        - void editEmailDialog()
+        - void addPNumberDialog()
+        - void editPNumberDialog()
+        - ActivityResultLauncher<Intent> galleryLauncher
+        - ActivityResultLauncher<Intent> cameraLauncher
+    }
+
+    class EventDetailActivityEntrant {
+        + void onCreate(Bundle savedInstanceState)
+    }
+
+    class switch_on_off {
+        + void onCreate(Bundle savedInstanceState)
+        - void updateSwitchColors(SwitchCompat switchCompat, boolean isChecked)
+    }
+}
+
+package "Interfaces" {
+    interface OnItemClickListener
+    interface ViewHolder
+}
+
+' **Inheritance Relationships**
+Event ..|> DatabaseEntity
+Facility ..|> DatabaseEntity
+User ..|> DatabaseEntity
+
+EventAdapter --|> RecyclerView_Adapter
+EventViewHolder --|> RecyclerView_ViewHolder
+
+UserAdapter --|> RecyclerView_Adapter
+UserViewHolder --|> RecyclerView_ViewHolder
+
+EventViewModelFactory ..|> ViewModelProvider_Factory
+FacilityViewModelFactory ..|> ViewModelProvider_Factory
+UserViewModelFactory ..|> ViewModelProvider_Factory
+
+EventsListViewModel --|> ViewModel
+EventViewModel --|> ViewModel
+FacilityViewModel --|> ViewModel
+UserViewModel --|> ViewModel
+
+' **Associations with Multiplicities**
+EventAdapter "1" o-- "*" Event
+UserAdapter "1" o-- "*" User
+
+EventViewModelFactory "1" --> "*" EventViewModel
+FacilityViewModelFactory "1" --> "*" FacilityViewModel
+UserViewModelFactory "1" --> "*" UserViewModel
+
+EventViewModel "1" --> "1" Event
+FacilityViewModel "1" --> "1" Facility
+UserViewModel "1" --> "1" User
+
+GlobalRepository "1" --> "1" FirestoreHelper
+GlobalRepository "1" --> "*" User
+GlobalRepository "1" --> "*" Facility
+GlobalRepository "1" --> "*" Event
+
+Event "1" --> "1" Facility
+Facility "1" --> "1" User
+
+EventWaitlistFragment "1" --> "1" EventViewModel
+CreateEventFragment "1" --> "1" Event
+EventDetailsActivity "1" --> "1" Event
+EventsFragment "1" --> "1" EventAdapter
+EventAdapter "1" --> "1" OnItemClickListener
+
+UserAuthenticator "1" --> "*" User
+
+MainActivity "1" --> "1" UserViewModel
+MainActivity "1" --> "1" UserAuthenticator
+
+UserProfileActivity "1" --> "1" UserViewModel
+
+HandleQRScan "1" --> "*" EventDetailActivityEntrant
+HandleQRScan "1" --> "*" Event
+
+QrCodeScannerFragment "1" --> "1" HandleQRScan
+
+@enduml
