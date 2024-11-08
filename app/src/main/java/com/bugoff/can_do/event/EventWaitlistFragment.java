@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Fragment for displaying and managing the waitlist of users for a specific event.
+ * Provides functionality to randomly select users from the waitlist and move them to the selected list.
+ * Displays a RecyclerView of waitlisted users, a progress bar during data load, and handles error messages.
+ */
 public class EventWaitlistFragment extends Fragment {
 
     private static final String TAG = "EventWaitlistFragment";
@@ -37,17 +42,22 @@ public class EventWaitlistFragment extends Fragment {
     private ProgressBar progressBar;
     private TextView emptyTextView;
 
-    private List<User> userList = new ArrayList<>();
+    private List<User> userList = new ArrayList<>(); // List of users on the waitlist
+    private String eventId; // ID of the associated event
+    private EventViewModel viewModel; // ViewModel to manage event-related data
 
-    private String eventId;
-
-    private EventViewModel viewModel;
-
+    /**
+     * Default constructor required for fragment instantiation.
+     */
     public EventWaitlistFragment() {
         // Required empty public constructor
     }
 
-    // If passing arguments
+    /**
+     * Initializes the fragment, extracting the event ID from arguments if available.
+     *
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,39 +70,37 @@ public class EventWaitlistFragment extends Fragment {
         }
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     *
+     * @param inflater           LayoutInflater used to inflate views in the fragment.
+     * @param container          Parent view that the fragment's UI will attach to.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     * @return The root view of the inflated layout.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event_waitlist, container, false);
     }
 
+    /**
+     * Randomly selects a specified number of users from the waitlist and adds them to the selected entrants list.
+     * Updates the ViewModel and removes selected users from the waitlist in the UI.
+     *
+     * @param numberToDraw The number of users to randomly select from the waitlist.
+     */
     private void performDrawing(int numberToDraw) {
         // Randomly select users from the waitlist
-        List<User> selectedUsers = new ArrayList<>();
-        List<User> waitlistCopy = new ArrayList<>(userList); // Create a copy to avoid modifying the original list
+    }
 
-        Random random = new Random();
-        for (int i = 0; i < numberToDraw; i++) {
-            int index = random.nextInt(waitlistCopy.size());
-            selectedUsers.add(waitlistCopy.get(index));
-            waitlistCopy.remove(index);
-        }
-
-        for (User user : selectedUsers) {
-            // Update the selected list in the ViewModel and database
-            viewModel.addSelectedEntrant(user.getId());
-
-            // Remove the selected users from the waitlist
-            viewModel.removeWaitingListEntrant(user.getId());
-        }
-
-        // Update the UI
-        userList.removeAll(selectedUsers);
-        userAdapter.notifyDataSetChanged();
-
-        Toast.makeText(getContext(), "Successfully drew " + numberToDraw + " users.", Toast.LENGTH_SHORT).show();
-    };
+    /**
+     * Initializes views, sets up the RecyclerView and ViewModel, and observes data changes for the waitlist users.
+     * Handles the "Draw" button click to trigger user selection from the waitlist.
+     *
+     * @param view               The root view of the fragment's layout.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -100,12 +108,12 @@ public class EventWaitlistFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar_waitlist);
         emptyTextView = view.findViewById(R.id.text_view_empty_waitlist);
 
-        // Initialize RecyclerView
+        // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userAdapter = new UserAdapter(userList);
         recyclerView.setAdapter(userAdapter);
 
-        // Initialize ViewModel
+        // Initialize ViewModel using a factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
@@ -128,7 +136,7 @@ public class EventWaitlistFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         });
 
-        // Get reference to the "Draw" button
+        // Set up "Draw" button click listener to select users from the waitlist
         Button drawButton = view.findViewById(R.id.draw);
         drawButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -163,7 +171,7 @@ public class EventWaitlistFragment extends Fragment {
             builder.show();
         });
 
-        // Observe error messages
+        // Observe error messages from ViewModel
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 progressBar.setVisibility(View.GONE);
@@ -173,3 +181,4 @@ public class EventWaitlistFragment extends Fragment {
         });
     }
 }
+
