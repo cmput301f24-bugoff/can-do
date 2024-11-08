@@ -1,9 +1,5 @@
 package com.bugoff.can_do.organizer;
 
-import static android.app.PendingIntent.getActivity;
-
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -26,21 +22,23 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import org.jetbrains.annotations.Contract;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
@@ -67,14 +65,17 @@ public class CreateEventFragment extends Fragment {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
     public CreateEventFragment() {
         // Required empty public constructor
     }
+
     @NonNull
     @Contract(" -> new")
     public static CreateEventFragment newInstance() {
         return new CreateEventFragment();
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -107,6 +109,7 @@ public class CreateEventFragment extends Fragment {
 
         buttonUploadImage.setOnClickListener(v -> openImagePicker());
     }
+
     private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("event_images/" + event.getId() + ".jpg");
@@ -125,6 +128,7 @@ public class CreateEventFragment extends Fragment {
             Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
         });
     }
+
     private void saveEventToDatabase(Event event) {
         GlobalRepository.addEvent(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -154,6 +158,7 @@ public class CreateEventFragment extends Fragment {
         checkBoxGeolocation = view.findViewById(R.id.checkBoxGeolocation);
         buttonCreateEvent = view.findViewById(R.id.buttonCreateEvent);
     }
+
     private void setupDateTimePickers() {
         // Registration Start Date and Time
         buttonRegStartDate.setOnClickListener(v -> showDatePickerDialog(date -> {
@@ -192,6 +197,7 @@ public class CreateEventFragment extends Fragment {
             updateButtonText(buttonEventEndTime, eventEndDate);
         }));
     }
+
     private void showDatePickerDialog(DateSelectedListener listener) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
@@ -204,6 +210,7 @@ public class CreateEventFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
+
     /**
      * Displays a TimePickerDialog and returns the selected time.
      */
@@ -220,6 +227,7 @@ public class CreateEventFragment extends Fragment {
                 true);
         timePickerDialog.show();
     }
+
     private void updateButtonText(Button button, Date date) {
         if (button == buttonRegStartDate || button == buttonRegEndDate ||
                 button == buttonEventStartDate || button == buttonEventEndDate) {
@@ -228,6 +236,7 @@ public class CreateEventFragment extends Fragment {
             button.setText(timeFormat.format(date));
         }
     }
+
     private Date setDate(Date original, Date selectedDate) {
         Calendar originalCal = Calendar.getInstance();
         if (original != null) {
@@ -242,6 +251,7 @@ public class CreateEventFragment extends Fragment {
         originalCal.set(Calendar.DAY_OF_MONTH, selectedCal.get(Calendar.DAY_OF_MONTH));
         return originalCal.getTime();
     }
+
     /**
      * Sets the time part of the Date object while retaining the date.
      */
@@ -260,6 +270,7 @@ public class CreateEventFragment extends Fragment {
         originalCal.set(Calendar.MILLISECOND, 0);
         return originalCal.getTime();
     }
+
     private void setupCreateEventButton() {
         buttonCreateEvent.setOnClickListener(v -> createEvent());
     }

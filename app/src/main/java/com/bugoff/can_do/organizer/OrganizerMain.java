@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.event.EventsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class OrganizerMain extends AppCompatActivity {
@@ -29,12 +30,12 @@ public class OrganizerMain extends AppCompatActivity {
                 if (id == R.id.nav_events_organizer) {
                     Log.d(TAG, "Events clicked");
                     selectedFragmentOrganizer = new EventsFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_organizer, selectedFragmentOrganizer).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragmentOrganizer).commit();
                     return true;
                 } else if (id == R.id.nav_profile_organizer) {
                     Log.d(TAG, "Profile clicked");
                     selectedFragmentOrganizer = new ProfileFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_organizer, selectedFragmentOrganizer).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragmentOrganizer).commit();
                     return true;
                 } else {
                     return false;
