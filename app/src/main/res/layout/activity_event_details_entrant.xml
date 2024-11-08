@@ -4,6 +4,9 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
     <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/top_bar"
@@ -12,16 +15,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingBottom="8dp">
-
         <ImageButton
             android:id="@+id/back_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/arrow_back_24px"
             android:background="@null" />
-
         <TextView
-            android:id="@+id/class_title"
+            android:id="@+id/class_tile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,14 +30,12 @@
             android:text="Event Title"
             android:textSize="18sp"
             android:textStyle="bold" />
-
         <ImageButton
             android:id="@+id/map_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/location_on_24px"
             android:background="@null" />
-
         <ImageButton
             android:id="@+id/share_icon"
             android:layout_width="wrap_content"
@@ -44,7 +43,6 @@
             android:src="@drawable/share_24px"
             android:background="@null" />
     </LinearLayout>
-
     <!-- Graph Section -->
     <FrameLayout
         android:id="@+id/graphsection"
@@ -52,6 +50,13 @@
         android:layout_height="200dp"
         android:layout_below="@id/top_bar"
         android:layout_marginTop="16dp">
+
+        <!-- ImageView for Event Image -->
+        <ImageView
+            android:id="@+id/event_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
         <ImageButton
             android:id="@+id/edit_graph"
@@ -62,7 +67,6 @@
             android:layout_margin="8dp"
             android:background="@null" />
     </FrameLayout>
-
     <!-- Class Description -->
     <TextView
         android:id="@+id/class_description"
@@ -72,7 +76,6 @@
         android:layout_marginTop="16dp"
         android:text="Event description here"
         android:textSize="16sp" />
-
     <!-- Date and Location -->
     <TextView
         android:id="@+id/class_date"
@@ -82,7 +85,6 @@
         android:layout_marginTop="8dp"
         android:text="Date: XX,XX,XXXX"
         android:textSize="14sp" />
-
     <TextView
         android:id="@+id/class_location"
         android:layout_width="match_parent"
@@ -90,7 +92,6 @@
         android:layout_below="@id/class_date"
         android:text="Location: XXXXX"
         android:textSize="14sp" />
-
     <!-- Buttons -->
     <LinearLayout
         android:id="@+id/button_container"
@@ -100,14 +101,12 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:gravity="center">
-
         <Button
             android:id="@+id/view_watch_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="View Watch List" />
-
         <Button
             android:id="@+id/send_notification"
             android:layout_width="0dp"
@@ -116,7 +115,6 @@
             android:layout_marginStart="8dp"
             android:text="Send Notification" />
     </LinearLayout>
-
     <!-- Entrants Section -->
     <TextView
         android:id="@+id/drawn_entrants_title"
@@ -127,7 +125,6 @@
         android:text="All Drawn Entrants"
         android:textSize="18sp"
         android:textStyle="bold" />
-
     <ListView
         android:id="@+id/entrants_list"
         android:layout_width="match_parent"
@@ -136,5 +133,4 @@
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:scrollbars="vertical" />
-
 </RelativeLayout>
