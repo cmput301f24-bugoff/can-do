@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -29,8 +31,12 @@ import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.organizer.OrganizerTransition;
+import com.bugoff.can_do.user.User;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserProfileActivity extends Fragment {
+    private User user;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,8 +49,13 @@ public class UserProfileActivity extends Fragment {
         ImageView avatar = view.findViewById(R.id.image_avatar);
         avatar.setImageBitmap(generateAvatar(firstLetter));
 
+        String androidID = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        loadUserData(db, androidID);
+
         // If user already added a phone number, change visibility to "Edit Phone Number" button
-            //-- if condition here --//
+        //-- if condition here --//
         // view.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
         // view.findViewById(R.id.edit_pnumber_button).setVisibility(View.VISIBLE);
 
@@ -92,8 +103,6 @@ public class UserProfileActivity extends Fragment {
                 // editPNumberDialog()
             }
         });
-
-        setupAdminButton(view);
 
         // User clicks avatar to change or add profile picture
         view.findViewById(R.id.image_avatar).setOnClickListener(new View.OnClickListener() {
@@ -187,6 +196,43 @@ public class UserProfileActivity extends Fragment {
             }
     );
 
+    private void loadUserData(FirebaseFirestore db, String androidID) {
+        db.collection("users").document(androidID).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        user = new User(documentSnapshot);
+
+                        String userName = user.getName();
+                        TextView firstName = getView().findViewById(R.id.first_name);
+                        TextView lastName = getView().findViewById(R.id.last_name);
+
+                        if (userName != null && !userName.isEmpty()) {
+                            String[] parts = userName.split(" ");
+                            if (parts.length > 0) {
+                                firstName.setText(parts[0]);
+                            }
+                            if (parts.length > 1) {
+                                lastName.setText(parts[1]);
+                            }
+                        }
+                    } else {
+                        user = new User(androidID);
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure to load data", Toast.LENGTH_SHORT).show());
+    }
+
+    private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
+        if (user == null) {
+            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
+        }
+
+        String name = firstNameTxt.getText().toString() + " " + lastNameTxt.getText().toString();
+
+        user.setName(name);
+        user.setRemote();
+    }
+
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -211,6 +257,8 @@ public class UserProfileActivity extends Fragment {
 
                     firstName.setText(newFirstName);
                     lastName.setText(newLastName);
+
+                    saveUserData(firstName, lastName);
                 })
                 .create()
                 .show();
