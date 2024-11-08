@@ -17,11 +17,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity to display a list of notifications for a user.
+ */
 public class NotificationsActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private List<Notification> notificationList;
 
+    /**
+     * Called when the activity is starting. Initializes the activity and sets up UI elements.
+     *
+     * @param savedInstanceState if the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the most recent data; otherwise, it is null.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +54,12 @@ public class NotificationsActivity extends AppCompatActivity {
         fetchUserNotifications(userId, notifListView);
     }
 
+    /**
+     * Fetches the user's notifications from Firestore and updates the ListView.
+     *
+     * @param userId       the ID of the user whose notifications are to be fetched
+     * @param notifListView the ListView to display the notifications
+     */
     private void fetchUserNotifications(String userId, ListView notifListView) {
         DocumentReference userRef = db.collection("users").document(userId);
         userRef.get().addOnSuccessListener(documentSnapshot -> {
