@@ -26,11 +26,7 @@ public class OrganizerMain extends AppCompatActivity {
                 int id = item.getItemId();
                 Fragment selectedFragmentOrganizer = null;
 
-                if (id == R.id.nav_home_organizer) {
-                    Log.d(TAG, "Home clicked");
-                    // Replace with home fragment or activity
-                    return true;
-                } else if (id == R.id.nav_events_organizer) {
+                if (id == R.id.nav_events_organizer) {
                     Log.d(TAG, "Events clicked");
                     selectedFragmentOrganizer = new EventsFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_organizer, selectedFragmentOrganizer).commit();
