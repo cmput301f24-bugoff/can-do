@@ -17,6 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * RecyclerView adapter for displaying a list of events.
+ * Manages the display of each event item in the RecyclerView and
+ * binds event data to the respective views.
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private static List<Event> eventList;
@@ -28,13 +33,34 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         void onDeleteClick(Event event);
     }
 
+    /**
+     * Interface for handling click events on individual event items.
+     */
+    public interface OnItemClickListener {
+        /**
+         * Called when an event item is clicked.
+         *
+         * @param event The event that was clicked.
+         */
+        void onItemClick(Event event);
+    }
+
+    /**
+     * Constructs a new EventAdapter with a list of events and a click listener.
+     *
+     * @param eventList The list of events to display.
+     */
     public EventAdapter(List<Event> eventList, boolean isAdmin, OnDeleteClickListener deleteClickListener) {
         this.eventList = eventList;
         this.isAdmin = isAdmin;
         this.deleteClickListener = deleteClickListener;
     }
 
-    // Update the list and notify the adapter
+    /**
+     * Updates the event list and refreshes the RecyclerView.
+     *
+     * @param eventList The updated list of events.
+     */
     public void setEventList(List<Event> eventList) {
         this.eventList = eventList;
         notifyDataSetChanged();
@@ -45,6 +71,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         notifyDataSetChanged();
     }
 
+    /**
+     * Creates a new ViewHolder for an event item view.
+     *
+     * @param parent   The parent view group.
+     * @param viewType The view type.
+     * @return A new instance of EventViewHolder.
+     */
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,18 +85,31 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return new EventViewHolder(itemView);
     }
 
+    /**
+     * Binds the event data to the ViewHolder at the specified position.
+     *
+     * @param holder   The ViewHolder to bind data to.
+     * @param position The position of the item in the dataset.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         holder.bind(event, isAdmin, deleteClickListener);
     }
 
+    /**
+     * Returns the total number of items in the dataset.
+     *
+     * @return The size of the event list.
+     */
     @Override
     public int getItemCount() {
         return eventList != null ? eventList.size() : 0;
     }
 
-    // ViewHolder class
+    /**
+     * ViewHolder class for holding and binding data to each event item view in the RecyclerView.
+     */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewName;
@@ -74,6 +120,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("MMM d, yyyy HH:mm", Locale.getDefault());
 
+        /**
+         * Initializes the ViewHolder and finds the views within the event item layout.
+         *
+         * @param itemView The item view associated with the ViewHolder.
+         */
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.text_view_event_name);
@@ -83,6 +134,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             buttonDelete = itemView.findViewById(R.id.button_delete_event);
         }
 
+        /**
+         * Binds event data to the views, including formatting dates and displaying participant counts.
+         *
+         * @param event    The event data to display.
+         * @param listener The listener for handling click events on the item view.
+         */
         public void bind(final Event event, boolean isAdmin, final OnDeleteClickListener listener) {
             textViewName.setText(event.getName());
             textViewDescription.setText(event.getDescription());
@@ -97,7 +154,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     " | Event: " + eventStart + " - " + eventEnd;
             textViewDates.setText(dates);
 
-            // Display current number of participants out of max number of participants
+            // Display the current number of participants out of the max allowed
             String participants = event.getEnrolledEntrants().size() + " / " + event.getMaxNumberOfParticipants();
             textViewParticipants.setText(participants);
 

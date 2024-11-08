@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * ViewModel responsible for managing and providing a list of events for the current user's facility.
+ * Retrieves data from Firebase and listens for real-time updates. Exposes LiveData objects
+ * for observing the list of events and error messages.
+ */
 public class EventsListViewModel extends ViewModel {
 
     private static final String TAG = "EventsListViewModel";
@@ -53,6 +58,10 @@ public class EventsListViewModel extends ViewModel {
         fetchEvents();
     }
 
+    /**
+     * Fetches the list of events associated with the current user's facility and updates the LiveData.
+     * If the user or their associated facility is null, sets an error message in LiveData.
+     */
     private void fetchEvents() {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {
@@ -149,20 +158,31 @@ public class EventsListViewModel extends ViewModel {
 
     /**
      * Refreshes the events list LiveData to notify observers of any changes.
+     * This is typically called when an event in the list is updated.
      */
     private void refreshEventsList() {
         if (eventsList.getValue() != null) {
-            // Create a new list to trigger LiveData observers
+            // Create a new list instance to trigger LiveData observers
             List<Event> updatedList = new ArrayList<>(eventsList.getValue());
             eventsList.postValue(updatedList);
             Log.d(TAG, "Events list refreshed.");
         }
     }
 
+    /**
+     * Returns the LiveData object representing the list of events.
+     *
+     * @return A LiveData object containing the list of events.
+     */
     public LiveData<List<Event>> getEventsList() {
         return eventsList;
     }
 
+    /**
+     * Returns the LiveData object containing error messages.
+     *
+     * @return A LiveData object with the error message, or null if no error occurred.
+     */
     public LiveData<String> getErrorMessage() {
         return errorMessage;
     }

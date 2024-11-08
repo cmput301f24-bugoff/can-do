@@ -23,6 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ViewModel for managing and exposing an Event's data to the UI layer.
+ * This ViewModel asynchronously fetches the Event data from Firestore
+ * and provides it through LiveData for real-time UI updates.
+ *
+ * The EventViewModel also handles automatic updates when the Event data
+ * changes in Firestore by attaching snapshot listeners, and it fetches
+ * associated Facility and User details for further UI integration.
+ */
 public class EventViewModel extends ViewModel {
     private static final String TAG = "EventViewModel";
     private Event event;
@@ -47,7 +56,13 @@ public class EventViewModel extends ViewModel {
     private final MutableLiveData<Map<String, User>> waitingListUsers = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Map<String, User>> selectedEntrantsUsers = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Map<String, User>> enrolledEntrantsUsers = new MutableLiveData<>(new HashMap<>());
-
+    /**
+     * Constructor that initializes the EventViewModel with the specified event ID.
+     * It asynchronously fetches the event data from Firestore, including the associated
+     * facility and participant details, and sets up LiveData for UI observation.
+     *
+     * @param eventId The ID of the event to fetch and observe.
+     */
     public EventViewModel(String eventId) {
         // Fetch Event asynchronously
         GlobalRepository.getEventsCollection().document(eventId).get()
@@ -101,7 +116,11 @@ public class EventViewModel extends ViewModel {
                     Log.e("EventViewModel", "Error fetching event", e);
                 });
     }
-
+    /**
+     * Updates the LiveData objects with the current values of the event fields.
+     * This method is triggered when the event data is updated in Firestore, ensuring
+     * that the UI layer remains synchronized with the latest event data.
+     */
     private void updateLiveData() {
         if (event != null) {
             eventName.postValue(event.getName());
@@ -125,7 +144,13 @@ public class EventViewModel extends ViewModel {
             fetchUsersForList(event.getEnrolledEntrants(), enrolledEntrantsUsers);
         }
     }
-
+    /**
+     * Fetches user details for a given list of user IDs in batches and updates the target LiveData map.
+     * Each batch is fetched asynchronously to avoid limitations on query size.
+     *
+     * @param userIds       A list of user IDs to fetch.
+     * @param targetLiveData The target LiveData map to store the fetched User objects, mapped by their ID.
+     */
     private void fetchUsersForList(List<String> userIds, MutableLiveData<Map<String, User>> targetLiveData) {
         if (userIds == null || userIds.isEmpty()) {
             Log.d(TAG, "fetchUsersForList: userIds is null or empty");
@@ -194,12 +219,20 @@ public class EventViewModel extends ViewModel {
     public LiveData<Map<String, User>> getSelectedEntrantsUsers() { return selectedEntrantsUsers; }
     public LiveData<Map<String, User>> getEnrolledEntrantsUsers() { return enrolledEntrantsUsers; }
 
-    // Methods to interact with Event
+    /**
+     * Adds a user to the waiting list and fetches the updated list of users.
+     *
+     * @param userId The ID of the user to add to the waiting list.
+     */
     public void addWaitingListEntrant(String userId) {
         event.addWaitingListEntrant(userId);
         fetchUsersForList(waitingListEntrants.getValue(), waitingListUsers);
     }
-
+    /**
+     * Removes a user from the waiting list and updates the LiveData.
+     *
+     * @param userId The ID of the user to remove from the waiting list.
+     */
     public void removeWaitingListEntrant(String userId) {
         event.removeWaitingListEntrant(userId);
         // Optionally, remove from waitingListUsers LiveData
@@ -209,17 +242,30 @@ public class EventViewModel extends ViewModel {
             waitingListUsers.postValue(currentMap);
         }
     }
-
+    /**
+     * Updates the status of an entrant in the event.
+     *
+     * @param userId The ID of the entrant to update.
+     * @param status The new status to assign to the entrant.
+     */
     public void updateEntrantStatus(String userId, EntrantStatus status) {
         event.updateEntrantStatus(userId, status);
         // Update entrantStatuses LiveData if needed
     }
-
+    /**
+     * Adds a user to the selected entrants list and fetches the updated list of users.
+     *
+     * @param userId The ID of the user to add to the selected entrants list.
+     */
     public void addSelectedEntrant(String userId) {
         event.addSelectedEntrant(userId);
         fetchUsersForList(selectedEntrants.getValue(), selectedEntrantsUsers);
     }
-
+    /**
+     * Removes a user from the selected entrants list and updates the LiveData.
+     *
+     * @param userId The ID of the user to remove from the selected entrants list.
+     */
     public void removeSelectedEntrant(String userId) {
         event.removeSelectedEntrant(userId);
         // Optionally, remove from selectedEntrantsUsers LiveData
@@ -229,12 +275,18 @@ public class EventViewModel extends ViewModel {
             selectedEntrantsUsers.postValue(currentMap);
         }
     }
-
+    /**
+     * Enrolls a user as an entrant and fetches the updated list of enrolled users.
+     *
+     * @param userId The ID of the user to enroll.
+     */
     public void enrollEntrant(String userId) {
         event.enrollEntrant(userId);
         fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
     }
-
+    /**
+     * Called when the ViewModel is cleared, typically used to clean up resources or listeners.
+     */
     @Override
     protected void onCleared() {
         super.onCleared();
