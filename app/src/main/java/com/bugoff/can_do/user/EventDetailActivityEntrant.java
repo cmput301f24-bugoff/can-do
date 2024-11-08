@@ -15,7 +15,7 @@ public class EventDetailActivityEntrant extends AppCompatActivity {
         setContentView(R.layout.activity_event_details_entrant);
 
         // Retrieve TextView elements
-        TextView eventNameTextView = findViewById(R.id.class_title);
+        TextView eventNameTextView = findViewById(R.id.class_tile);
         TextView eventDateTextView = findViewById(R.id.class_date);
 
         // Get data passed from HandleQRScan
