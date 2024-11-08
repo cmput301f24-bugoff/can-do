@@ -1,4 +1,4 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.user;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bugoff.can_do.MainActivity;
+import com.bugoff.can_do.R;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -58,7 +60,9 @@ public class QrCodeScannerFragment extends Fragment {
         public void barcodeResult(BarcodeResult result) {
             if (result.getText() != null) {
                 Log.d(TAG, "Scanned: " + result.getText());
-                // Handle the scanned QR code here
+                barcodeView.pause();
+                HandleQRScan.processQRCode(result.getText(), getActivity());
+
             }
         }
 

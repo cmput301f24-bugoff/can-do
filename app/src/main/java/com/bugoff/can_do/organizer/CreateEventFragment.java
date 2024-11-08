@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -49,6 +50,7 @@ public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
     private Button buttonUploadImage;
     private Uri imageUri; // To store the selected image URI
+    private ImageButton buttonBack;
     private EditText editTextEventName;
     private EditText editTextEventDescription;
     private Button buttonRegStartDate;
@@ -86,6 +88,7 @@ public class CreateEventFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_event, container, false);
+
     }
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     @Override
@@ -94,6 +97,7 @@ public class CreateEventFragment extends Fragment {
         initializeViews(view);
         setupDateTimePickers();
         setupCreateEventButton();
+        setupBackButton();
         setupImagePicker();
     }
 
@@ -140,6 +144,12 @@ public class CreateEventFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to create event: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                 Log.e("CreateEventFragment", "Error creating event", task.getException());
             }
+        
+    }
+
+    private void setupBackButton() {
+        buttonBack.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack();
         });
     }
 
@@ -159,6 +169,7 @@ public class CreateEventFragment extends Fragment {
         editTextNumParticipants = view.findViewById(R.id.editTextMaxNumParticipants);
         checkBoxGeolocation = view.findViewById(R.id.checkBoxGeolocation);
         buttonCreateEvent = view.findViewById(R.id.buttonCreateEvent);
+        buttonBack = view.findViewById(R.id.back_button_create_event);
     }
 
     private void setupDateTimePickers() {

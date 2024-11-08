@@ -1,6 +1,5 @@
 package com.bugoff.can_do.organizer;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -8,12 +7,8 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.bugoff.can_do.HomeActivity;
-import com.bugoff.can_do.QrCodeScannerFragment;
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.UserProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class OrganizerMain extends AppCompatActivity {
