@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -26,31 +27,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Connect to Firestore
+        // Initialize Firestore
         new GlobalRepository();
 
-        // Get Android ID
+        // Get Android ID for user identification
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        // Authenticate user and check if name exists
         UserAuthenticator.authenticateUser(androidId)
                 .addOnSuccessListener(user -> {
-                    // Handle successful authentication
-                    Log.d(TAG, "Authenticated User: " + user.getId());
+                    if (user.getName() == null || user.getName().isEmpty()) {
+                        // Redirect to SignInActivity for new users
+                        Intent intent = new Intent(MainActivity.this, signInActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // Existing user: proceed to load user data
+                        Log.d(TAG, "Authenticated User: " + user.getId());
+                        userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
+                                .get(UserViewModel.class);
+                        GlobalRepository.setLoggedInUser(user);
 
-                    // Initialize UserViewModel with authenticated user ID
-                    userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
-                            .get(UserViewModel.class);
-
-                    GlobalRepository.setLoggedInUser(user);
+                        // Load the home fragment if no saved state
+                        if (savedInstanceState == null) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, new HomeActivity())
+                                    .commit();
+                        }
+                    }
                 })
-                .addOnFailureListener(e -> {
-                    // Handle authentication failure
-                    Log.e(TAG, "Authentication failed", e);
-                });
+                .addOnFailureListener(e -> Log.e(TAG, "Authentication failed", e));
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeActivity()).commit();
-        }
-
+        // Set up BottomNavigationView for navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -59,25 +67,20 @@ public class MainActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
 
                 if (id == R.id.nav_home) {
-                    // Handle "Home" click
-                    Log.d(TAG, "Home clicked");
                     selectedFragment = new HomeActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    return true;
                 } else if (id == R.id.nav_scan) {
-                    Log.d(TAG, "Scan Activity clicked");
                     selectedFragment = new QrCodeScannerFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    return true;
                 } else if (id == R.id.nav_profile) {
-                    // Handle "Profile" click
-                    Log.d(TAG, "Profile clicked");
                     selectedFragment = new UserProfileActivity();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                    return true;
-                } else {
-                    return false;
                 }
+
+                if (selectedFragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, selectedFragment)
+                            .commit();
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -86,3 +89,5 @@ public class MainActivity extends AppCompatActivity {
         return userViewModel;
     }
 }
+
+

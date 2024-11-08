@@ -22,22 +22,21 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Register signInActivity here -->
+        <activity android:name=".signInActivity" />
+
         <activity android:name=".organizer.OrganizerTransition" />
         <activity android:name=".organizer.OrganizerMain" />
         <activity android:name=".organizer.FacilityEdit" />
-
         <activity android:name=".organizer.EventDetailsActivity" />
         <activity android:name=".user.EventDetailActivityEntrant" />
 
-
-        <!-- Add your NotificationSettingsActivity here -->
+        <!-- Notification settings and notifications -->
         <activity android:name=".NotificationSettingsActivity" />
-
         <activity android:name=".NotificationsActivity" android:exported="true"/>
     </application>
 </manifest>
