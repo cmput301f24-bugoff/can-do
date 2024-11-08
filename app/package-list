@@ -211,6 +211,7 @@ $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity///PointingToDec
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/EventDetailsActivity/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/-event-details-activity.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/fetchEntrants/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/fetch-entrants.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/fetchEventDetails/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/fetch-event-details.html
+$dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/generateQRCode/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/generate-q-r-code.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/on-create.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/openMapToLocation/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/open-map-to-location.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsActivity/shareEventDetails/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-activity/share-event-details.html
