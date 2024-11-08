@@ -1,5 +1,7 @@
 package com.bugoff.can_do.user;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bugoff.can_do.R;
 
 import java.util.List;
@@ -62,10 +65,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
 
         public void bind(User user) {
-            textViewName.setText(user.getName());
-            textViewEmail.setText(user.getEmail());
-            textViewPhone.setText(user.getPhoneNumber());
-            // display counts of eventsJoined and eventsEnrolled?
+            Log.d("UserAdapter", "Binding user: " + user.getId() + ", name: " + user.getName()
+                    + ", email: " + user.getEmail() + ", phone: " + user.getPhoneNumber());
+            textViewName.setText(
+                    !TextUtils.isEmpty(user.getName()) ? user.getName() : "No Name"
+            );
+            textViewEmail.setText(
+                    !TextUtils.isEmpty(user.getEmail()) ? user.getEmail() : "No Email"
+            );
+            textViewPhone.setText(
+                    !TextUtils.isEmpty(user.getPhoneNumber()) ? user.getPhoneNumber() : "No Phone"
+            );
         }
     }
 }

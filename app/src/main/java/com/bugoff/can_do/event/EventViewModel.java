@@ -11,8 +11,11 @@ import com.bugoff.can_do.EntrantStatus;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EventViewModel extends ViewModel {
+    private static final String TAG = "EventViewModel";
     private Event event;
     private final MutableLiveData<String> eventName = new MutableLiveData<>();
     private final MutableLiveData<Facility> facility = new MutableLiveData<>();
@@ -122,17 +126,14 @@ public class EventViewModel extends ViewModel {
         }
     }
 
-    /**
-     * Fetches User objects based on a list of user IDs and updates the corresponding LiveData map.
-     *
-     * @param userIds The list of user IDs to fetch.
-     * @param targetLiveData The LiveData map to update with fetched User objects.
-     */
     private void fetchUsersForList(List<String> userIds, MutableLiveData<Map<String, User>> targetLiveData) {
         if (userIds == null || userIds.isEmpty()) {
+            Log.d(TAG, "fetchUsersForList: userIds is null or empty");
             targetLiveData.setValue(new HashMap<>());
             return;
         }
+
+        Log.d(TAG, "fetchUsersForList: Fetching users for IDs: " + userIds);
 
         Map<String, User> usersMap = new HashMap<>();
         int batchSize = 10;
@@ -140,30 +141,34 @@ public class EventViewModel extends ViewModel {
 
         for (int i = 0; i < userIds.size(); i += batchSize) {
             int end = Math.min(i + batchSize, userIds.size());
-            batches.add(userIds.subList(i, end));
+            batches.add(new ArrayList<>(userIds.subList(i, end)));
         }
 
+        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
         for (List<String> batch : batches) {
-            GlobalRepository.getUsersCollection()
+            tasks.add(GlobalRepository.getUsersCollection()
                     .whereIn(FieldPath.documentId(), batch)
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
+                    .get());
+        }
+
+        Tasks.whenAllSuccess(tasks)
+                .addOnSuccessListener(results -> {
+                    for (Object result : results) {
+                        if (result instanceof QuerySnapshot) {
+                            QuerySnapshot snapshot = (QuerySnapshot) result;
+                            for (DocumentSnapshot document : snapshot.getDocuments()) {
                                 User user = new User(document);
                                 usersMap.put(user.getId(), user);
+                                Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName());
                             }
-                            // Merge with existing map
-                            Map<String, User> currentMap = targetLiveData.getValue();
-                            if (currentMap != null) {
-                                currentMap.putAll(usersMap);
-                                targetLiveData.postValue(currentMap);
-                            }
-                        } else {
-                            Log.e("EventViewModel", "Error fetching users: ", task.getException());
                         }
-                    });
-        }
+                    }
+                    targetLiveData.postValue(usersMap);
+                    Log.d(TAG, "fetchUsersForList: Updated targetLiveData with usersMap size: " + usersMap.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "fetchUsersForList: Error fetching user batches", e);
+                });
     }
 
     // Getters for LiveData

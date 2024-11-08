@@ -33,7 +33,7 @@ public class EventWaitlistFragment extends Fragment {
 
     private List<User> userList = new ArrayList<>();
 
-    private String eventId; // To hold the passed eventId
+    private String eventId;
 
     private EventViewModel viewModel;
 
@@ -48,6 +48,7 @@ public class EventWaitlistFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             eventId = args.getString("eventId");
+            Log.d(TAG, "Event ID: " + eventId);
         } else {
             Log.e(TAG, "No eventId provided to EventWaitlistFragment.");
         }
@@ -78,16 +79,19 @@ public class EventWaitlistFragment extends Fragment {
 
         // Observe LiveData for waiting list users
         viewModel.getWaitingListUsers().observe(getViewLifecycleOwner(), usersMap -> {
+            Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
             if (usersMap != null && !usersMap.isEmpty()) {
                 userList.clear();
                 userList.addAll(usersMap.values());
                 userAdapter.notifyDataSetChanged();
                 emptyTextView.setVisibility(View.GONE);
+                Log.d(TAG, "Observer: Updated userList and notified adapter");
             } else {
                 userList.clear();
                 userAdapter.notifyDataSetChanged();
                 emptyTextView.setVisibility(View.VISIBLE);
                 emptyTextView.setText("No users in the watch list.");
+                Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
             }
             progressBar.setVisibility(View.GONE);
         });
