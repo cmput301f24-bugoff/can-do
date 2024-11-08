@@ -287,6 +287,7 @@ $dokka.location:com.bugoff.can_do.user/User/User/#java.lang.String#java.lang.Str
 $dokka.location:com.bugoff.can_do.user/User/User/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/-user.html
 $dokka.location:com.bugoff.can_do.user/User/addEventEnrolled/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-event-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/addEventJoined/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-event-joined.html
+$dokka.location:com.bugoff.can_do.user/User/addNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-notification.html
 $dokka.location:com.bugoff.can_do.user/User/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/attach-listener.html
 $dokka.location:com.bugoff.can_do.user/User/deserializeEventsEnrolled/#java.lang.Object/PointingToDeclaration/app/com.bugoff.can_do.user/-user/deserialize-events-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/deserializeEventsJoined/#java.lang.Object/PointingToDeclaration/app/com.bugoff.can_do.user/-user/deserialize-events-joined.html
@@ -298,11 +299,13 @@ $dokka.location:com.bugoff.can_do.user/User/getFacility/#/PointingToDeclaration/
 $dokka.location:com.bugoff.can_do.user/User/getId/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-id.html
 $dokka.location:com.bugoff.can_do.user/User/getIsAdmin/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-is-admin.html
 $dokka.location:com.bugoff.can_do.user/User/getName/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-name.html
+$dokka.location:com.bugoff.can_do.user/User/getNotificationList/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-notification-list.html
 $dokka.location:com.bugoff.can_do.user/User/getPhoneNumber/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-phone-number.html
 $dokka.location:com.bugoff.can_do.user/User/linkFacility/#com.bugoff.can_do.facility.Facility/PointingToDeclaration/app/com.bugoff.can_do.user/-user/link-facility.html
 $dokka.location:com.bugoff.can_do.user/User/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/on-update.html
 $dokka.location:com.bugoff.can_do.user/User/removeEventEnrolled/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-event-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/removeEventJoined/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-event-joined.html
+$dokka.location:com.bugoff.can_do.user/User/removeNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-notification.html
 $dokka.location:com.bugoff.can_do.user/User/setEmail/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-email.html
 $dokka.location:com.bugoff.can_do.user/User/setEventsEnrolled/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-events-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/setEventsJoined/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-events-joined.html
