@@ -44,7 +44,7 @@ public class NotificationAdapterTest {
             Notification notification = adapter.getItem(i);
             assertEquals("Notification content should match", notifications.get(i).getContent(), notification.getContent());
             assertEquals("Notification type should match", notifications.get(i).getType(), notification.getType());
-            assertEquals("Notification ID should match", notifications.get(i).getId(), notification.getId());
+            assertEquals("Notification I should match", notifications.get(i).getId(), notification.getId());
         }
     }
 }
