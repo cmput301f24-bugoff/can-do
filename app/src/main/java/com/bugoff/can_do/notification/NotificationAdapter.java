@@ -1,4 +1,4 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.notification;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bugoff.can_do.R;
 
 import java.util.List;
 
