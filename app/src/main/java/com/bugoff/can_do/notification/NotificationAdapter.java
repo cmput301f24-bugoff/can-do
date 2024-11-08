@@ -18,11 +18,11 @@ import com.bugoff.can_do.R;
 
 import java.util.List;
 
-public class NotificationAdapter extends ArrayAdapter<Notification> {
+public class NotificationAdapter extends ArrayAdapter<String> {
     private Context context;
-    private List<Notification> notifications;
+    private List<String> notifications;
 
-    public NotificationAdapter(Context context, List<Notification> notifications) {
+    public NotificationAdapter(Context context, List<String> notifications) {
         super(context, R.layout.notif_list_item, notifications);
         this.context = context;
         this.notifications = notifications;
@@ -39,9 +39,8 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
         TextView textView = convertView.findViewById(R.id.notif_item_text);
         ImageButton moreVertButton = convertView.findViewById(R.id.notif_more_vert);
 
-        // Set text for the item using the content of the Notification object
-        Notification notification = notifications.get(position);
-        textView.setText(notification.getContent());
+        // Set text for the item
+        textView.setText(notifications.get(position));
 
         // Set OnClickListener for the button to show a dialog
         moreVertButton.setOnClickListener(v -> {
@@ -57,14 +56,12 @@ public class NotificationAdapter extends ArrayAdapter<Notification> {
             Button btnReport = dialogView.findViewById(R.id.btn_report);
 
             btnDelete.setOnClickListener(view -> {
-                notifications.remove(position); // Remove the notification from the list
-                notifyDataSetChanged(); // Notify the adapter that the data has changed
-                Toast.makeText(context, "Deleted: " + notification.getContent(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Deleted: " + notifications.get(position), Toast.LENGTH_SHORT).show();
                 dialog.dismiss(); // Dismiss the dialog after clicking
             });
 
             btnReport.setOnClickListener(view -> {
-                Toast.makeText(context, "Reported: " + notification.getContent(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Reported: " + notifications.get(position), Toast.LENGTH_SHORT).show();
                 dialog.dismiss(); // Dismiss the dialog after clicking
             });
 
