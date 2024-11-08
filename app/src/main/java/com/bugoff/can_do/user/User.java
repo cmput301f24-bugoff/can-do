@@ -152,6 +152,24 @@ public class User implements DatabaseEntity {
 
     // Getters and Setters
 
+    // New method to get the notification list
+    public List<Notification> getNotificationList() {
+        return Collections.unmodifiableList(notificationList);
+    }
+
+    // Existing Getters and Setters...
+
+    public void addNotification(Notification notification) {
+        this.notificationList.add(notification);
+        setRemote();
+    }
+
+    public void removeNotification(Notification notification) {
+        if (this.notificationList.remove(notification)) {
+            setRemote();
+        }
+    }
+
     public String getName() {
         return name;
     }
