@@ -5,9 +5,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.bugoff.can_do.database.DatabaseEntity;
-import com.bugoff.can_do.event.Event;
-import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.facility.Facility;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,8 +27,8 @@ public class User implements DatabaseEntity {
     private String phoneNumber;
     private Boolean isAdmin;
     private Facility facility; // Associated facility if the user is an organizer
-    private List<Event> eventsJoined; // Events where the user joined the waiting list
-    private List<Event> eventsEnrolled; // Events where the user is enrolled
+    private List<String> eventsJoined; // Event IDs where the user joined the waiting list
+    private List<String> eventsEnrolled; // Event IDs where the user is enrolled
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
@@ -98,25 +97,9 @@ public class User implements DatabaseEntity {
         } else {
             map.put("facilityId", null);
         }
-        map.put("eventsJoined", serializeEventsJoined(eventsJoined));
-        map.put("eventsEnrolled", serializeEventsEnrolled(eventsEnrolled));
+        map.put("eventsJoined", eventsJoined); // List of event IDs
+        map.put("eventsEnrolled", eventsEnrolled); // List of event IDs
         return map;
-    }
-
-    private List<String> serializeEventsJoined(List<Event> events) {
-        List<String> eventIds = new ArrayList<>();
-        for (Event event : events) {
-            eventIds.add(event.getId());
-        }
-        return eventIds;
-    }
-
-    private List<String> serializeEventsEnrolled(List<Event> events) {
-        List<String> eventIds = new ArrayList<>();
-        for (Event event : events) {
-            eventIds.add(event.getId());
-        }
-        return eventIds;
     }
 
     private void deserializeEventsJoined(Object data) {
@@ -125,19 +108,7 @@ public class User implements DatabaseEntity {
             for (Object eventIdObj : eventIds) {
                 if (eventIdObj instanceof String) {
                     String eventId = (String) eventIdObj;
-                    GlobalRepository.getEventsCollection().document(eventId).get()
-                            .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    Event event = new Event(this.getFacility(), doc);
-                                    this.eventsJoined.add(event);
-                                    onUpdate(); // Notify listeners if necessary
-                                } else {
-                                    Log.w("User", "No such event with ID: " + eventId);
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("User", "Error fetching event with ID: " + eventId, e);
-                            });
+                    this.eventsJoined.add(eventId);
                 }
             }
         }
@@ -149,23 +120,13 @@ public class User implements DatabaseEntity {
             for (Object eventIdObj : eventIds) {
                 if (eventIdObj instanceof String) {
                     String eventId = (String) eventIdObj;
-                    GlobalRepository.getEventsCollection().document(eventId).get()
-                            .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    Event event = new Event(this.getFacility(), doc);
-                                    this.eventsEnrolled.add(event);
-                                    onUpdate(); // Notify listeners if necessary
-                                } else {
-                                    Log.w("User", "No such event with ID: " + eventId);
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("User", "Error fetching event with ID: " + eventId, e);
-                            });
+                    this.eventsEnrolled.add(eventId);
                 }
             }
         }
     }
+
+    // Getters and Setters
 
     public String getName() {
         return name;
@@ -173,6 +134,7 @@ public class User implements DatabaseEntity {
 
     public void setName(String name) {
         this.name = name;
+        setRemote();
     }
 
     public String getEmail() {
@@ -193,42 +155,48 @@ public class User implements DatabaseEntity {
         setRemote();
     }
 
-    public List<Event> getEventsJoined() {
+    public List<String> getEventsJoined() {
         return Collections.unmodifiableList(eventsJoined);
     }
 
-    public void setEventsJoined(List<Event> eventsJoined) {
-        this.eventsJoined = eventsJoined;
+    public void setEventsJoined(List<String> eventsJoined) {
+        this.eventsJoined = eventsJoined != null ? new ArrayList<>(eventsJoined) : new ArrayList<>();
         setRemote();
     }
 
-    public void addEventJoined(Event event) {
-        this.eventsJoined.add(event);
-        setRemote();
+    public void addEventJoined(String eventId) {
+        if (!this.eventsJoined.contains(eventId)) {
+            this.eventsJoined.add(eventId);
+            setRemote();
+        }
     }
 
-    public void removeEventJoined(Event event) {
-        this.eventsJoined.remove(event);
-        setRemote();
+    public void removeEventJoined(String eventId) {
+        if (this.eventsJoined.remove(eventId)) {
+            setRemote();
+        }
     }
 
-    public List<Event> getEventsEnrolled() {
+    public List<String> getEventsEnrolled() {
         return Collections.unmodifiableList(eventsEnrolled);
     }
 
-    public void setEventsEnrolled(List<Event> eventsEnrolled) {
-        this.eventsEnrolled = eventsEnrolled;
+    public void setEventsEnrolled(List<String> eventsEnrolled) {
+        this.eventsEnrolled = eventsEnrolled != null ? new ArrayList<>(eventsEnrolled) : new ArrayList<>();
         setRemote();
     }
 
-    public void addEventEnrolled(Event event) {
-        this.eventsEnrolled.add(event);
-        setRemote();
+    public void addEventEnrolled(String eventId) {
+        if (!this.eventsEnrolled.contains(eventId)) {
+            this.eventsEnrolled.add(eventId);
+            setRemote();
+        }
     }
 
-    public void removeEventEnrolled(Event event) {
-        this.eventsEnrolled.remove(event);
-        setRemote();
+    public void removeEventEnrolled(String eventId) {
+        if (this.eventsEnrolled.remove(eventId)) {
+            setRemote();
+        }
     }
 
     public Boolean getIsAdmin() {
@@ -237,6 +205,7 @@ public class User implements DatabaseEntity {
 
     public void setIsAdmin(Boolean isAdmin) {
         this.isAdmin = isAdmin;
+        setRemote();
     }
 
     public Facility getFacility() {
@@ -245,6 +214,7 @@ public class User implements DatabaseEntity {
 
     public void setFacility(Facility facility) {
         this.facility = facility;
+        setRemote();
     }
 
     @Override
@@ -324,16 +294,22 @@ public class User implements DatabaseEntity {
                     return;
                 }
 
-                // Deserialize eventsJoined
+                // Deserialize eventsJoined as List<String>
                 List<String> updatedEventsJoinedIds = (List<String>) documentSnapshot.get("eventsJoined");
                 if (updatedEventsJoinedIds != null) {
-                    updateEventsJoined(updatedEventsJoinedIds);
+                    if (!updatedEventsJoinedIds.equals(this.eventsJoined)) {
+                        this.eventsJoined = new ArrayList<>(updatedEventsJoinedIds);
+                        isChanged.set(true);
+                    }
                 }
 
-                // Deserialize eventsEnrolled
+                // Deserialize eventsEnrolled as List<String>
                 List<String> updatedEventsEnrolledIds = (List<String>) documentSnapshot.get("eventsEnrolled");
                 if (updatedEventsEnrolledIds != null) {
-                    updateEventsEnrolled(updatedEventsEnrolledIds);
+                    if (!updatedEventsEnrolledIds.equals(this.eventsEnrolled)) {
+                        this.eventsEnrolled = new ArrayList<>(updatedEventsEnrolledIds);
+                        isChanged.set(true);
+                    }
                 }
 
                 if (isChanged.get()) {
@@ -341,44 +317,6 @@ public class User implements DatabaseEntity {
                 }
             }
         });
-    }
-
-    private void updateEventsJoined(List<String> eventIds) {
-        this.eventsJoined.clear();
-        for (String eventId : eventIds) {
-            GlobalRepository.getEventsCollection().document(eventId).get()
-                    .addOnSuccessListener(doc -> {
-                        if (doc.exists()) {
-                            Event event = new Event(this.getFacility(), doc);
-                            this.eventsJoined.add(event);
-                            onUpdate(); // Notify listeners if necessary
-                        } else {
-                            Log.w("User", "No such event with ID: " + eventId);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("User", "Error fetching event with ID: " + eventId, e);
-                    });
-        }
-    }
-
-    private void updateEventsEnrolled(List<String> eventIds) {
-        this.eventsEnrolled.clear();
-        for (String eventId : eventIds) {
-            GlobalRepository.getEventsCollection().document(eventId).get()
-                    .addOnSuccessListener(doc -> {
-                        if (doc.exists()) {
-                            Event event = new Event(this.getFacility(), doc);
-                            this.eventsEnrolled.add(event);
-                            onUpdate(); // Notify listeners if necessary
-                        } else {
-                            Log.w("User", "No such event with ID: " + eventId);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("User", "Error fetching event with ID: " + eventId, e);
-                    });
-        }
     }
 
     @Override

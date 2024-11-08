@@ -129,6 +129,31 @@
             android:text="Send Notification" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/waitlist_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_container"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/join_waiting_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Join Waiting List" />
+
+        <Button
+            android:id="@+id/leave_waiting_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Leave Waiting List" />
+    </LinearLayout>
+
     <!-- QR Code ImageView -->
     <ImageView
         android:id="@+id/idIVQrcode"
@@ -158,4 +183,9 @@
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:scrollbars="vertical" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

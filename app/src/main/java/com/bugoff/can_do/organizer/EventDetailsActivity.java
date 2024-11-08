@@ -1,6 +1,5 @@
 package com.bugoff.can_do.organizer;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,15 +8,24 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView; // Import ImageView
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.R;
-import com.bumptech.glide.Glide; // Import Glide
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.event.EventViewModel;
+import com.bugoff.can_do.event.EventViewModelFactory;
+import com.bugoff.can_do.event.EventWaitlistFragment;
+import com.bugoff.can_do.user.User;
+import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -73,6 +81,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         Button viewWatchListButton = findViewById(R.id.view_watch_list);
         Button sendNotificationButton = findViewById(R.id.send_notification);
 
+        Button joinWaitingListButton = findViewById(R.id.join_waiting_list);
+        Button leaveWaitingListButton = findViewById(R.id.leave_waiting_list);
+
         // Set click listeners
         backArrowButton.setOnClickListener(v -> finish());
 
@@ -80,14 +91,65 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         shareIconButton.setOnClickListener(v -> shareEventDetails());
 
+        EventViewModel viewModel = new ViewModelProvider(this, new EventViewModelFactory(eventId)).get(EventViewModel.class);
+        String finalEventId = eventId;
+        joinWaitingListButton.setOnClickListener(v -> {
+            User currentUser = GlobalRepository.getLoggedInUser();
+            if (currentUser == null) {
+                throw new IllegalStateException("User not logged in");
+            }
+
+            String userId = currentUser.getId();
+
+            // Add the user to the event's waiting list
+            viewModel.addWaitingListEntrant(userId);
+
+            // Add the event to the user's list of joined events
+            currentUser.addEventJoined(finalEventId);
+            Toast.makeText(this, "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+        });
+
+        leaveWaitingListButton.setOnClickListener(v -> {
+            // Retrieve the current user
+            User currentUser = GlobalRepository.getLoggedInUser();
+            if (currentUser == null) {
+                throw new IllegalStateException("User not logged in");
+            }
+
+            String userId = currentUser.getId();
+
+            // Remove the user from the event's waiting list
+            viewModel.removeWaitingListEntrant(userId);
+
+            // Remove the event from the user's list of joined events
+            currentUser.removeEventJoined(finalEventId);
+            Toast.makeText(this, "Successfully left the waiting list.", Toast.LENGTH_SHORT).show();
+        });
+
+        leaveWaitingListButton.setOnClickListener(v -> {
+        });
+
         editGraphButton.setOnClickListener(v -> {
             // Handle edit graph action
             Toast.makeText(this, "Edit Graph clicked", Toast.LENGTH_SHORT).show();
         });
 
         viewWatchListButton.setOnClickListener(v -> {
-            // Handle view watch list action
             Toast.makeText(this, "View Watch List clicked", Toast.LENGTH_SHORT).show();
+
+            Fragment eventWaitlistFragment = new EventWaitlistFragment();
+
+            // Pass eventId to the fragment
+            Bundle args = new Bundle();
+            args.putString("eventId", finalEventId);
+            eventWaitlistFragment.setArguments(args);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, eventWaitlistFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            Log.d("EventDetailsActivity", "View Watch List clicked");
         });
 
         sendNotificationButton.setOnClickListener(v -> {
