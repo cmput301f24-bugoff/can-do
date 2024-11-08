@@ -16,11 +16,21 @@ import com.bugoff.can_do.user.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Activity for editing a facility. Allows the user to view, create, or update facility details such as
+ * name and address. Facility data is loaded from or saved to Firebase Firestore.
+ */
 public class FacilityEdit extends AppCompatActivity {
     private TextInputEditText facilityNameInput, facilityAddressInput;
     private Button saveFacilityButton;
     private Facility facility;
-
+    /**
+     * Called when the activity is first created. Initializes UI components and loads facility data
+     * from Firestore if it exists.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the most recent data. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +60,12 @@ public class FacilityEdit extends AppCompatActivity {
         });
     }
 
+    /**
+     * Loads the facility data from Firestore using the specified Android ID.
+     *
+     * @param db        The FirebaseFirestore instance for accessing Firestore.
+     * @param androidId The unique Android ID used to identify the user's facility data in Firestore.
+     */
     private void loadFacilityData(FirebaseFirestore db, String androidId) {
         db.collection("facilities").document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -66,11 +82,20 @@ public class FacilityEdit extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(FacilityEdit.this, "Failed to load facility data", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Checks if the facility name and address fields are not empty.
+     *
+     * @return True if both fields are not empty, false otherwise.
+     */
     private boolean areFieldsValid() {
         return facilityNameInput.getText() != null && !facilityNameInput.getText().toString().isEmpty()
                 && facilityAddressInput.getText() != null && !facilityAddressInput.getText().toString().isEmpty();
     }
 
+    /**
+     * Saves the current facility data to Firestore and displays a success message.
+     * Updates the facility name and address based on user input, then saves the facility data.
+     */
     private void saveFacilityData() {
         String name = facilityNameInput.getText().toString();
         String address = facilityAddressInput.getText().toString();
