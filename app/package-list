@@ -204,13 +204,14 @@ $dokka.location:com.bugoff.can_do.notification/Notification/setContent/#java.lan
 $dokka.location:com.bugoff.can_do.notification/Notification/setId/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-id.html
 $dokka.location:com.bugoff.can_do.notification/Notification/setType/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-type.html
 $dokka.location:com.bugoff.can_do.notification/NotificationAdapter///PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-adapter/index.html
-$dokka.location:com.bugoff.can_do.notification/NotificationAdapter/NotificationAdapter/#Context#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-adapter/-notification-adapter.html
+$dokka.location:com.bugoff.can_do.notification/NotificationAdapter/NotificationAdapter/#Context#java.util.List<com.bugoff.can_do.notification.Notification>/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-adapter/-notification-adapter.html
 $dokka.location:com.bugoff.can_do.notification/NotificationAdapter/getView/#int#View#ViewGroup/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-adapter/get-view.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity///PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/index.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity/NotificationSettingsActivity/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/-notification-settings-activity.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/on-create.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsActivity///PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-activity/index.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsActivity/NotificationsActivity/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-activity/-notifications-activity.html
+$dokka.location:com.bugoff.can_do.notification/NotificationsActivity/fetchUserNotifications/#java.lang.String#ListView/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-activity/fetch-user-notifications.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-activity/on-create.html
 $dokka.location:com.bugoff.can_do.organizer////PointingToDeclaration/app/com.bugoff.can_do.organizer/index.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment.DateSelectedListener///PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/-date-selected-listener/index.html
