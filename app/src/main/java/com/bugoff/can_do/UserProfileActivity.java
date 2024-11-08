@@ -104,6 +104,8 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
+        setupAdminButton(view);
+
         // User clicks avatar to change or add profile picture
         view.findViewById(R.id.image_avatar).setOnClickListener(new View.OnClickListener() {
             @Override
