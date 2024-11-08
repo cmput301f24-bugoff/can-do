@@ -24,6 +24,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment for displaying a list of events and allowing the organizer to create new events.
+ * Users can click on an event to view its details or use the floating action button to create a new event.
+ */
 public class EventsFragment extends Fragment {
     private static final String TAG = "EventsFragment";
 
@@ -32,6 +36,14 @@ public class EventsFragment extends Fragment {
     private FloatingActionButton fabAddEvent;
     private EventsListViewModel eventsListViewModel;
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return The View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -74,7 +86,11 @@ public class EventsFragment extends Fragment {
 
         return view;
     }
-
+    /**
+     * Handles event click action to open EventDetailsActivity with the selected event's ID.
+     *
+     * @param event The Event object that was clicked.
+     */
     private void onEventClicked(Event event) {
         Intent intent = new Intent(getContext(), EventDetailsActivity.class);
         intent.putExtra("selected_event_id", event.getId());

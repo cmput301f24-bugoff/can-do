@@ -13,6 +13,8 @@ dokka = "2.0.0-Beta"
 materialVersion = "1.9.0"
 zxingAndroidEmbedded = "4.3.0"
 firebaseStorage = "21.0.1"
+core = "1.6.1"
+testng = "6.9.6"
 
 [libraries]
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -28,6 +30,8 @@ kotlinAsJavaPlugin = { module = "org.jetbrains.dokka:kotlin-as-java-plugin", ver
 material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
+testng = { group = "org.testng", name = "testng", version.ref = "testng" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

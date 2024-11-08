@@ -41,6 +41,9 @@ android {
 
 dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    testImplementation(libs.core)
+    testImplementation(libs.testng)
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.firebase.storage)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
@@ -51,7 +54,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
 
