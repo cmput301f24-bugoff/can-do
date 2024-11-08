@@ -97,6 +97,11 @@ $dokka.location:com.bugoff.can_do.event/EventAdapter/getItemCount/#/PointingToDe
 $dokka.location:com.bugoff.can_do.event/EventAdapter/onBindViewHolder/#com.bugoff.can_do.event.EventAdapter.EventViewHolder#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/on-bind-view-holder.html
 $dokka.location:com.bugoff.can_do.event/EventAdapter/onCreateViewHolder/#ViewGroup#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/on-create-view-holder.html
 $dokka.location:com.bugoff.can_do.event/EventAdapter/setEventList/#java.util.List<com.bugoff.can_do.event.Event>/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/set-event-list.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/index.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/EventSelectedFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/-event-selected-fragment.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel///PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/index.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/EventViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/-event-view-model.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/addSelectedEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/add-selected-entrant.html
@@ -135,6 +140,7 @@ $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/EventWaitlistFragm
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/on-create.html
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/on-view-created.html
+$dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/performDrawing/#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/perform-drawing.html
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel///PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/index.html
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel/EventsListViewModel/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/-events-list-view-model.html
 $dokka.location:com.bugoff.can_do.event/EventsListViewModel/fetchEvents/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-list-view-model/fetch-events.html
