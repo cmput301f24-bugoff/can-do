@@ -40,6 +40,10 @@ android {
 }
 
 dependencies {
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.firebase.storage)
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.zxing.android.embedded)
     implementation(libs.material.v190)
     implementation(libs.appcompat)

@@ -1,9 +1,11 @@
-package com.bugoff.can_do;
+package com.bugoff.can_do.notification;
 
 import android.os.Bundle;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bugoff.can_do.R;
 
 public class NotificationSettingsActivity extends AppCompatActivity {
 

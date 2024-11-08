@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Existing Views -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
     <!-- Top Bar -->
     <LinearLayout
         android:id="@+id/top_bar"
@@ -21,7 +27,7 @@
             android:background="@null" />
 
         <TextView
-            android:id="@+id/class_title"
+            android:id="@+id/class_tile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,6 +58,12 @@
         android:layout_height="200dp"
         android:layout_below="@id/top_bar"
         android:layout_marginTop="16dp">
+
+        <ImageView
+            android:id="@+id/event_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
         <ImageButton
             android:id="@+id/edit_graph"
@@ -117,12 +129,22 @@
             android:text="Send Notification" />
     </LinearLayout>
 
+    <!-- QR Code ImageView -->
+    <ImageView
+        android:id="@+id/idIVQrcode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/button_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:contentDescription="QR Code" />
+
     <!-- Entrants Section -->
     <TextView
         android:id="@+id/drawn_entrants_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_container"
+        android:layout_below="@id/idIVQrcode"
         android:layout_marginTop="16dp"
         android:text="All Drawn Entrants"
         android:textSize="18sp"
@@ -136,5 +158,4 @@
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:scrollbars="vertical" />
-
 </RelativeLayout>
