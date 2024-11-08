@@ -1,0 +1,1900 @@
+[33mcommit 824928b7d85aa74591d28bb0fe9041e575e7f62d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mYL[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 2b29c6a 1424580
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Fri Nov 8 12:44:33 2024 -0700
+
+    Merge pull request #178 from cmput301f24-bugoff/Notification_receiving
+    
+    Add notification list in user class
+
+[33mcommit 1424580380d8b3312e4833d0c3dfcada54a1429c[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Fri Nov 8 12:37:46 2024 -0700
+
+    update the notification method
+    
+    change the type of notification, add method to return value in user and let the notification page receive the message from user
+
+[33mcommit 9d1091f826b7d30b6a6f03e9402dd8303a91627a[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Fri Nov 8 12:28:56 2024 -0700
+
+    Add notification list in user class
+    
+    update
+
+[33mcommit 2b29c6a9eed3b37c6a254c8531d1e9845c1ffb31[m
+Merge: d23140a 2f5266a
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Nov 8 12:11:52 2024 -0700
+
+    Merge pull request #177 from cmput301f24-bugoff/uml
+    
+    UML
+
+[33mcommit 2f5266ae02b3cba93a0afd612ae7db20f76ac84d[m
+Merge: 1f4c2c8 d23140a
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Nov 8 12:06:55 2024 -0700
+
+    Merge branch 'main' into uml
+
+[33mcommit 1f4c2c81496356237e0ae27763b6c79a6617e57e[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Nov 8 12:01:15 2024 -0700
+
+    UML
+
+[33mcommit d23140a3c496f07fd53642a1feae719632e9e67c[m
+Merge: 127adc9 932a9ff
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 11:58:37 2024 -0700
+
+    Merge pull request #173 from cmput301f24-bugoff/YL
+    
+    Organizer home page deleted
+
+[33mcommit 932a9ff58b9bdbe1a8832dba60c454d92031121b[m[33m ([m[1;31morigin/YL[m[33m)[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 11:54:04 2024 -0700
+
+    bug fixed
+
+[33mcommit f7844d0ff9e0247e149f7776bfae67cf1111e993[m
+Merge: e63ef13 030145d
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 11:50:41 2024 -0700
+
+    merge
+
+[33mcommit e63ef1359d912b38416ea0d0652258ae461f7221[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 11:49:11 2024 -0700
+
+    draw, view list added
+
+[33mcommit 127adc9412e1e048c6b05d244019b39d6b4e320b[m
+Merge: 761ccaa 205fc45
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Nov 8 05:15:40 2024 -0700
+
+    Merge pull request #176 from cmput301f24-bugoff/details
+    
+    Details
+
+[33mcommit 205fc4580409a7c935e59749cda6903d4d396720[m[33m ([m[1;31morigin/details[m[33m)[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Nov 8 04:23:42 2024 -0700
+
+    fix
+
+[33mcommit 6b9934cfe2a8de485c682fdd4a35aca925902a65[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Nov 8 04:19:33 2024 -0700
+
+    Sorta working list
+
+[33mcommit 761ccaae45c1db8d11b1d07bc2189f9d05333eb9[m
+Merge: 270d633 5698b0c
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Nov 8 03:46:55 2024 -0700
+
+    Merge pull request #175 from cmput301f24-bugoff/details
+    
+    Some details
+
+[33mcommit 5698b0c90607b7dc2cd781b97dcc51d8de1a45ba[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Nov 8 03:41:45 2024 -0700
+
+    Some details
+
+[33mcommit 030145d83960ce32c55b2d585dbf02d03f2ea0d9[m
+Merge: 003df4c 270d633
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 00:45:33 2024 -0700
+
+    Merge branch 'main' into YL
+
+[33mcommit 003df4ce890043f00960f2abf65e8541efbcdfcc[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Fri Nov 8 00:40:34 2024 -0700
+
+    Organizer home page deleted
+
+[33mcommit 270d6337d71c39f4b900fa9f93352d98ecce4853[m[33m ([m[1;32mmain[m[33m)[m
+Merge: a384f55 657209d
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Fri Nov 8 00:24:04 2024 -0700
+
+    Merge pull request #172 from cmput301f24-bugoff/notification_class_setup
+    
+    Update notification object
+
+[33mcommit 657209db04a5879f6a6a1023400de2b6234af234[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Fri Nov 8 00:16:24 2024 -0700
+
+    Update notification object
+    
+    remove all notification related files into the new folder and create the new class
+
+[33mcommit a384f559e5b304a784c7c20dabc9a1bff6569f9b[m[33m ([m[1;31morigin/send-notification-function[m[33m)[m
+Merge: 82433f5 d0eb0b9
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Thu Nov 7 23:15:20 2024 -0700
+
+    Merge pull request #171 from cmput301f24-bugoff/YL
+    
+    bugs fixed
+
+[33mcommit d0eb0b9493c89c1ddcaef0d0ad87c15e97770576[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Thu Nov 7 23:09:42 2024 -0700
+
+    bugs fixed
+
+[33mcommit 82433f58ff9bfb77d2793a76169f9d7f3505c6ad[m
+Merge: 07eb542 99c39b3
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Thu Nov 7 22:40:43 2024 -0700
+
+    Merge pull request #170 from cmput301f24-bugoff/YL
+    
+    Image
+
+[33mcommit 99c39b3db120393720f1cf7e76d3c89047348995[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Thu Nov 7 22:36:12 2024 -0700
+
+    Small fix
+
+[33mcommit 9006cf828b78f8a6a98440182eec2dc1f94afef1[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Thu Nov 7 22:30:43 2024 -0700
+
+    Image
+
+[33mcommit 07eb5426cdb687966ed6bef9422d5b0418531d2f[m
+Merge: ef18c86 76c27e6
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Thu Nov 7 18:49:25 2024 -0700
+
+    Merge pull request #167 from cmput301f24-bugoff/notification_function
+    
+    notification update
+
+[33mcommit 76c27e6b12f2333780572e17d19717eece2543b5[m
+Merge: a2bff4d ef18c86
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Thu Nov 7 18:42:13 2024 -0700
+
+    Merge branch 'main' into notification_function
+
+[33mcommit a2bff4dd510a18e4afbb87a42efb2532ab3eeb6d[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Thu Nov 7 18:41:33 2024 -0700
+
+    notification update
+    
+    remove the notice for no notification
+
+[33mcommit ef18c86f476b384c42e26abed413965ac0f9d17e[m
+Merge: c53ad20 5365b3d
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Thu Nov 7 16:30:20 2024 -0700
+
+    Merge pull request #166 from cmput301f24-bugoff/minor-update
+    
+    Minor update
+
+[33mcommit 5365b3df89b6d414678a7b1956f418229ea63051[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Nov 7 16:15:47 2024 -0700
+
+    material 3 initialization
+
+[33mcommit 7244793e07a00ecf91cf07417c6c55bf26b37c1e[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Nov 7 16:15:39 2024 -0700
+
+    added back button to create event fragment
+
+[33mcommit 97bc18bf480f5013390545540f4ce599dc32f72e[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Nov 7 16:15:09 2024 -0700
+
+    added background app color
+
+[33mcommit 30b7077f7f491c547c15e973dde89b3d331e79d5[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Nov 7 16:14:59 2024 -0700
+
+    changed notification toggles to material 3
+
+[33mcommit c53ad20d5ae1e74b5455d342f55863f048854ebf[m
+Merge: f28b017 8264beb
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Nov 6 20:56:17 2024 -0700
+
+    Profile picture functionality
+    
+    Profile picture functionality
+
+[33mcommit 8264bebdafd1b0c74a7d7073834b1e945eff4ff5[m[33m ([m[1;31morigin/user-profile-screen[m[33m)[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Wed Nov 6 20:50:38 2024 -0700
+
+    Profile picture functionality
+
+[33mcommit f28b017409db0da61764d15644ab12f18f82da68[m
+Merge: e3f1b4c aa3bd66
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Wed Nov 6 18:59:58 2024 -0700
+
+    Merge pull request #164 from cmput301f24-bugoff/qrcode
+    
+    Qrcode
+
+[33mcommit aa3bd667845f09ddc8f2c70b7d19a85863660ece[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:54:25 2024 -0700
+
+    removed unused imports
+
+[33mcommit d2a13919093021c8a26c424bb03f23df541e37fd[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:54:09 2024 -0700
+
+    event detail
+
+[33mcommit 4aabaa5308edae4ff2ef104365a8991438472fda[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:54:00 2024 -0700
+
+    event detail
+
+[33mcommit daf8e3555a38f9c3e81740b22ff254b1e1fbf1db[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:53:52 2024 -0700
+
+    event detail
+
+[33mcommit 596242894db7c18161ed020ef30bb5add43283ee[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:52:37 2024 -0700
+
+    refactor
+
+[33mcommit b8d8f0d9ea6859efed6e4b03405fe69fe89d04b6[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:52:11 2024 -0700
+
+    added javadocs
+
+[33mcommit 344675210d4482a9ffe5d83b60f33fec506525a8[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 18:51:57 2024 -0700
+
+    qr code now scans
+
+[33mcommit e3f1b4c8b1ad4dcbfc114301c37ee98fce3e4cf5[m
+Merge: 32f589a caee3f4
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Wed Nov 6 17:17:58 2024 -0700
+
+    Merge pull request #163 from cmput301f24-bugoff/nickshan-save
+    
+    added basic activity when clicking on an event (organizer)
+
+[33mcommit caee3f425c9dcc2750114e61e555a3c573c51079[m
+Merge: e6e929f 32f589a
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Wed Nov 6 17:13:05 2024 -0700
+
+    Merge branch 'main' into nickshan-save
+
+[33mcommit e6e929f26af866ffd522986a994b15b77fa9b407[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 17:11:01 2024 -0700
+
+    work in progress
+
+[33mcommit b3e263298e15be77f852211db24c1970edf5ddb8[m
+Merge: 13ac073 b48311b
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 16:29:36 2024 -0700
+
+    Merge remote-tracking branch 'origin/nickshan-save' into nickshan-save
+    
+    # Conflicts:
+    #       app/src/main/java/com/bugoff/can_do/organizer/EventDetailsActivity.java
+
+[33mcommit 13ac0739343b6425deebce2aa7d2501e79b3c6ee[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Nov 6 16:27:49 2024 -0700
+
+    work in progress
+
+[33mcommit 32f589acb043911939d54dc968ed9b5012f4bf3b[m
+Merge: d287886 63a1fbf
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Wed Nov 6 12:30:54 2024 -0700
+
+    Merge pull request #161 from cmput301f24-bugoff/notification_function
+    
+    Update for notification function
+
+[33mcommit 63a1fbf4c0f218ba6497efde3d23f5aa549603fe[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Wed Nov 6 12:08:23 2024 -0700
+
+    Update for notification function
+    
+    complete the Adapter and the logic for pop-up windows.
+    
+    Need to change the List item later from db
+
+[33mcommit d287886c086f6b6b9cac80c636f6dba4fc65d259[m
+Merge: a95b2da 85dc14d
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Tue Nov 5 16:31:01 2024 -0700
+
+    Added remove/edit profile picture
+    
+    Added remove/edit profile picture
+
+[33mcommit 85dc14d130b7cae6494c3b2b2d8ba4550a031ef7[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Tue Nov 5 16:26:06 2024 -0700
+
+    Added remove/edit profile picture
+
+[33mcommit 6b36b7dce674e306ced814dbb3e0612acf35f1a5[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Mon Nov 4 01:16:38 2024 -0700
+
+    starting qr code generation
+
+[33mcommit 9310a3076ce5927f02842bb52fc801b2c8cec6ce[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Mon Nov 4 01:16:26 2024 -0700
+
+    added details page for event (not done)
+
+[33mcommit a95b2da72df8e501cc5fe709ffa644c738f65ede[m
+Merge: ac8f4bc da0eb95
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Tue Nov 5 14:13:57 2024 -0700
+
+    Minor layout changes
+    
+    Minor layout changes
+
+[33mcommit da0eb95f5ceae52898387516e0efaaba89cacb39[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Tue Nov 5 14:08:20 2024 -0700
+
+    Minor layout changes
+
+[33mcommit ac8f4bc1cd9b13066b538a47c64507cd8f15c50f[m
+Merge: a08008b 59768c1
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Tue Nov 5 13:10:51 2024 -0700
+
+    Merge pull request #158 from cmput301f24-bugoff/user-profile-screen
+    
+    User profile screen
+
+[33mcommit 59768c194984a273a01a17b5b15a29e01c9900a0[m
+Merge: 643bc71 52e1245
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Tue Nov 5 13:02:14 2024 -0700
+
+    merge
+
+[33mcommit b48311bfb74f35b58d14c65bf440f8967d4c3018[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Mon Nov 4 01:16:38 2024 -0700
+
+    starting qr code generation
+
+[33mcommit 769acb7a34f46206ed7df896d43c2260cc8d78ae[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Mon Nov 4 01:16:26 2024 -0700
+
+    added details page for event (not done)
+
+[33mcommit 643bc711b0b68b0ca000740b119ed2c78b760aad[m
+Merge: 0b2d84e e2ec5bf
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Sun Nov 3 19:05:26 2024 -0700
+
+    Update
+
+[33mcommit 52e1245977335efaf0c77d2320e983b89639c2e5[m
+Merge: 0b2d84e a08008b
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 19:01:26 2024 -0700
+
+    Merge pull request #157 from cmput301f24-bugoff/main
+    
+    merge main to user
+
+[33mcommit a08008bf90314d9da46267af5544f076bcb83dd1[m
+Merge: 58db48b e2ec5bf
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 18:54:26 2024 -0700
+
+    Merge pull request #156 from cmput301f24-bugoff/user-profile-screen
+    
+    Merge pull request #155 from cmput301f24-bugoff/main
+
+[33mcommit e2ec5bfb0212fa47c70ca4ca2a62968170f8a5e1[m
+Merge: 8376031 58db48b
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 18:46:53 2024 -0700
+
+    Merge pull request #155 from cmput301f24-bugoff/main
+    
+    Merge pull request #154 from cmput301f24-bugoff/user-profile-screen
+
+[33mcommit 0b2d84e104fc52d3a84f491391bd31674459018d[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Sun Nov 3 18:40:56 2024 -0700
+
+    Added phone number button function
+
+[33mcommit 58db48b5947370086ec4fb210696c760292bad4c[m
+Merge: 444f6fe 8376031
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 17:45:53 2024 -0700
+
+    Merge pull request #154 from cmput301f24-bugoff/user-profile-screen
+    
+    User profile screen
+
+[33mcommit 837603154233cd0dac83ce074f925aa464d629c5[m
+Merge: aa50ef8 444f6fe
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 17:41:19 2024 -0700
+
+    Merge branch 'main' into user-profile-screen
+
+[33mcommit aa50ef8bc54d50407f7bdd4c67eb4c4ff75200cb[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Sun Nov 3 17:40:46 2024 -0700
+
+    Revised name & email buttons
+
+[33mcommit 444f6fe8cc07d603681b4cdfc082c15ed189bb9d[m
+Merge: ab2bcb1 17bb477
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Sun Nov 3 17:13:36 2024 -0700
+
+    Merge pull request #153 from cmput301f24-bugoff/manage-facility-update
+    
+    manage facility button now works in organizer
+
+[33mcommit 17bb4770ae84d5388f7dab99579e299bd9d3166e[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sun Nov 3 17:07:54 2024 -0700
+
+    manage facility button now works in organizer
+
+[33mcommit bcf5bd1914d0332d27c4d134dd38247b8058cec9[m
+Merge: 6cc5610 ab2bcb1
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Sun Nov 3 16:02:34 2024 -0700
+
+    Merge pull request #151 from cmput301f24-bugoff/main
+    
+    merge main into user-profile-screen
+
+[33mcommit 6cc5610e1d028d9b04fe50dfea837791bdb45a73[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Sun Nov 3 15:54:18 2024 -0700
+
+    Updated user profile buttons
+
+[33mcommit ab2bcb1ef399d415a6ed4960fb2ac40469e69818[m
+Merge: 2be97de 8ee8ffe
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Sat Nov 2 11:28:28 2024 -0600
+
+    Merge pull request #150 from cmput301f24-bugoff/bugfix
+    
+    Some bugfixes
+
+[33mcommit 8ee8ffe15d56dcc7659acf0bfb09e91865061334[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Nov 2 11:20:22 2024 -0600
+
+    Some bugfixes
+
+[33mcommit 2be97de09b6bd155ff7b7ad796ac091d349a9c1b[m
+Merge: 8120310 14e499d
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Thu Oct 31 16:29:56 2024 -0600
+
+    Merge pull request #149 from cmput301f24-bugoff/buttonimage
+    
+    image button update
+
+[33mcommit 14e499d9c35cf826b2156f72f01f450014036143[m
+Author: Sky Chen <qiran2@ualberta.ca>
+Date:   Thu Oct 31 16:24:10 2024 -0600
+
+    image button update
+    
+    update the image for location, share and more vert
+
+[33mcommit 81203108211f1085c75877b9ca84347f6e31ff2a[m
+Merge: d277f50 fadb714
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Thu Oct 31 02:10:58 2024 -0600
+
+    Merge pull request #148 from cmput301f24-bugoff/event
+    
+    Create Event
+
+[33mcommit fadb7143be1e6a4d4e5322a51543ecb7b1e243bb[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 31 02:05:16 2024 -0600
+
+    Nothing
+
+[33mcommit 5f59c40714d73912534d47457e04721e15ddfb45[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 31 01:09:12 2024 -0600
+
+    Something small
+
+[33mcommit 03c8028bb90ce8be6b2917e0ae4fbb2a67fb878b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 31 00:58:02 2024 -0600
+
+    Part whatever
+
+[33mcommit 003e016bd289127d86c07b3a09523dcc7e5c2ea2[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 30 23:32:50 2024 -0600
+
+    Part 3
+
+[33mcommit 120df062695a1c19ecce5a144e869f345bcf8f22[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 30 22:33:56 2024 -0600
+
+    Part 2
+
+[33mcommit b2adc8cfb1ef3ea64cf3009994c93c24ae4b89cc[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 30 22:31:08 2024 -0600
+
+    Part 1
+
+[33mcommit d277f50c277b12c12e427179802c242eb11b1ce2[m
+Merge: 0429448 d9073de
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Wed Oct 30 18:49:53 2024 -0600
+
+    Merge pull request #146 from cmput301f24-bugoff/gr
+    
+    Small update to gr
+
+[33mcommit d9073de83bc6d762f11cc13f8a1bb10a2eb2d7b1[m
+Merge: cfc3ae9 0429448
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Wed Oct 30 18:45:11 2024 -0600
+
+    Merge branch 'main' into gr
+
+[33mcommit cfc3ae9f36b573a0672729f4f1aa32f7dcab4a14[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 30 18:42:48 2024 -0600
+
+    Small update to gr
+
+[33mcommit 04294486c8a50e5dfdb5363d91d33b504c50fdcd[m
+Merge: 721c621 b8dc4b2
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Oct 30 18:29:39 2024 -0600
+
+    Merge pull request #144 from cmput301f24-bugoff/user-profile-screen
+    
+    Added name & email buttons some functionality
+
+[33mcommit b8dc4b2cb3c0549e55bedbea0906f644f38fc7d7[m
+Merge: f58dcc6 721c621
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Oct 30 18:24:31 2024 -0600
+
+    Merge branch 'main' into user-profile-screen
+
+[33mcommit f58dcc60a7d23b954d1e5da2955a4d174c2ff168[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Wed Oct 30 18:19:16 2024 -0600
+
+    Added name & email buttons some functionality
+
+[33mcommit 721c621955aec3aa928b348bf6fb0d5c54b0ff3e[m
+Merge: 9baa34e cfa931a
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Wed Oct 30 18:11:00 2024 -0600
+
+    Merge pull request #143 from cmput301f24-bugoff/facility
+    
+    Minor changes to the facility creation process
+
+[33mcommit cfa931a6327de55a3d263a18bbd1bc396febff47[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 30 18:03:55 2024 -0600
+
+    Minor changes to the facility creation process
+
+[33mcommit 9baa34ef528575a0cab77c6d12bf3309e7c42388[m
+Merge: f4cbec7 9aaab6d
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Oct 30 16:42:26 2024 -0600
+
+    Merge pull request #142 from cmput301f24-bugoff/user-profile-screen
+    
+    Created Notifications activity
+
+[33mcommit 9aaab6d94145262be21217d828784d229e5fdb8b[m
+Merge: 50e172c f4cbec7
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Oct 30 16:37:52 2024 -0600
+
+    Merge branch 'main' into user-profile-screen
+
+[33mcommit 50e172cc63c8279c6c4c9fde676750047879b72b[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Wed Oct 30 16:35:46 2024 -0600
+
+    Created Notifications activity
+
+[33mcommit f4cbec7adbae0a4e0354cae6ad0e26c9d36af4cf[m
+Merge: 3b767c0 ab20d29
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Wed Oct 30 15:56:27 2024 -0600
+
+    Merge pull request #141 from cmput301f24-bugoff/user-profile-screen
+    
+    Updated settings button function in homescreen
+
+[33mcommit ab20d29b3c4ceec4c5e7814259cc8c3c42fae3a0[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Wed Oct 30 15:51:31 2024 -0600
+
+    Updated settings button function in homescreen
+
+[33mcommit 3b767c0769413c3db20d5fff895f52a061325f04[m
+Merge: c596550 24cfe86
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Wed Oct 30 13:25:43 2024 -0600
+
+    Merge pull request #140 from cmput301f24-bugoff/icon-update
+    
+    update icons
+
+[33mcommit 24cfe863628086ade2e30e342f80538f151d04c2[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Wed Oct 30 12:51:09 2024 -0600
+
+    update icons
+
+[33mcommit c5965501ba9333fb61806b8354840987faa84e56[m
+Merge: 30cccc6 17a490d
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Wed Oct 30 12:07:26 2024 -0600
+
+    Merge pull request #139 from cmput301f24-bugoff/user_ui
+    
+    User UI
+
+[33mcommit 17a490d9502ae7af83a37218bae214564cda6747[m
+Merge: 8446c15 30cccc6
+Author: Davidsharkdododo <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Wed Oct 30 00:34:39 2024 -0600
+
+    Merge branch 'main' of github.com:cmput301f24-bugoff/can-do into user_ui
+
+[33mcommit 8446c1587ed09351872f7bd14da313c1ba4c2dd6[m
+Author: Davidsharkdododo <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Wed Oct 30 00:32:49 2024 -0600
+
+    notification setting page added
+
+[33mcommit 30cccc649c8b5b36af824a2dcd83bdc23611aa0e[m
+Merge: a910b57 74738ea
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 29 22:07:28 2024 -0600
+
+    Merge pull request #138 from cmput301f24-bugoff/viewmodel
+    
+    More viewmodel
+
+[33mcommit 74738ea71e35e48750b0f611765707db526805bb[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 21:59:12 2024 -0600
+
+    Minor fixes
+
+[33mcommit 2496be341786bbee78e23d29c399e592e79b6973[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 21:49:08 2024 -0600
+
+    Minor fixes
+
+[33mcommit 67f86a375deece029fd48e978925e0933310fccc[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 21:32:54 2024 -0600
+
+    More viewmodel
+
+[33mcommit a910b576d75ddb59ac070233863c01b06c0b783b[m
+Merge: 75bb017 e29ba69
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Tue Oct 29 20:19:46 2024 -0600
+
+    Merge pull request #137 from cmput301f24-bugoff/attendee-switching
+    
+    Attendee switching
+
+[33mcommit e29ba69733762c36ac11700ed2574106ffe2987a[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 20:09:50 2024 -0600
+
+    added spacer
+
+[33mcommit 29b2c82898942eb780b901d658e6bc26947ad82e[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 20:09:41 2024 -0600
+
+    updated bottom nav bar
+
+[33mcommit c93a7c290efedc4120b6132e1553fa58ba326665[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 20:09:21 2024 -0600
+
+    added organizer profile screen
+
+[33mcommit a9fe4905baffb70e0e76ba80b147dabd982cf664[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 20:09:15 2024 -0600
+
+    added organizer profile screen
+
+[33mcommit 75bb017b1bd9922804ae452e900f200a33ecdefb[m
+Merge: e1cc1fd 9fc6823
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Tue Oct 29 19:04:36 2024 -0600
+
+    Merge pull request #136 from cmput301f24-bugoff/organizer-events-save
+    
+    Organizer events save
+
+[33mcommit 9fc682311fd4f1f8e9e067c8131690f1dd0364f8[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:59:02 2024 -0600
+
+    fixed renames
+
+[33mcommit 5f63830b0170816dd24fc61cfad96e5c41750dec[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:58:44 2024 -0600
+
+    start of events fragment
+
+[33mcommit b049090e01a86371732b430df507fc40a9007484[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:58:27 2024 -0600
+
+    renamed nav menu items
+
+[33mcommit 8d204e1f3fa099a0b7ff4511a823ae1f66ef9aad[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:58:12 2024 -0600
+
+    renamed container
+
+[33mcommit ed059a94afd0fc9e7086b3658b44aab380a3e2ed[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:57:35 2024 -0600
+
+    renamed file
+
+[33mcommit 94f237c6e34426e4b5ab2205ed84bf7e2d1eabe3[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 18:57:04 2024 -0600
+
+    added + icon for FAB
+
+[33mcommit e1cc1fd20ea8725b089296d8af0d2dd89fdc8f21[m
+Merge: 88022ad 8213ef4
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 29 17:17:16 2024 -0600
+
+    Merge pull request #135 from cmput301f24-bugoff/bugfix
+    
+    Fixed a bug where the app would crash on startup
+
+[33mcommit 8213ef466777435e766718647316c35bab68879f[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 17:12:15 2024 -0600
+
+    Fixed a bug where the app would crash on startup
+
+[33mcommit 88022ad49eb4884c51237c0746b15224f8050363[m
+Merge: 3479155 e1a130a
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Tue Oct 29 16:56:55 2024 -0600
+
+    Merge pull request #134 from cmput301f24-bugoff/organizer-transition
+    
+    logic for changing to organizer home
+
+[33mcommit e1a130a8c4d337617657ca31f5194d44c9cfb95c[m
+Merge: 7465bc5 3479155
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Tue Oct 29 16:52:22 2024 -0600
+
+    Merge branch 'main' into organizer-transition
+
+[33mcommit 7465bc5237b1ea8a2a188a3abb0ce381703b7ac8[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 16:47:19 2024 -0600
+
+    logic for changing to organizer home
+
+[33mcommit 3479155fe7089f69540861f33ed7bdafea4b4aeb[m
+Merge: 73c4b03 10f218c
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 29 16:39:18 2024 -0600
+
+    Merge pull request #131 from cmput301f24-bugoff/viewmodel
+    
+    Partial viewmodel + refactor
+
+[33mcommit 10f218c5e6cd0236fcf80b5a3fc3271321570ebb[m
+Merge: 1209612 73c4b03
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 29 16:33:42 2024 -0600
+
+    Merge branch 'main' into viewmodel
+
+[33mcommit 73c4b03393c0592d53eb764e62f8c487758a479a[m
+Merge: 742a81e 1450a38
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Tue Oct 29 16:15:31 2024 -0600
+
+    Merge pull request #132 from cmput301f24-bugoff/icons-update
+    
+    changed icons to match material design
+
+[33mcommit 1450a3810338f6db5857448454bbe3d8433faed6[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Tue Oct 29 16:08:56 2024 -0600
+
+    changed icons to match material design
+
+[33mcommit 12096125d03ddf8fcec24acdbab705067e4adb3b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 12:23:05 2024 -0600
+
+    Refactor: Organized class files
+
+[33mcommit 8b9545cfdcb9fc13f28170de9800e4f69f6f3bfb[m
+Merge: 0938f6b 742a81e
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 12:19:00 2024 -0600
+
+    Merge remote-tracking branch 'origin/main' into viewmodel
+
+[33mcommit 0938f6bba1484a8a878efaa809b1b8e835a7d6e4[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 12:16:48 2024 -0600
+
+    Updated UserViewModel
+
+[33mcommit 742a81ec75c47acaa6b3e264802306f00e0460c5[m
+Merge: 51d3b3e 15b714c
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Tue Oct 29 12:02:37 2024 -0600
+
+    Merge pull request #130 from cmput301f24-bugoff/user_ui
+    
+    notification and setting icon added
+
+[33mcommit 15b714c8ea3f6cb285323a6bca76f1528a831475[m
+Merge: 8fbc60e 51d3b3e
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Tue Oct 29 11:56:05 2024 -0600
+
+    Merge branch 'main' into user_ui
+
+[33mcommit 51d3b3eab3a82ad9c122f9b9ce57b63e975746f9[m
+Merge: b6b2793 640b2f5
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 29 00:24:29 2024 -0600
+
+    Merge pull request #129 from cmput301f24-bugoff/fields
+    
+    Added many fields. Untested.
+
+[33mcommit 640b2f57792e968d668b61d4d094cb46192219fe[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 29 00:14:56 2024 -0600
+
+    Implemented a few more methods
+
+[33mcommit 8fbc60eb8a0a66982e4e3bd40f843445ee7f6e41[m
+Author: Davidsharkdododo <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Tue Oct 29 00:04:35 2024 -0600
+
+    notification and setting icon added
+
+[33mcommit 92966923932b1458c4a1344b93047ebaf7c01136[m
+Merge: 710bb05 b6b2793
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 23:51:12 2024 -0600
+
+    Merge remote-tracking branch 'origin/main' into fields
+
+[33mcommit 710bb05f1e2b2fd6755026816e641c250c1f768b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 23:50:19 2024 -0600
+
+    Implemented new fields
+
+[33mcommit b6b27936c50020bea53a0ea499273c966aaab8ef[m
+Merge: 0f915a8 f1af96f
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Mon Oct 28 17:10:22 2024 -0600
+
+    Merge pull request #127 from cmput301f24-bugoff/user-profile-screen
+    
+    Created HomeScreen
+
+[33mcommit f1af96fb05dfc8346159d6fc8d7177dac2adedb0[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Mon Oct 28 17:00:27 2024 -0600
+
+    Created HomeScreen
+
+[33mcommit c292081e978b35a73125317c1ba2be3390666fb7[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 14:31:50 2024 -0600
+
+    Added additional field definitions
+
+[33mcommit 0f915a86d83001c30aee9c0093a15484a1df256e[m
+Merge: 67e52c7 48a1397
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Mon Oct 28 01:54:13 2024 -0600
+
+    Merge pull request #123 from cmput301f24-bugoff/viewmodel
+    
+    Added experimental untested viewmodels for database classes
+
+[33mcommit 48a139756abaeba517464414ad090f0779339905[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 01:49:01 2024 -0600
+
+    Fixed getEvents exposes the internal representation stored in field events
+
+[33mcommit 069d995b6d247e244a191054fcac27ee5f6b36b0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 01:39:29 2024 -0600
+
+    Removed unused variable
+
+[33mcommit 69a559fd810510eb43c5b73e60607e392694f3b1[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 01:29:56 2024 -0600
+
+    Added experimental untested viewmodels for database classes
+
+[33mcommit 67e52c7d98b901ddaedb97239503944d731ff56e[m
+Merge: 1ced509 fc63280
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Mon Oct 28 00:49:33 2024 -0600
+
+    Merge pull request #122 from cmput301f24-bugoff/binding
+    
+    Added Binding feature (untested)
+
+[33mcommit fc6328026c6a421f47f1357a93fcfd11596c7d47[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 00:36:50 2024 -0600
+
+    Added data binding for key models
+
+[33mcommit 8f47b290b2ecb7faa5189ecb605536ffd8827c7b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 28 00:06:57 2024 -0600
+
+    Added buildFeatures
+
+[33mcommit 1ced509cd50901811ee36a95e732497f4e906c10[m
+Merge: ad98307 10d3af2
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Sun Oct 27 20:55:52 2024 -0600
+
+    Merge pull request #120 from cmput301f24-bugoff/Manage-Facility
+    
+    Manage facility
+
+[33mcommit 10d3af2e9fd14438d84c239e6d03ba914f402dde[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sun Oct 27 20:49:49 2024 -0600
+
+    added background fill color
+
+[33mcommit 285a105f93d5a4e4e9213a7e9e4710c51d6e65a9[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sun Oct 27 20:49:36 2024 -0600
+
+    added Manage Facility activity
+
+[33mcommit 6d770e2be36a55daecab8281e0ba3229583a1eda[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sun Oct 27 20:48:35 2024 -0600
+
+    added functionality to "i am organizer" button
+
+[33mcommit 2cee6faaaff39ee10325962f0cafdd6e69810431[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sun Oct 27 20:47:54 2024 -0600
+
+    added icons
+
+[33mcommit ad983075950667dc03bd9132072c7c739514599e[m
+Merge: ad123a5 0b03359
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Sat Oct 26 19:26:30 2024 -0600
+
+    Merge pull request #119 from cmput301f24-bugoff/qr-code-fragment
+    
+    changed qr code scanner into fragment
+
+[33mcommit 0b03359895eebd934f7fcd2fddf63b1cd817e74c[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sat Oct 26 19:19:36 2024 -0600
+
+    changed qr code scanner into fragment
+
+[33mcommit ad123a57ab6b16112023f87fb082f9d7ff4041f5[m
+Merge: fa047f7 576bde7
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Fri Oct 25 19:54:37 2024 -0600
+
+    Merge pull request #116 from cmput301f24-bugoff/user-profile-screen
+    
+    Updated Profile and Navigation
+
+[33mcommit 576bde7fbe30a0b2fffab506e2d4ab61b24d6440[m
+Merge: 84e8ae0 fa047f7
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Fri Oct 25 19:49:33 2024 -0600
+
+    Merge branch 'main' into user-profile-screen
+
+[33mcommit 84e8ae016b387c96b64f7d5dc80c954c245e968c[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Fri Oct 25 19:48:18 2024 -0600
+
+    Updated Profile and Navigation
+
+[33mcommit fa047f7fe4714ae19d56b78ee820030a63861d60[m
+Merge: 526d680 d6f45ba
+Author: dixee <169106617+dixeee@users.noreply.github.com>
+Date:   Fri Oct 25 17:53:55 2024 -0600
+
+    Merge pull request #115 from cmput301f24-bugoff/user-profile-screen
+    
+    Initial User Profile XML
+
+[33mcommit d6f45bafc7c9bca509d0f13ed48a4470d9633252[m
+Author: Dixee Lyn Alvarez <dixeelyn@Dixees-MacBook-Air.local>
+Date:   Wed Oct 23 18:55:26 2024 -0600
+
+    Initial User Profile XML
+
+[33mcommit 526d680f9e41d98b4f0ed30a53d46e2b4bd30ff3[m
+Merge: 96d3de3 5647ffb
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Sat Oct 19 16:13:06 2024 -0600
+
+    Merge pull request #114 from cmput301f24-bugoff/QR-Code
+    
+    camera asks user for permisson before proceeding
+
+[33mcommit 5647ffbca387e1548805950ca6c081d141fff1d8[m
+Merge: ea33f74 96d3de3
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Sat Oct 19 16:08:29 2024 -0600
+
+    Merge branch 'main' into QR-Code
+
+[33mcommit ea33f74fa3cd630aa0905e598f5d892a416c599f[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Sat Oct 19 16:06:16 2024 -0600
+
+    camera asks user for permisson before proceeding, otherwise Toast shows up informing user to grant permissions
+
+[33mcommit 96d3de3aa6009b4f57c787e3ede77715a4e00fc9[m
+Merge: 17c8aa8 4f14889
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Fri Oct 18 02:40:31 2024 -0600
+
+    Merge pull request #113 from cmput301f24-bugoff/QR-Code
+    
+    Qr code
+
+[33mcommit 4f14889467d95066884c33ad5ab4f18f79784834[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Oct 17 19:49:48 2024 -0600
+
+    added QR scanning functionality
+
+[33mcommit f53f0088e9bf65eaa9c889f7d7a4e9a226a5b1e4[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Oct 17 19:49:37 2024 -0600
+
+    added QR scanning functionality
+
+[33mcommit ba51bfa050de7a1240f92a946f74f1e8a9413a20[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Oct 17 19:49:08 2024 -0600
+
+    added camera permissions
+
+[33mcommit 17c8aa8dbe9530b4ec6550df0cf52a85cd16db2c[m
+Merge: 47ece37 703a9ef
+Author: Nick Shan <73727267+nickshan11@users.noreply.github.com>
+Date:   Thu Oct 17 18:18:06 2024 -0600
+
+    Merge pull request #112 from cmput301f24-bugoff/nav-bar
+    
+    added icons
+
+[33mcommit 703a9effddca83ce2cf15527abdc5e691ecdd902[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Oct 17 18:12:26 2024 -0600
+
+    added navagation bar to home screen
+
+[33mcommit fcc4b292b27280bbce20070ad49e87e48dc6e850[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Thu Oct 17 18:08:16 2024 -0600
+
+    added icons
+
+[33mcommit 47ece377e93c5f003afb639bc3468d41010e17b5[m
+Merge: ee9a024 6b4d85b
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Thu Oct 17 02:44:53 2024 -0600
+
+    Merge pull request #111 from cmput301f24-bugoff/sync
+    
+    Sync: potentially unstable, I will write tests for it.
+
+[33mcommit 6b4d85bbd3d2dc617220b7eac84f0a22ff4c740b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 17 02:39:35 2024 -0600
+
+    Fixed unused parameter
+
+[33mcommit 346a4dc2d56bc661857a0ad872ec7a5f0b137a99[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 17 02:12:30 2024 -0600
+
+    Removed auto-run of demo
+
+[33mcommit 08a5af72c6fd054006fd3a0884f8ecba81d6cf91[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 17 02:01:38 2024 -0600
+
+    More sync changes, should be a bit more stable
+
+[33mcommit 6931fd1d4fa210d78993cd16dbb8e67a3bb326b1[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Thu Oct 17 01:37:07 2024 -0600
+
+    UNTESTED MASSIVE CHANGES DO NOT HAVE MAIN TOUCH THIS WITH A TEN FOOT POOL
+
+[33mcommit ee9a0248c0d17bbca21a582308d0fa94e688c24f[m
+Merge: e5679af b92b1b5
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Wed Oct 16 18:40:31 2024 -0600
+
+    Merge pull request #101 from cmput301f24-bugoff/sync
+    
+    Added untested sync feature for some model classes
+
+[33mcommit b92b1b56889e3c080684a3d0ca8d13f96850b24c[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 16 18:34:56 2024 -0600
+
+    Removed unused variable
+
+[33mcommit e72eb5a4b064d4769cf26b8f77ba4590a2ad86e2[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 16 18:27:43 2024 -0600
+
+    Updated to not auto-run demo
+
+[33mcommit 6f2ee9b634c4aedb34806cd5f37422c9788bce96[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 16 18:06:36 2024 -0600
+
+    Added untested sync feature for some model classes
+
+[33mcommit e5679afed5a905961b0fa66cf2f34b6c3db320a1[m
+Merge: 3650d47 f42f014
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 15 15:57:29 2024 -0600
+
+    Merge pull request #100 from cmput301f24-bugoff/readme
+    
+    Added reference to User Interface Mockup
+
+[33mcommit f42f014202d44539268761d7c82a4b8e819fca69[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 15 15:52:22 2024 -0600
+
+    Added reference to User Interface Mockup
+
+[33mcommit 3650d474eb8bd9f47a07c885ca93ce1ffbe00354[m
+Merge: e224b78 56d4357
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Mon Oct 14 13:35:13 2024 -0600
+
+    Merge pull request #99 from cmput301f24-bugoff/database
+    
+    More integration with Firebase
+
+[33mcommit 56d43578b6480e189925c9cfa56ad2e93ec7dbea[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 14 13:29:55 2024 -0600
+
+    Added minor Javadoc comments
+
+[33mcommit cdee72bd62f658bcb7571c595b4fc0ea43320a80[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 14 11:55:19 2024 -0600
+
+    Fixed 'Exposing internal representation' concern
+
+[33mcommit 8f7e4b64ac5f1a00eed5d39378ee7bff68c32069[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 14 11:45:32 2024 -0600
+
+    UNTESTED: Added initial event and facility integration with Firebase
+
+[33mcommit c55fcfcc8977ea30e462187f1a26385c1ee668e3[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 14 00:32:17 2024 -0600
+
+    Refactor and added Event class
+
+[33mcommit 99b7905570112d2bae56237ee85f0ad465db318d[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 14 00:05:38 2024 -0600
+
+    Massively reworked authentication using tasks
+
+[33mcommit ce4793078f281d3cffd3495eff138a09b6c69391[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 13 17:44:16 2024 -0600
+
+    Added field facility for user
+
+[33mcommit e224b78722c2db379b755cdcb5a5e4768ad39d30[m
+Merge: 1266fca 360e55d
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Sat Oct 12 20:35:35 2024 -0600
+
+    Merge pull request #94 from cmput301f24-bugoff/javadoc
+    
+    Reduce workflow conditions
+
+[33mcommit 360e55dacdccbf798ea0a05e9176ddf213fb3783[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 20:20:50 2024 -0600
+
+    Reduce workflow conditions
+
+[33mcommit 1266fcac35945e8b81fdd7cb9374af74910da041[m
+Merge: 44c534f 696b11b
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Sat Oct 12 20:14:52 2024 -0600
+
+    Merge pull request #93 from cmput301f24-bugoff/javadoc
+    
+    Fixed Javadoc
+
+[33mcommit 696b11b0907127b344b657d1b6daf736f40dd0da[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 20:10:12 2024 -0600
+
+    More modifications on how jobs will be ran
+
+[33mcommit f0644c488a8d48d604cd73de8f6382fcab7b2df0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 19:53:10 2024 -0600
+
+    Partially reverts previous commit
+
+[33mcommit 29b94a7b070998935cfa54c633c787a162c51e89[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 19:48:45 2024 -0600
+
+    Improve triggers for workflows
+
+[33mcommit 1f8ffb361d1fa2addd6d647a8aa8470c0491a8f8[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 17:46:32 2024 -0600
+
+    Have Javadoc be in proper Java syntax (hopefully)
+
+[33mcommit 349c06883ac03bb717dd49d4ce8c29f34bba322e[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 16:53:34 2024 -0600
+
+    Updated language used for generating Javadoc (hopefully)
+
+[33mcommit 44c534f4b024406d3b70dd78a7d6bde4a5fcff05[m
+Merge: 6d1f2c7 86a4691
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Sat Oct 12 16:31:04 2024 -0600
+
+    Merge pull request #92 from cmput301f24-bugoff/javadoc
+    
+    Added Javadoc 'integration'
+
+[33mcommit 86a46912e6272d80a5e80eabb5cfde9afe126606[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 16:13:10 2024 -0600
+
+    Refactor and added reference to our Javadoc webpage
+
+[33mcommit bce6d2adc41ca41dd4a87b0f01114a3b863942b3[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 15:53:17 2024 -0600
+
+    Updated publish_dir for generate-javadoc
+
+[33mcommit 0b48c331e7a39fc0c720cb64a00e4b796c79b8a0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 15:37:33 2024 -0600
+
+    Hopefully fixes 'generateJavadoc' task
+
+[33mcommit f5bf00a5c1fc4b8619231858481bd9d16f8a5a07[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 15:35:29 2024 -0600
+
+    Small revert of generate-javadoc
+
+[33mcommit d7678fd20bfd5fb0ac3cf326dc57c1f46ba6c9d8[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 15:34:01 2024 -0600
+
+    Added some Javadoc comments for testing
+
+[33mcommit a33c1cf19c0454af2341f8a3b564630432a0c37d[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 14:54:40 2024 -0600
+
+    Attempted to fix 'Deploy Javadoc to GitHub Pages'
+
+[33mcommit 656c8fa42384f51a377ea53429a3873fe72b31a4[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 14:33:32 2024 -0600
+
+    Allowed generate-javadoc job to have write permissions
+
+[33mcommit 850a5de0d6227a760285069f6a39f3c2b18c72fe[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 11:52:44 2024 -0600
+
+    Added task for generating Javadoc
+
+[33mcommit 835a3b2f5e7a68ae89091f36491642d0c571a0c6[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 11:39:48 2024 -0600
+
+    Setup job to generate javadoc
+
+[33mcommit 6d1f2c7c8d76505c9ad980c7a0034512a70b9107[m
+Merge: 29349c3 5dcd1c0
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Sat Oct 12 11:17:09 2024 -0600
+
+    Merge pull request #91 from cmput301f24-bugoff/actions
+    
+    Adjust triggers for Android CI workflow
+
+[33mcommit 5dcd1c01abb453b36dd937e9dafbbf8818eb8abe[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sat Oct 12 11:06:08 2024 -0600
+
+    Adjust triggers for Android CI workflow
+
+[33mcommit 29349c362968b6239490dc0f8295ce6a8f9e8c91[m
+Merge: 1f3af02 88c69bf
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Oct 11 19:06:26 2024 -0600
+
+    Merge pull request #90 from cmput301f24-bugoff/dummy
+    
+    Some small changes to README
+
+[33mcommit 88c69bfc63fb09fa983c60c3990a3b40a9df093c[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 18:37:49 2024 -0600
+
+    Some small changes to README
+
+[33mcommit 1f3af02a2d8cb5c8fb91321c1279ac63ea05451e[m
+Merge: ea75303 9a785d5
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Oct 11 18:04:02 2024 -0600
+
+    Merge pull request #89 from cmput301f24-bugoff/junit
+    
+    Added JUnit 5 for unit tests
+
+[33mcommit 9a785d58f943afc6b5b61c682ae2f6b720bfa507[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:38:13 2024 -0600
+
+    Removed always failing test and renamed some jobs
+
+[33mcommit 2e4a9169cd47bc4c3fab0fc1a94956c8d2805235[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:23:31 2024 -0600
+
+    Have the build task no longer run tests
+
+[33mcommit d0ecfa310c3db8043cdbdf05301cb47e5854878c[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:18:30 2024 -0600
+
+    Intentionally introduces a failing unit test
+
+[33mcommit c7b8cd2462831a33bca88f8d8daa12db617fa24f[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:14:04 2024 -0600
+
+    Attempted to fix unit tests workflow issue
+
+[33mcommit 24ff29f8e5f609434243863c40a4a25b751d87c8[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:03:50 2024 -0600
+
+    Modified workflow branch conditions
+
+[33mcommit 21dcb2ad194bf63736fb51a6763d91fa7b948a29[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 17:01:03 2024 -0600
+
+    Added workflow to run unit tests
+
+[33mcommit f7bab92c5958e075767a48727b70ca01b4385c03[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 16:23:24 2024 -0600
+
+    Setup JUnit 5
+
+[33mcommit ea7530376ae35222251e0a1c663ad9104989aa9a[m
+Merge: 301c872 0cee564
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Fri Oct 11 12:23:29 2024 -0600
+
+    Merge pull request #88 from cmput301f24-bugoff/firebase
+    
+    Added basic Firebase 'login' functionality
+
+[33mcommit 0cee5646a80db5f2aa89dec7c37e621ec2558193[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Fri Oct 11 12:13:08 2024 -0600
+
+    Added isAdmin field to user class and database
+
+[33mcommit 38be4bb4e5eece15e4bd70af50f303e54db17ac0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 9 23:09:55 2024 -0600
+
+    Modification and refactor of user authentication
+
+[33mcommit 23400b211711752cec348581577bdc89385e70cc[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 9 22:04:37 2024 -0600
+
+    Untested: Attempted to actually interact with Firebase
+
+[33mcommit 7dc7bf43db894a848d1b27f8ecae263301e9d42d[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 9 16:14:54 2024 -0600
+
+    Added User and UserRepository classes to communicate with Firebase
+
+[33mcommit d7921ed074b18cab689bbce3830feca69dbb2d97[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Wed Oct 9 09:21:50 2024 -0600
+
+    Created class FirestoreHelper to manage the Firebase Firestore reference
+
+[33mcommit 301c8727610e96d5cfb21bcbdc35ccdb8b5b0217[m
+Merge: 4c088de ddfc803
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 16:47:12 2024 -0600
+
+    Merge pull request #86 from cmput301f24-bugoff/testing
+    
+    Updated Android CI to cache Gradle dependencies to speed up builds
+
+[33mcommit ddfc803c8e4a589257584194fd2a5ac281fa5cc3[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 16:42:07 2024 -0600
+
+    Updated Android CI to cache Gradle dependencies to speed up builds
+
+[33mcommit 4c088ded0e847b949691d6263c441064eb005fb5[m
+Merge: 1d21e24 137ddc7
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 16:30:07 2024 -0600
+
+    Merge pull request #85 from cmput301f24-bugoff/firebase
+    
+    Initialized Firebase for project
+
+[33mcommit 137ddc781a6fbd064f8d5f5285c428050c29b9f3[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 16:18:36 2024 -0600
+
+    Modified workflows to recreate secret: GOOGLE_SERVICES_JSON
+
+[33mcommit 13b925470eb7d8b565f518b55bbb0e826bbf70b5[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 16:03:23 2024 -0600
+
+    Setup Firebase
+
+[33mcommit 1d21e24c42a3fa045d35dbda3f831006453ce180[m
+Merge: 27a02be b989659
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 05:19:52 2024 -0600
+
+    Merge pull request #84 from cmput301f24-bugoff/testing
+    
+    Another dummy commit to test branch protection
+
+[33mcommit b9896594c79514161ab95674bce696ffc1e31c25[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 05:12:33 2024 -0600
+
+    Another dummy commit to test branch protection
+
+[33mcommit 27a02be568415a8ca94e01362f275a79ba42fe88[m
+Merge: 368169b bcf0605
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 05:01:09 2024 -0600
+
+    Merge pull request #83 from cmput301f24-bugoff/testing
+    
+    Dummy commit to README to test branch protection on main
+
+[33mcommit bcf0605150a72ccb280de9b900bfab7b2866e779[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 04:49:08 2024 -0600
+
+    Dummy commit to README to test branch protection on main
+
+[33mcommit 368169ba6a82cd4352d7678201788e9dcfecba02[m
+Merge: baa417c 8e3e92f
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 04:24:43 2024 -0600
+
+    Merge pull request #82 from cmput301f24-bugoff/autofix/alert-1-cc4d6b1f0e
+    
+    Fix code scanning alert no. 1: Application backup allowed
+
+[33mcommit 8e3e92f3860868519cb28db9040952b9f6b5f6a8[m
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 04:16:59 2024 -0600
+
+    Fix code scanning alert no. 1: Application backup allowed
+    
+    Co-authored-by: Copilot Autofix powered by AI <62310815+github-advanced-security[bot]@users.noreply.github.com>
+
+[33mcommit baa417c935f27282ebe3aa6563b29d63edd1b487[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 04:05:50 2024 -0600
+
+    Revert "Dummy commit to README for testing workflows"
+    
+    This reverts commit e433fc11b261391f60e3dbc06bb119f97ad45e1a.
+
+[33mcommit e433fc11b261391f60e3dbc06bb119f97ad45e1a[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 03:51:10 2024 -0600
+
+    Dummy commit to README for testing workflows
+
+[33mcommit 2317ada6f1479111eb7aee642d3331e3e8c815a0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 03:25:35 2024 -0600
+
+    Revert "Added xml queries to codeql.yml workflow"
+    
+    This reverts commit de13cfdda03a3d3a12da4469577777ab624e372d.
+
+[33mcommit cc5bfa5e34e940cf5b710ba5e56d92d8ca305a7a[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 03:25:35 2024 -0600
+
+    Revert "Attempted to fix xml queries in codeql.yml workflow"
+    
+    This reverts commit 2b843f3c20e591ecdd88f68f9bd71a110609cf79.
+
+[33mcommit 2b843f3c20e591ecdd88f68f9bd71a110609cf79[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 03:11:26 2024 -0600
+
+    Attempted to fix xml queries in codeql.yml workflow
+
+[33mcommit de13cfdda03a3d3a12da4469577777ab624e372d[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 03:00:24 2024 -0600
+
+    Added xml queries to codeql.yml workflow
+
+[33mcommit 56f7c635179085a947087216f5b9fd02a0cb0e29[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 02:31:41 2024 -0600
+
+    Attempted fix for Unexpected input(s) warning for codeql.yml workflow
+
+[33mcommit 9c489c7337567e4d5ee4af85a4cee2a4b168199a[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 02:18:44 2024 -0600
+
+    Added additional queries for codeql.yml
+
+[33mcommit 9bfabbae35ed4cbf00114c07ffee16f8c976af9e[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 01:59:20 2024 -0600
+
+    Switched to a higher version of Node.js for codeql.yml workflow
+
+[33mcommit fad445e9c7f989a051a586035d42572b76ce6902[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 00:14:39 2024 -0600
+
+    Fixed syntax error and modified workflow to set up JDK 21
+
+[33mcommit 7dd8e061054728cbd5652b32c0c31e1361538122[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Tue Oct 8 00:08:20 2024 -0600
+
+    Modified codeql.yml in an attempt to fix outdated JDK error
+
+[33mcommit 4f3d740462675334106d12f6600a434f58d4687d[m
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Tue Oct 8 00:00:14 2024 -0600
+
+    Created codeql.yml for advanced code analysis
+
+[33mcommit 5ff84b0a4129b483117fd1fb9278151cb9555d66[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 16:09:50 2024 -0600
+
+    Removed colour overrides for base theme
+
+[33mcommit f4c5401d1e75f35f3f74816b9566d4d7dffc95d0[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 14:59:57 2024 -0600
+
+    Applied the previous commit to night theme
+
+[33mcommit aa966c5a5cc6e52393fec6a10fe32b7da9d60a69[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 14:49:48 2024 -0600
+
+    Switched to a more modern default theme
+
+[33mcommit b4339fb855d64d8fab72ea0efdf504e573e1bad3[m
+Author: Ziqi Zhang <112828817+ziqizhang42@users.noreply.github.com>
+Date:   Mon Oct 7 14:04:02 2024 -0600
+
+    Created android.yml for continuous integration
+
+[33mcommit d0544d9b5e8f753a1db4d6d8c27d883918ed1e66[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 01:39:21 2024 -0600
+
+    Added activity_main.xml
+
+[33mcommit 40ed6e2ac6aeb28bcc437527665db7511f685977[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 01:37:15 2024 -0600
+
+    Added MainActivity.java
+
+[33mcommit e3fdbe66e9007ad762f7fe693a953d3b4b54fe5e[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Mon Oct 7 01:34:23 2024 -0600
+
+    Setup AndroidManifest.xml for first launch
+
+[33mcommit 39416fada22634aeb6dbb24de1df3bc599aa79cc[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 23:01:40 2024 -0600
+
+    Reapply "Experiment: attempted to use different misc.xml version"
+    
+    Changed my mind. Let's try it one more time.
+    
+    This reverts commit 7166e23d9b999feb33b8116b0fda38e963a407b4.
+
+[33mcommit 2cca6ec0a3a9d9c1e06ae8810a3845015676ffc6[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 22:49:07 2024 -0600
+
+    Reworded development instructions in README
+
+[33mcommit 7166e23d9b999feb33b8116b0fda38e963a407b4[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 22:43:27 2024 -0600
+
+    Revert "Experiment: attempted to use different misc.xml version"
+    
+    Unclear if the experiment on misc.xml was helpful.
+    
+    This reverts commit fecad11faaef6f7f1fe558d4fdbc78a5ef20290a.
+
+[33mcommit fecad11faaef6f7f1fe558d4fdbc78a5ef20290a[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 22:24:02 2024 -0600
+
+    Experiment: attempted to use different misc.xml version
+
+[33mcommit ec08f435980244de27e7b1130c0d98076ad7e318[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 22:19:59 2024 -0600
+
+    Mentioned fix to 'Invalid Gradle JDK configuration found' in README
+
+[33mcommit d3150f1c7c43a888d49e81bde5b218d12c45b5c1[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 20:53:07 2024 -0600
+
+    Clarified and added to development compatibility in README
+
+[33mcommit 8b3b3592fd025c063ad2cfe346a0a7a9baaf7a19[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 17:43:57 2024 -0600
+
+    Fixed formatting for the 'Team Members' table
+
+[33mcommit 7e840e679b842840e229915f948560d282b5d5d4[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 17:40:44 2024 -0600
+
+    Added a basic README file
+
+[33mcommit 3e52bb3820cf91991f543bcb342c5883601f151e[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 17:27:49 2024 -0600
+
+    Kept auto modified files ?from the upgrade?
+
+[33mcommit 3226baf0cfad387c5404355de62b9242b42b03dd[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 17:17:59 2024 -0600
+
+    Remove .idea/deploymentTargetSelector.xml from version control
+
+[33mcommit 5043b1890826d21e6f87eced0ab1bd4dc113bb55[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 17:16:48 2024 -0600
+
+    Modified .idea/.gitignore to ignore deploymentTargetSelector.xml
+
+[33mcommit 0e9a120bb7cc352b4bec938d1b27c895922d510b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 16:42:53 2024 -0600
+
+    Updated compileSdk, targetSdk, minSdk to 35, 35, 28 respectively
+
+[33mcommit 1c80fe23138bbf1d752b65f140d61ddd8995bad8[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 15:02:47 2024 -0600
+
+    Auto? added xml header for misc.xml
+
+[33mcommit 48348c18aa506f36ce4a1db639dbff72f34174f9[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 14:45:07 2024 -0600
+
+    Upgraded AGP dependency from 8.6.0 to 8.7.0, upgraded Gradle version to 8.9
+
+[33mcommit 2b0e3509836783035939b9f68a4a0a6449500a2b[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Oct 6 02:28:28 2024 -0600
+
+    Initialized empty Android Studio project
+
+[33mcommit e5edc8aafdcfc0e535bbb6d0e1fd74834797facc[m
+Author: Riyasat <riyasat@ualberta.ca>
+Date:   Tue Oct 1 13:27:06 2024 -0600
+
+    Name Update team.txt
+
+[33mcommit 6b9536842f3b86f8ee78c1620e898e957b19ea31[m
+Author: Dixee Alvarez <dixeelyn@cs.ualberta.ca>
+Date:   Tue Oct 1 13:17:58 2024 -0600
+
+    Update team.txt
+
+[33mcommit d8921a1761669b1f3a3e1b866c142a3a11b9cd7c[m
+Author: Sky Chen <113720109+SkyChen8@users.noreply.github.com>
+Date:   Mon Sep 30 22:10:58 2024 -0600
+
+    Update team.txt
+
+[33mcommit 83489a8dc675f8397914f811b261b344d81e3c24[m
+Author: Nick Shan <bshan1@ualberta.ca>
+Date:   Mon Sep 30 14:50:44 2024 -0600
+
+    updated team.txt
+
+[33mcommit 2289bd4e8d0406f86658ae2d31edd49cc2ddaecf[m
+Author: Yunzeliu <74719938+Davidsharkdododo@users.noreply.github.com>
+Date:   Sun Sep 29 13:51:16 2024 -0600
+
+    Update team.txt
+
+[33mcommit 3ca146e85800a1d1e20484867de36641f178eed4[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Sep 29 13:26:24 2024 -0600
+
+    Replaced CCID with GitHub username
+
+[33mcommit 80f7992176d9a5a312b01b7f61d7869a70f508ff[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Sep 29 13:16:22 2024 -0600
+
+    Added CCID3 of group to team.txt
+
+[33mcommit 22bb2ab126d6c4d63120cd9b5aa862b6ab86a401[m
+Author: Ziqi Zhang <ziqizhang42@gmail.com>
+Date:   Sun Sep 29 11:03:23 2024 -0600
+
+    Added team.txt
