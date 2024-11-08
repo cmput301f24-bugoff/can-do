@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bugoff.can_do.admin.AdminActivity;
+import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 
@@ -85,6 +88,8 @@ public class UserProfileActivity extends Fragment {
                 // editPNumberDialog()
             }
         });
+
+        setupAdminButton(view);
 
         // User clicks avatar to change or add profile picture
         view.findViewById(R.id.image_avatar).setOnClickListener(new View.OnClickListener() {
@@ -243,5 +248,18 @@ public class UserProfileActivity extends Fragment {
                 })
                 .create()
                 .show();
+    }
+
+    private void setupAdminButton(View view) {
+        Button adminButton = view.findViewById(R.id.admin_button);
+        if (GlobalRepository.getLoggedInUser() != null && GlobalRepository.getLoggedInUser().getIsAdmin()) {
+            adminButton.setVisibility(View.VISIBLE);
+            adminButton.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), AdminActivity.class);
+                startActivity(intent);
+            });
+        } else {
+            adminButton.setVisibility(View.GONE); // Hide if not admin
+        }
     }
 }
