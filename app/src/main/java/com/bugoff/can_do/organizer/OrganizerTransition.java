@@ -16,10 +16,22 @@ import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * The OrganizerTransition activity checks whether the logged-in user has an associated facility.
+ * If the user has a facility, it redirects them to the main organizer activity. If no facility is
+ * found, it prompts the user to create a new facility.
+ */
 public class OrganizerTransition extends AppCompatActivity {
     private FirebaseFirestore db;
     private String androidId;
 
+    /**
+     * Called when the activity is created. Initializes Firebase Firestore and retrieves the device's Android ID.
+     * It then checks whether the user has an associated facility.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     *                           this Bundle contains the most recent data. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +41,11 @@ public class OrganizerTransition extends AppCompatActivity {
         checkUserFacility();
     }
 
+    /**
+     * Checks if the logged-in user has an associated facility in Firestore.
+     * If a facility exists, the user is redirected to the next activity.
+     * If not, the user is prompted to create a new facility.
+     */
     private void checkUserFacility() {
         db.collection("facilities").document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -45,6 +62,10 @@ public class OrganizerTransition extends AppCompatActivity {
                 );
     }
 
+    /**
+     * Prompts the user to create a new facility by displaying the facility edit screen.
+     * Sets up the continue button to save the facility and proceed.
+     */
     private void promptUserToCreateFacility() {
         setContentView(R.layout.activity_facility_edit);
 
@@ -55,12 +76,19 @@ public class OrganizerTransition extends AppCompatActivity {
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
 
+    /**
+     * Navigates the user to the next activity (OrganizerMain).
+     */
     private void navigateToNextActivity() {
         Intent intent = new Intent(this, OrganizerMain.class); // Replace NewActivity with the target activity class
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Saves the new facility entered by the user and proceeds to the main organizer activity.
+     * If the facility name or address is missing, a toast message is shown.
+     */
     private void saveFacilityAndProceed() {
         // Retrieve input fields
         EditText facilityNameInput = findViewById(R.id.facilityNameInput);

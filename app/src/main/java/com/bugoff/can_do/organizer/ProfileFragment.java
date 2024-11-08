@@ -14,7 +14,21 @@ import com.bugoff.can_do.MainActivity;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 
+/**
+ * A Fragment representing the user's profile in the organizer context. This fragment allows the user
+ * to either navigate to the home screen as an attendee or manage their facility.
+ */
 public class ProfileFragment extends Fragment {
+
+    /**
+     * Called to inflate the fragment's view. It sets up click listeners for the buttons that allow the user
+     * to navigate to different activities: either the home screen as an attendee or the facility management screen.
+     *
+     * @param inflater The LayoutInflater object to inflate views in the fragment.
+     * @param container The parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this Bundle contains the fragment's previously saved state.
+     * @return The inflated view for this fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
