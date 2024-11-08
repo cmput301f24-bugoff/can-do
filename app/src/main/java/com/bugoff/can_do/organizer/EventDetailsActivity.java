@@ -2,8 +2,10 @@ package com.bugoff.can_do.organizer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,6 +21,9 @@ import com.bumptech.glide.Glide; // Import Glide
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private String eventDescription;
     private String eventName;
     private String eventId;
+    private ImageView qrCodeImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         eventLocationTextView = findViewById(R.id.class_location);
         entrantsListView = findViewById(R.id.entrants_list);
         eventImageView = findViewById(R.id.event_image); // Initialize ImageView
+        qrCodeImageView = findViewById(R.id.idIVQrcode);
 
         ImageButton backArrowButton = findViewById(R.id.back_arrow);
         ImageButton mapIconButton = findViewById(R.id.map_icon);
@@ -109,6 +116,8 @@ public class EventDetailsActivity extends AppCompatActivity {
                         eventLocation = documentSnapshot.getString("location");
                         Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
                         String imageUrl = documentSnapshot.getString("imageUrl"); // Get imageUrl
+                        String qrCodeText = documentSnapshot.getString("qrCodeHash");
+                        generateQRCode(qrCodeText);
 
                         // Update TextViews with event details
                         eventNameTextView.setText(eventName != null ? eventName : "N/A");
@@ -187,5 +196,18 @@ public class EventDetailsActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
+    }
+
+    private void generateQRCode(String text)
+    {
+        BarcodeEncoder barcodeEncoder
+                = new BarcodeEncoder();
+        try {
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, 400, 400);
+            qrCodeImageView.setImageBitmap(bitmap); // Sets the Bitmap to ImageView
+        }
+        catch (WriterException e) {
+            Log.e("TAG", e.toString());
+        }
     }
 }
