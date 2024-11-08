@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import com.bugoff.can_do.database.DatabaseEntity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
-import com.bugoff.can_do.notification.Notification;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,7 +29,6 @@ public class User implements DatabaseEntity {
     private Facility facility; // Associated facility if the user is an organizer
     private List<String> eventsJoined; // Event IDs where the user joined the waiting list
     private List<String> eventsEnrolled; // Event IDs where the user is enrolled
-    private List<Notification> notificationList; // List of Notification objects
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
@@ -45,7 +43,6 @@ public class User implements DatabaseEntity {
         this.facility = null;
         this.eventsJoined = new ArrayList<>();
         this.eventsEnrolled = new ArrayList<>();
-        this.notificationList = new ArrayList<>();
     }
 
     public User(String id, String name, String email, String phoneNumber, Boolean isAdmin, Facility facility) {
@@ -57,7 +54,6 @@ public class User implements DatabaseEntity {
         this.facility = facility;
         this.eventsJoined = new ArrayList<>();
         this.eventsEnrolled = new ArrayList<>();
-        this.notificationList = new ArrayList<>();
     }
 
     public User(@NonNull DocumentSnapshot doc) {
@@ -66,19 +62,26 @@ public class User implements DatabaseEntity {
         this.email = doc.getString("email");
         this.phoneNumber = doc.getString("phoneNumber");
         this.isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
-        this.facility = new Facility(this);
+
+        this.facility = new Facility(this); // placeholder
+
         this.eventsJoined = new ArrayList<>();
         this.eventsEnrolled = new ArrayList<>();
-        this.notificationList = new ArrayList<>();
 
         deserializeEventsJoined(doc.get("eventsJoined"));
         deserializeEventsEnrolled(doc.get("eventsEnrolled"));
-        deserializeNotifications((List<Map<String, Object>>) doc.get("notificationList"));
+    }
+
+    // Add a method to set the Facility post-construction
+    public void linkFacility(@NonNull Facility facility) {
+        this.facility = facility;
+        facility.setOwner(this); // Establish bidirectional reference
+        onUpdate(); // Notify listeners about the update
     }
 
     @Override
     public String getId() {
-        return "";
+        return id;
     }
 
     @Override
@@ -96,34 +99,7 @@ public class User implements DatabaseEntity {
         }
         map.put("eventsJoined", eventsJoined); // List of event IDs
         map.put("eventsEnrolled", eventsEnrolled); // List of event IDs
-        map.put("notificationList", serializeNotifications(notificationList)); // Serialize notifications
         return map;
-    }
-
-    private List<Map<String, Object>> serializeNotifications(List<Notification> notifications) {
-        List<Map<String, Object>> serialized = new ArrayList<>();
-        for (Notification notification : notifications) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("id", notification.getId());
-            data.put("type", notification.getType());
-            data.put("content", notification.getContent());
-            serialized.add(data);
-        }
-        return serialized;
-    }
-
-    private void deserializeNotifications(List<Map<String, Object>> data) {
-        this.notificationList.clear();
-        if (data != null) {
-            for (Map<String, Object> notificationData : data) {
-                Notification notification = new Notification(
-                        (String) notificationData.get("id"),
-                        (String) notificationData.get("type"),
-                        (String) notificationData.get("content")
-                );
-                this.notificationList.add(notification);
-            }
-        }
     }
 
     private void deserializeEventsJoined(Object data) {
@@ -151,24 +127,6 @@ public class User implements DatabaseEntity {
     }
 
     // Getters and Setters
-
-    // New method to get the notification list
-    public List<Notification> getNotificationList() {
-        return Collections.unmodifiableList(notificationList);
-    }
-
-    // Existing Getters and Setters...
-
-    public void addNotification(Notification notification) {
-        this.notificationList.add(notification);
-        setRemote();
-    }
-
-    public void removeNotification(Notification notification) {
-        if (this.notificationList.remove(notification)) {
-            setRemote();
-        }
-    }
 
     public String getName() {
         return name;
