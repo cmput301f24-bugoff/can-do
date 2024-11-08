@@ -1,16 +1,19 @@
 package com.bugoff.can_do.event;
+
 import android.location.Location;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
-import com.bugoff.can_do.database.DatabaseEntity;
+
 import com.bugoff.can_do.EntrantStatus;
+import com.bugoff.can_do.database.DatabaseEntity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
-import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Event implements DatabaseEntity {
     // Data fields
     private String id; // Unique ID of the event
@@ -32,11 +36,11 @@ public class Event implements DatabaseEntity {
     private Date eventEndDate; // The end date and time for the event
     private Integer maxNumberOfParticipants; // The number of participants to be selected for the event
     private Boolean geolocationRequired; // Whether the event requires geo-location verification
-    private List<User> waitingListEntrants; // The list of users on the waiting list
-    private Map<User, Location> entrantsLocations; // The locations of the entrants
-    private Map<User, EntrantStatus> entrantStatuses; // The statuses of the entrants
-    private List<User> selectedEntrants; // Entrants selected in the lottery
-    private List<User> enrolledEntrants; // Entrants who accepted and enrolled
+    private List<String> waitingListEntrants; // The list of user IDs on the waiting list
+    private Map<String, Location> entrantsLocations; // The locations of the entrants (key: user ID)
+    private Map<String, EntrantStatus> entrantStatuses; // The statuses of the entrants (key: user ID)
+    private List<String> selectedEntrants; // Entrants selected in the lottery (user IDs)
+    private List<String> enrolledEntrants; // Entrants who accepted and enrolled (user IDs)
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
@@ -79,19 +83,20 @@ public class Event implements DatabaseEntity {
         this.geolocationRequired = doc.getBoolean("geolocationRequired") != null ? doc.getBoolean("geolocationRequired") : Boolean.FALSE;
 
         this.imageUrl = doc.getString("imageUrl"); // Retrieve imageUrl from Firestore
-        // Initialize user lists
+        // Initialize user lists as lists of user IDs
         this.waitingListEntrants = new ArrayList<>();
         this.entrantsLocations = new HashMap<>();
         this.entrantStatuses = new HashMap<>();
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
         // Deserialize complex fields
-        deserializeUserList(doc.get("waitingListEntrants"));
-        deserializeEntrantsLocations(doc.get("entrantsLocations"));
-        deserializeEntrantStatuses(doc.get("entrantStatuses"));
-        deserializeUserList(doc.get("selectedEntrants"));
-        deserializeUserList(doc.get("enrolledEntrants"));
+        deserializeUserList(doc.get("waitingListEntrants"), waitingListEntrants);
+        deserializeEntrantsLocations(doc.get("entrantsLocations"), entrantsLocations);
+        deserializeEntrantStatuses(doc.get("entrantStatuses"), entrantStatuses);
+        deserializeUserList(doc.get("selectedEntrants"), selectedEntrants);
+        deserializeUserList(doc.get("enrolledEntrants"), enrolledEntrants);
     }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
@@ -105,44 +110,40 @@ public class Event implements DatabaseEntity {
         map.put("eventEndDate", eventEndDate);
         map.put("maxNumberOfParticipants", maxNumberOfParticipants);
         map.put("geolocationRequired", geolocationRequired);
-        map.put("waitingListEntrants", serializeUserList(waitingListEntrants));
-        map.put("entrantsLocations", serializeEntrantsLocations(entrantsLocations));
-        map.put("entrantStatuses", serializeEntrantStatuses(entrantStatuses));
-        map.put("selectedEntrants", serializeUserList(selectedEntrants));
-        map.put("enrolledEntrants", serializeUserList(enrolledEntrants));
+        map.put("waitingListEntrants", waitingListEntrants); // List of user IDs
+        map.put("entrantsLocations", entrantsLocations); // Map of user IDs to Locations
+        map.put("entrantStatuses", entrantStatuses); // Map of user IDs to statuses
+        map.put("selectedEntrants", selectedEntrants); // List of user IDs
+        map.put("enrolledEntrants", enrolledEntrants); // List of user IDs
         map.put("imageUrl", imageUrl); // Include imageUrl in the map
         return map;
     }
 
-    private List<User> deserializeUserList(Object data) {
-        List<User> users = new ArrayList<>();
+    /**
+     * Deserialize a list of user IDs from Firestore and populate the provided list.
+     *
+     * @param data The raw data from Firestore.
+     * @param targetList The list to populate with user IDs.
+     */
+    private void deserializeUserList(Object data, List<String> targetList) {
         if (data instanceof List<?>) {
             List<?> userIds = (List<?>) data;
             for (Object userIdObj : userIds) {
                 if (userIdObj instanceof String) {
                     String userId = (String) userIdObj;
-                    GlobalRepository.getUsersCollection().document(userId).get()
-                            .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    String name = doc.getString("name");
-                                    Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
-                                    User user = new User(userId, name, null, null, isAdmin, this.facility);
-                                    users.add(user);
-                                    onUpdate();
-                                } else {
-                                    Log.w("Event", "No such user with ID: " + userId);
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("Event", "Error fetching user with ID: " + userId, e);
-                            });
+                    targetList.add(userId);
                 }
             }
         }
-        return users;
     }
-    private Map<User, Location> deserializeEntrantsLocations(Object data) {
-        Map<User, Location> entrantsLoc = new HashMap<>();
+
+    /**
+     * Deserialize entrants' locations from Firestore and populate the provided map.
+     *
+     * @param data The raw data from Firestore.
+     * @param targetMap The map to populate with user IDs and their locations.
+     */
+    private void deserializeEntrantsLocations(Object data, Map<String, Location> targetMap) {
         if (data instanceof Map<?, ?>) {
             Map<?, ?> dataMap = (Map<?, ?>) data;
             for (Map.Entry<?, ?> entry : dataMap.entrySet()) {
@@ -152,32 +153,23 @@ public class Event implements DatabaseEntity {
                     Double latitude = locMap.get("latitude") instanceof Number ? ((Number) Objects.requireNonNull(locMap.get("latitude"))).doubleValue() : null;
                     Double longitude = locMap.get("longitude") instanceof Number ? ((Number) Objects.requireNonNull(locMap.get("longitude"))).doubleValue() : null;
                     if (latitude != null && longitude != null) {
-                        GlobalRepository.getUsersCollection().document(userId).get()
-                                .addOnSuccessListener(doc -> {
-                                    if (doc.exists()) {
-                                        String name = doc.getString("name");
-                                        Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
-                                        User user = new User(userId, name, null, null, isAdmin, this.facility);
-                                        Location location = new Location("");
-                                        location.setLatitude(latitude);
-                                        location.setLongitude(longitude);
-                                        entrantsLoc.put(user, location);
-                                        onUpdate();
-                                    } else {
-                                        Log.w("Event", "No such user with ID: " + userId);
-                                    }
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("Event", "Error fetching user with ID: " + userId, e);
-                                });
+                        Location location = new Location("");
+                        location.setLatitude(latitude);
+                        location.setLongitude(longitude);
+                        targetMap.put(userId, location);
                     }
                 }
             }
         }
-        return entrantsLoc;
     }
-    private Map<User, EntrantStatus> deserializeEntrantStatuses(Object data) {
-        Map<User, EntrantStatus> entrantStatusMap = new HashMap<>();
+
+    /**
+     * Deserialize entrant statuses from Firestore and populate the provided map.
+     *
+     * @param data The raw data from Firestore.
+     * @param targetMap The map to populate with user IDs and their statuses.
+     */
+    private void deserializeEntrantStatuses(Object data, Map<String, EntrantStatus> targetMap) {
         if (data instanceof Map<?, ?>) {
             Map<?, ?> dataMap = (Map<?, ?>) data;
             for (Map.Entry<?, ?> entry : dataMap.entrySet()) {
@@ -187,59 +179,52 @@ public class Event implements DatabaseEntity {
                     EntrantStatus status;
                     try {
                         status = EntrantStatus.valueOf(statusStr);
+                        targetMap.put(userId, status);
                     } catch (IllegalArgumentException e) {
                         Log.e("Event", "Invalid EntrantStatus: " + statusStr, e);
-                        continue;
                     }
-                    GlobalRepository.getUsersCollection().document(userId).get()
-                            .addOnSuccessListener(doc -> {
-                                if (doc.exists()) {
-                                    String name = doc.getString("name");
-                                    Boolean isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
-                                    User user = new User(userId, name, null, null, isAdmin, this.facility);
-                                    entrantStatusMap.put(user, status);
-                                    onUpdate();
-                                } else {
-                                    Log.w("Event", "No such user with ID: " + userId);
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("Event", "Error fetching user with ID: " + userId, e);
-                            });
                 }
             }
         }
+    }
+
+    /**
+     * Deserialize a map of user IDs to locations.
+     *
+     * @param data The raw data from Firestore.
+     * @return A map with user IDs as keys and Location objects as values.
+     */
+    private Map<String, Location> deserializeEntrantsLocations(Object data) {
+        Map<String, Location> entrantsLoc = new HashMap<>();
+        deserializeEntrantsLocations(data, entrantsLoc);
+        return entrantsLoc;
+    }
+
+    /**
+     * Deserialize a map of user IDs to entrant statuses.
+     *
+     * @param data The raw data from Firestore.
+     * @return A map with user IDs as keys and EntrantStatus enums as values.
+     */
+    private Map<String, EntrantStatus> deserializeEntrantStatuses(Object data) {
+        Map<String, EntrantStatus> entrantStatusMap = new HashMap<>();
+        deserializeEntrantStatuses(data, entrantStatusMap);
         return entrantStatusMap;
     }
-    private List<Map<String, Object>> serializeUserList(@NonNull List<User> users) {
-        // Convert User objects to a serializable format
-        List<Map<String, Object>> serializedList = new ArrayList<>();
-        for (User user : users) {
-            serializedList.add(user.toMap());
-        }
-        return serializedList;
+
+    /**
+     * Deserialize a list of user IDs.
+     *
+     * @param data The raw data from Firestore.
+     * @return A list of user IDs.
+     */
+    private List<String> deserializeUserList(Object data) {
+        List<String> users = new ArrayList<>();
+        deserializeUserList(data, users);
+        return users;
     }
-    private Map<String, Object> serializeEntrantsLocations(Map<User, Location> entrantsLocations) {
-        Map<String, Object> serializedMap = new HashMap<>();
-        for (Map.Entry<User, Location> entry : entrantsLocations.entrySet()) {
-            Location location = entry.getValue();
-            Map<String, Object> locationMap = new HashMap<>();
-            // Extract relevant data from Android Location object
-            locationMap.put("latitude", location.getLatitude());
-            locationMap.put("longitude", location.getLongitude());
-            serializedMap.put(entry.getKey().getId(), locationMap);
-        }
-        return serializedMap;
-    }
-    private Map<String, Object> serializeEntrantStatuses(Map<User, EntrantStatus> entrantStatuses) {
-        // Convert Map<User, EntrantStatus> to a serializable format
-        Map<String, Object> serializedMap = new HashMap<>();
-        for (Map.Entry<User, EntrantStatus> entry : entrantStatuses.entrySet()) {
-            serializedMap.put(entry.getKey().getId(), entry.getValue().name());  // Store enum as a String
-        }
-        return serializedMap;
-    }
-    @Override
+
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -250,100 +235,217 @@ public class Event implements DatabaseEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+        setRemote();
     }
 
     public Facility getFacility() {
         return facility;
     }
+
     public void setFacility(Facility facility) {
         this.facility = facility;
+        setRemote();
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
+        setRemote();
     }
-
 
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
+        setRemote();
     }
+
     public String getQrCodeHash() {
         return qrCodeHash;
     }
+
     public void setQrCodeHash(String qrCodeHash) {
         this.qrCodeHash = qrCodeHash;
+        setRemote();
     }
+
     public Date getRegistrationStartDate() {
         return registrationStartDate;
     }
+
     public void setRegistrationStartDate(Date registrationStartDate) {
         this.registrationStartDate = registrationStartDate;
+        setRemote();
     }
+
     public Date getRegistrationEndDate() {
         return registrationEndDate;
     }
+
     public void setRegistrationEndDate(Date registrationEndDate) {
         this.registrationEndDate = registrationEndDate;
+        setRemote();
     }
+
     public Date getEventStartDate() {
         return eventStartDate;
     }
+
     public void setEventStartDate(Date eventStartDate) {
         this.eventStartDate = eventStartDate;
+        setRemote();
     }
+
     public Date getEventEndDate() {
         return eventEndDate;
     }
+
     public void setEventEndDate(Date eventEndDate) {
         this.eventEndDate = eventEndDate;
+        setRemote();
     }
+
     public Integer getMaxNumberOfParticipants() {
         return maxNumberOfParticipants;
     }
+
     public void setMaxNumberOfParticipants(Integer maxNumberOfParticipants) {
         this.maxNumberOfParticipants = maxNumberOfParticipants;
+        setRemote();
     }
+
     public Boolean getGeolocationRequired() {
         return geolocationRequired;
     }
+
     public void setGeolocationRequired(Boolean geolocationRequired) {
         this.geolocationRequired = geolocationRequired;
+        setRemote();
     }
-    public List<User> getWaitingListEntrants() {
+
+    public List<String> getWaitingListEntrants() {
         return Collections.unmodifiableList(waitingListEntrants);
     }
-    public void setWaitingListEntrants(List<User> waitingListEntrants) {
+
+    public void setWaitingListEntrants(List<String> waitingListEntrants) {
         this.waitingListEntrants = waitingListEntrants;
+        setRemote();
     }
-    public Map<User, Location> getEntrantsLocations() {
+
+    public Map<String, Location> getEntrantsLocations() {
         return Collections.unmodifiableMap(entrantsLocations);
     }
-    public void setEntrantsLocations(Map<User, Location> entrantsLocations) {
+
+    public void setEntrantsLocations(Map<String, Location> entrantsLocations) {
         this.entrantsLocations = entrantsLocations;
+        setRemote();
     }
-    public Map<User, EntrantStatus> getEntrantStatuses() {
+
+    public Map<String, EntrantStatus> getEntrantStatuses() {
         return Collections.unmodifiableMap(entrantStatuses);
     }
-    public void setEntrantStatuses(Map<User, EntrantStatus> entrantStatuses) {
+
+    public void setEntrantStatuses(Map<String, EntrantStatus> entrantStatuses) {
         this.entrantStatuses = entrantStatuses;
+        setRemote();
     }
-    public List<User> getSelectedEntrants() {
+
+    public List<String> getSelectedEntrants() {
         return Collections.unmodifiableList(selectedEntrants);
     }
-    public void setSelectedEntrants(List<User> selectedEntrants) {
+
+    public void setSelectedEntrants(List<String> selectedEntrants) {
         this.selectedEntrants = selectedEntrants;
+        setRemote();
     }
-    public List<User> getEnrolledEntrants() {
+
+    public List<String> getEnrolledEntrants() {
         return Collections.unmodifiableList(enrolledEntrants);
     }
-    public void setEnrolledEntrants(List<User> enrolledEntrants) {
+
+    public void setEnrolledEntrants(List<String> enrolledEntrants) {
         this.enrolledEntrants = enrolledEntrants;
+        setRemote();
     }
+
+    // Methods to interact with Event
+
+    /**
+     * Adds a user ID to the waiting list entrants.
+     *
+     * @param userId The ID of the user to add.
+     */
+    public void addWaitingListEntrant(String userId) {
+        if (!waitingListEntrants.contains(userId)) {
+            waitingListEntrants.add(userId);
+            setRemote();
+        }
+    }
+
+    /**
+     * Removes a user ID from the waiting list entrants.
+     *
+     * @param userId The ID of the user to remove.
+     */
+    public void removeWaitingListEntrant(String userId) {
+        if (waitingListEntrants.contains(userId)) {
+            waitingListEntrants.remove(userId);
+            setRemote();
+        }
+    }
+
+    /**
+     * Updates the entrant status for a specific user.
+     *
+     * @param userId The ID of the user.
+     * @param status The new status to set.
+     */
+    public void updateEntrantStatus(String userId, EntrantStatus status) {
+        entrantStatuses.put(userId, status);
+        setRemote();
+    }
+
+    /**
+     * Adds a user ID to the selected entrants list.
+     *
+     * @param userId The ID of the user to add.
+     */
+    public void addSelectedEntrant(String userId) {
+        if (!selectedEntrants.contains(userId)) {
+            selectedEntrants.add(userId);
+            setRemote();
+        }
+    }
+
+    /**
+     * Removes a user ID from the selected entrants list.
+     *
+     * @param userId The ID of the user to remove.
+     */
+    public void removeSelectedEntrant(String userId) {
+        if (selectedEntrants.contains(userId)) {
+            selectedEntrants.remove(userId);
+            setRemote();
+        }
+    }
+
+    /**
+     * Adds a user ID to the enrolled entrants list.
+     *
+     * @param userId The ID of the user to add.
+     */
+    public void enrollEntrant(String userId) {
+        if (!enrolledEntrants.contains(userId)) {
+            enrolledEntrants.add(userId);
+            setRemote();
+        }
+    }
+
     // Method to save the event to Firestore
     @Override
     public void setRemote() {
@@ -357,6 +459,7 @@ public class Event implements DatabaseEntity {
                     Log.e("Firestore", "Error updating event", e);
                 });
     }
+
     @Override
     public void attachListener() {
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
@@ -409,6 +512,7 @@ public class Event implements DatabaseEntity {
             }
         });
     }
+
     @Override
     public void detachListener() {
         if (listener != null) {
@@ -417,12 +521,14 @@ public class Event implements DatabaseEntity {
             Log.d("Firestore", "Listener detached for event: " + id);
         }
     }
+
     @Override
     public void onUpdate() {
         if (onUpdateListener != null) {
             onUpdateListener.run();
         }
     }
+
     @Override
     public void setOnUpdateListener(Runnable listener) {
         this.onUpdateListener = listener;

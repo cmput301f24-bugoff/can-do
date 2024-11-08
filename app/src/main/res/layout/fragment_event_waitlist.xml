@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/event_waitlist_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".event.EventWaitlistFragment">
+
+    <!-- RecyclerView to display the list of users -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_waitlist_users"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:scrollbars="vertical" />
+
+    <!-- ProgressBar to show loading state -->
+    <ProgressBar
+        android:id="@+id/progress_bar_waitlist"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- TextView to display when the list is empty -->
+    <TextView
+        android:id="@+id/text_view_empty_waitlist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No users in the watch list."
+        android:textSize="16sp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
