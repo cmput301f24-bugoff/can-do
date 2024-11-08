@@ -40,7 +40,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * Activity to display detailed information about an event.
+ * This activity fetches and shows event details such as name, description, location, date, and image,
+ * along with a list of entrants. It also allows the user to perform actions such as joining or leaving the waiting list,
+ * viewing the event's watch list or selected list, sharing event details, and opening a map to the event's location.
+ */
 public class EventDetailsActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView eventNameTextView; // Assume you have these TextViews in your layout
@@ -55,6 +60,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     private String eventId;
     private ImageView qrCodeImageView;
 
+    /**
+     * Called when the activity is first created. Initializes the views, sets up the Firestore instance,
+     * binds click listeners to buttons, and fetches event details based on the passed event ID.
+     *
+     * @param savedInstanceState A Bundle containing the activity's previous state, if available.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,6 +195,12 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fetches the details of an event from Firestore based on the event ID.
+     * Updates the UI elements with the event's details.
+     *
+     * @param eventId The ID of the event to fetch.
+     */
     private void fetchEventDetails(String eventId) {
         db.collection("events").document(eventId)
                 .get()
@@ -230,6 +247,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Fetches and displays the list of entrants for the current event.
+     */
     private void fetchEntrants() {
         db.collection("events").document(eventId).collection("entrants")
                 .get()
@@ -251,6 +271,9 @@ public class EventDetailsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Opens the map to the event location using Google Maps.
+     */
     private void openMapToLocation() {
         if (eventLocation != null && !eventLocation.isEmpty()) {
             Uri geoLocation = Uri.parse("geo:0,0?q=" + Uri.encode(eventLocation));
@@ -266,6 +289,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Shares the event details, including the name, date, location, and description,
+     * via a share intent.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -277,6 +304,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
 
+    /**
+     * Generates a QR code from the given text and displays it in the ImageView.
+     *
+     * @param text The text to encode into a QR code.
+     */
     private void generateQRCode(String text)
     {
         BarcodeEncoder barcodeEncoder

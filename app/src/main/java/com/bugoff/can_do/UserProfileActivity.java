@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class UserProfileActivity extends Fragment {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
         // Automatically set profile picture to default avatar
-        TextView userNameTextView = view.findViewById(R.id.user_name);
+        TextView userNameTextView = view.findViewById(R.id.first_name);
         String userName = userNameTextView.getText().toString();
         String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
         ImageView avatar = view.findViewById(R.id.image_avatar);
@@ -63,7 +64,10 @@ public class UserProfileActivity extends Fragment {
         view.findViewById(R.id.name_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editNameDialog();
+                TextView firstName = view.findViewById(R.id.first_name);
+                TextView lastName = view.findViewById(R.id.last_name);
+
+                editNameDialog(firstName, lastName);
             }
         });
 
@@ -183,9 +187,18 @@ public class UserProfileActivity extends Fragment {
             }
     );
 
-    private void editNameDialog() {
+    private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
+
+        String first = firstName.getText().toString();
+        String last = lastName.getText().toString();
+
+        EditText editFirstName = nameView.findViewById(R.id.input_first_name);
+        EditText editLastName = nameView.findViewById(R.id.input_last_name);
+
+        editFirstName.setText(first);
+        editLastName.setText(last);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -193,7 +206,11 @@ public class UserProfileActivity extends Fragment {
                 .setView(nameView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    dialog.dismiss();
+                    String newFirstName = editFirstName.getText().toString();
+                    String newLastName = editLastName.getText().toString();
+
+                    firstName.setText(newFirstName);
+                    lastName.setText(newLastName);
                 })
                 .create()
                 .show();

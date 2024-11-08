@@ -40,6 +40,16 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+/**
+ * Fragment for creating a new event with options for image upload, date and time selection,
+ * and setting event details. Includes fields for event name, description, registration period,
+ * event period, maximum participants, and geolocation requirement.
+ * Utilizes Firebase for image storage and event saving.
+ */
 public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
 
@@ -76,6 +86,15 @@ public class CreateEventFragment extends Fragment {
         return new CreateEventFragment();
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     *
+     * @param inflater LayoutInflater to inflate the view.
+     * @param container Parent container.
+     * @param savedInstanceState Previously saved instance state.
+     * @return The View for the fragment.
+     */
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,6 +102,12 @@ public class CreateEventFragment extends Fragment {
     }
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    /**
+     * Initializes the fragment view and its components after creation.
+     *
+     * @param view The fragment's view.
+     * @param savedInstanceState Previously saved instance state.
+     */
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -93,6 +118,9 @@ public class CreateEventFragment extends Fragment {
         setupImagePicker();
     }
 
+    /**
+     * Sets up the image picker to allow users to upload an image for the event.
+     */
     private void setupImagePicker() {
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -109,6 +137,13 @@ public class CreateEventFragment extends Fragment {
 
         buttonUploadImage.setOnClickListener(v -> openImagePicker());
     }
+
+    /**
+     * Uploads the selected image to Firebase storage and saves the event with the image URL.
+     *
+     * @param imageUri URI of the selected image.
+     * @param event Event to be saved with the image URL.
+     */
 
     private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -129,6 +164,12 @@ public class CreateEventFragment extends Fragment {
         });
     }
 
+    /**
+     * Saves the event data to the Firebase database.
+     *
+     * @param event Event to be saved to the database.
+     */
+
     private void saveEventToDatabase(Event event) {
         GlobalRepository.addEvent(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -141,7 +182,11 @@ public class CreateEventFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Initializes view elements for the fragment.
+     *
+     * @param view The fragment's root view.
+     */
     private void initializeViews(@NonNull View view) {
         buttonUploadImage = view.findViewById(R.id.buttonUploadImage);
         editTextEventName = view.findViewById(R.id.editTextEventName);
@@ -158,6 +203,9 @@ public class CreateEventFragment extends Fragment {
         checkBoxGeolocation = view.findViewById(R.id.checkBoxGeolocation);
         buttonCreateEvent = view.findViewById(R.id.buttonCreateEvent);
     }
+    /**
+     * Configures date and time pickers for event and registration periods.
+     */
 
     private void setupDateTimePickers() {
         // Registration Start Date and Time
@@ -197,6 +245,9 @@ public class CreateEventFragment extends Fragment {
             updateButtonText(buttonEventEndTime, eventEndDate);
         }));
     }
+    /**
+     * Displays a date picker dialog and returns the selected date.
+     */
 
     private void showDatePickerDialog(DateSelectedListener listener) {
         final Calendar calendar = Calendar.getInstance();
@@ -227,6 +278,12 @@ public class CreateEventFragment extends Fragment {
                 true);
         timePickerDialog.show();
     }
+    /**
+     * Updates the text of a button with the formatted date or time.
+     *
+     * @param button The button to be updated.
+     * @param date The date or time to display.
+     */
 
     private void updateButtonText(Button button, Date date) {
         if (button == buttonRegStartDate || button == buttonRegEndDate ||
@@ -236,6 +293,9 @@ public class CreateEventFragment extends Fragment {
             button.setText(timeFormat.format(date));
         }
     }
+    /**
+     * Sets the date part of the Date object while retaining the time.
+     */
 
     private Date setDate(Date original, Date selectedDate) {
         Calendar originalCal = Calendar.getInstance();
@@ -270,16 +330,23 @@ public class CreateEventFragment extends Fragment {
         originalCal.set(Calendar.MILLISECOND, 0);
         return originalCal.getTime();
     }
+    /**
+     * Sets up the button to create a new event.
+     */
 
     private void setupCreateEventButton() {
         buttonCreateEvent.setOnClickListener(v -> createEvent());
     }
-
+    /**
+     * Opens the image picker for selecting an image.
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         imagePickerLauncher.launch(intent);
     }
-
+    /**
+     * Creates a new event using input details and saves it to Firebase.
+     */
     private void createEvent() {
         String eventName = editTextEventName.getText().toString().trim();
         String eventDescription = editTextEventDescription.getText().toString().trim();
@@ -361,12 +428,14 @@ public class CreateEventFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Navigates to the OrganizerMain activity.
+     */
     private void navigateToOrganizerMain() {
         Intent intent = new Intent(getActivity(), OrganizerMain.class);
         startActivity(intent);
     }
-    // Listener interfaces for date and time selection
+
     private interface DateSelectedListener {
         void onDateSelected(Date date);
     }
