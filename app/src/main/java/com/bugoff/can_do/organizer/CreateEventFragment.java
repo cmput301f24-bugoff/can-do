@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ import java.util.Objects;
 public class CreateEventFragment extends Fragment {
     private static final String TAG = "CreateEventFragment";
 
+    private ImageButton buttonBack;
     private EditText editTextEventName;
     private EditText editTextEventDescription;
     private Button buttonRegStartDate;
@@ -72,6 +74,7 @@ public class CreateEventFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_event, container, false);
+
     }
 
     @Override
@@ -80,7 +83,15 @@ public class CreateEventFragment extends Fragment {
         initializeViews(view);
         setupDateTimePickers();
         setupCreateEventButton();
+        setupBackButton();
     }
+
+    private void setupBackButton() {
+        buttonBack.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack();
+        });
+    }
+
 
     private void initializeViews(@NonNull View view) {
         editTextEventName = view.findViewById(R.id.editTextEventName);
@@ -96,6 +107,7 @@ public class CreateEventFragment extends Fragment {
         editTextNumParticipants = view.findViewById(R.id.editTextMaxNumParticipants);
         checkBoxGeolocation = view.findViewById(R.id.checkBoxGeolocation);
         buttonCreateEvent = view.findViewById(R.id.buttonCreateEvent);
+        buttonBack = view.findViewById(R.id.back_button_create_event);
     }
 
     private void setupDateTimePickers() {
@@ -305,6 +317,7 @@ public class CreateEventFragment extends Fragment {
         newEvent.setEventEndDate(eventEndDate);
         newEvent.setMaxNumberOfParticipants(maxNumParticipants);
         newEvent.setGeolocationRequired(isGeolocationRequired);
+        newEvent.setQrCodeHash("cando-" + newEvent.getId());
 
         // Save the Event to Firestore using GlobalRepository
         GlobalRepository.addEvent(newEvent).addOnCompleteListener(task -> {
