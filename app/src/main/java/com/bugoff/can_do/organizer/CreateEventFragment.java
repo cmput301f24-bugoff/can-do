@@ -1,9 +1,5 @@
 package com.bugoff.can_do.organizer;
 
-import static android.app.PendingIntent.getActivity;
-
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -26,12 +22,18 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import org.jetbrains.annotations.Contract;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -73,6 +75,7 @@ public class CreateEventFragment extends Fragment {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
     public CreateEventFragment() {
         // Required empty public constructor
     }
@@ -91,6 +94,7 @@ public class CreateEventFragment extends Fragment {
      * @param savedInstanceState Previously saved instance state.
      * @return The View for the fragment.
      */
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,6 +108,7 @@ public class CreateEventFragment extends Fragment {
      * @param view The fragment's view.
      * @param savedInstanceState Previously saved instance state.
      */
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -139,6 +144,7 @@ public class CreateEventFragment extends Fragment {
      * @param imageUri URI of the selected image.
      * @param event Event to be saved with the image URL.
      */
+
     private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("event_images/" + event.getId() + ".jpg");
@@ -163,6 +169,7 @@ public class CreateEventFragment extends Fragment {
      *
      * @param event Event to be saved to the database.
      */
+
     private void saveEventToDatabase(Event event) {
         GlobalRepository.addEvent(event).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -199,6 +206,7 @@ public class CreateEventFragment extends Fragment {
     /**
      * Configures date and time pickers for event and registration periods.
      */
+
     private void setupDateTimePickers() {
         // Registration Start Date and Time
         buttonRegStartDate.setOnClickListener(v -> showDatePickerDialog(date -> {
@@ -240,6 +248,7 @@ public class CreateEventFragment extends Fragment {
     /**
      * Displays a date picker dialog and returns the selected date.
      */
+
     private void showDatePickerDialog(DateSelectedListener listener) {
         final Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
@@ -252,6 +261,7 @@ public class CreateEventFragment extends Fragment {
                 calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
+
     /**
      * Displays a TimePickerDialog and returns the selected time.
      */
@@ -274,6 +284,7 @@ public class CreateEventFragment extends Fragment {
      * @param button The button to be updated.
      * @param date The date or time to display.
      */
+
     private void updateButtonText(Button button, Date date) {
         if (button == buttonRegStartDate || button == buttonRegEndDate ||
                 button == buttonEventStartDate || button == buttonEventEndDate) {
@@ -285,6 +296,7 @@ public class CreateEventFragment extends Fragment {
     /**
      * Sets the date part of the Date object while retaining the time.
      */
+
     private Date setDate(Date original, Date selectedDate) {
         Calendar originalCal = Calendar.getInstance();
         if (original != null) {
@@ -299,6 +311,7 @@ public class CreateEventFragment extends Fragment {
         originalCal.set(Calendar.DAY_OF_MONTH, selectedCal.get(Calendar.DAY_OF_MONTH));
         return originalCal.getTime();
     }
+
     /**
      * Sets the time part of the Date object while retaining the date.
      */
@@ -320,6 +333,7 @@ public class CreateEventFragment extends Fragment {
     /**
      * Sets up the button to create a new event.
      */
+
     private void setupCreateEventButton() {
         buttonCreateEvent.setOnClickListener(v -> createEvent());
     }

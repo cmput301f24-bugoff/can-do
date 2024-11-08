@@ -7,11 +7,22 @@
     card_view:cardCornerRadius="8dp"
     card_view:cardElevation="4dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
+
+        <!-- Delete Button -->
+        <ImageButton
+            android:id="@+id/button_delete_event"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="Delete Event"
+            android:visibility="gone" />
 
         <!-- Event Name -->
         <TextView
@@ -29,6 +40,7 @@
             android:layout_height="wrap_content"
             android:text="Event Description"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_below="@id/text_view_event_name"
             android:layout_marginTop="4dp" />
 
         <!-- Event Dates and Times -->
@@ -38,6 +50,7 @@
             android:layout_height="wrap_content"
             android:text="Registration: Jan 1, 2024 09:00 - Jan 10, 2024 17:00 | Event: Jan 15, 2024 10:00 - Jan 16, 2024 18:00"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_below="@id/text_view_event_description"
             android:layout_marginTop="8dp" />
 
         <!-- Number of Participants -->
@@ -47,8 +60,9 @@
             android:layout_height="wrap_content"
             android:text="Participants: 100"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:layout_below="@id/text_view_event_dates"
             android:layout_marginTop="4dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

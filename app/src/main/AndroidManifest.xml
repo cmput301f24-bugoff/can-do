@@ -35,6 +35,10 @@
 
         <activity android:name=".organizer.EventDetailsActivity" />
         <activity android:name=".user.EventDetailActivityEntrant" />
+        <activity android:name=".admin.AdminActivity"
+            android:label="Admin Dashboard"
+            android:parentActivityName=".UserProfileActivity">
+        </activity>
 
 
         <!-- Add your NotificationSettingsActivity here -->

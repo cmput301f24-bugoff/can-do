@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/browse_profiles_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- RecyclerView to display the list of user profiles -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_profiles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:scrollbars="vertical" />
+
+    <!-- ProgressBar to show loading state -->
+    <ProgressBar
+        android:id="@+id/progress_bar_profiles"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!-- TextView to display when the list is empty -->
+    <TextView
+        android:id="@+id/text_view_empty_profiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No profiles available."
+        android:textSize="16sp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
