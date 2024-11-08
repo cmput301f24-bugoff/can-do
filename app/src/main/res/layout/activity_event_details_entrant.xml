@@ -127,6 +127,13 @@
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:text="Send Notification" />
+
+        <Button
+            android:id="@+id/view_selected_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="View Selected" />
     </LinearLayout>
 
     <LinearLayout
@@ -157,11 +164,11 @@
     <!-- QR Code ImageView -->
     <ImageView
         android:id="@+id/idIVQrcode"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_below="@id/button_container"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="90dp"
         android:contentDescription="QR Code" />
 
     <!-- Entrants Section -->
