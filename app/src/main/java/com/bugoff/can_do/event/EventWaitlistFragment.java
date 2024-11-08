@@ -1,15 +1,20 @@
 package com.bugoff.can_do.event;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +26,7 @@ import com.bugoff.can_do.user.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class EventWaitlistFragment extends Fragment {
 
@@ -61,6 +67,32 @@ public class EventWaitlistFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_event_waitlist, container, false);
     }
 
+    private void performDrawing(int numberToDraw) {
+        // Randomly select users from the waitlist
+        List<User> selectedUsers = new ArrayList<>();
+        List<User> waitlistCopy = new ArrayList<>(userList); // Create a copy to avoid modifying the original list
+
+        Random random = new Random();
+        for (int i = 0; i < numberToDraw; i++) {
+            int index = random.nextInt(waitlistCopy.size());
+            selectedUsers.add(waitlistCopy.get(index));
+            waitlistCopy.remove(index);
+        }
+
+        for (User user : selectedUsers) {
+            // Update the selected list in the ViewModel and database
+            viewModel.addSelectedEntrant(user.getId());
+
+            // Remove the selected users from the waitlist
+            viewModel.removeWaitingListEntrant(user.getId());
+        }
+
+        // Update the UI
+        userList.removeAll(selectedUsers);
+        userAdapter.notifyDataSetChanged();
+
+        Toast.makeText(getContext(), "Successfully drew " + numberToDraw + " users.", Toast.LENGTH_SHORT).show();
+    };
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -94,6 +126,41 @@ public class EventWaitlistFragment extends Fragment {
                 Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
             }
             progressBar.setVisibility(View.GONE);
+        });
+
+        // Get reference to the "Draw" button
+        Button drawButton = view.findViewById(R.id.draw);
+        drawButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Enter number of users to draw");
+
+            final EditText input = new EditText(getContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            builder.setView(input);
+
+            builder.setPositiveButton("Draw", (dialog, which) -> {
+                String inputText = input.getText().toString().trim();
+                if (!inputText.isEmpty()) {
+                    try {
+                        int numberToDraw = Integer.parseInt(inputText);
+                        if (numberToDraw <= 0) {
+                            Toast.makeText(getContext(), "Please enter a positive number.", Toast.LENGTH_SHORT).show();
+                        } else if (numberToDraw > userList.size()) {
+                            Toast.makeText(getContext(), "Number exceeds the waitlist size.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            performDrawing(numberToDraw);
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Invalid number.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please enter a number.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
         });
 
         // Observe error messages

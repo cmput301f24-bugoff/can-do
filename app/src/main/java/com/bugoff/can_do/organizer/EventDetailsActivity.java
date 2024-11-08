@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
 import com.bugoff.can_do.event.EventWaitlistFragment;
@@ -79,6 +80,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         ImageButton editGraphButton = findViewById(R.id.edit_graph);
 
         Button viewWatchListButton = findViewById(R.id.view_watch_list);
+        Button viewSelectedButton = findViewById(R.id.view_selected_list);
         Button sendNotificationButton = findViewById(R.id.send_notification);
 
         Button joinWaitingListButton = findViewById(R.id.join_waiting_list);
@@ -147,6 +149,24 @@ public class EventDetailsActivity extends AppCompatActivity {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
             Log.d("EventDetailsActivity", "View Watch List clicked");
+        });
+
+        viewSelectedButton.setOnClickListener(v -> {
+            Toast.makeText(this, "View Selected clicked", Toast.LENGTH_SHORT).show();
+
+            Fragment eventSelectedFragment = new EventSelectedFragment();
+
+            // Pass eventId to the fragment
+            Bundle args = new Bundle();
+            args.putString("eventId", finalEventId);
+            eventSelectedFragment.setArguments(args);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, eventSelectedFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+            Log.d("EventDetailsActivity", "View Selected List clicked");
         });
 
         sendNotificationButton.setOnClickListener(v -> {
