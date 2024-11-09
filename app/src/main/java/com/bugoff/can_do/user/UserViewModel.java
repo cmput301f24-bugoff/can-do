@@ -13,6 +13,9 @@ import com.bugoff.can_do.facility.Facility;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ViewModel for a single user profile. Fetches user data from Firestore and exposes it to the UI.
+ */
 public class UserViewModel extends ViewModel {
     private User user;
     private final MutableLiveData<String> userName = new MutableLiveData<>();
@@ -53,6 +56,9 @@ public class UserViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Updates the LiveData with the latest user data.
+     */
     private void updateLiveData() {
         if (user != null) {
             userName.postValue(user.getName());

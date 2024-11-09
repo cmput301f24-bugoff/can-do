@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * ViewModel for browsing user profiles. Fetches user profiles from Firestore and exposes them to the UI.
+ */
 public class BrowseProfilesViewModel extends ViewModel {
 
     private static final String TAG = "BrowseProfilesViewModel";

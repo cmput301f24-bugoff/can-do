@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Factory for creating UserViewModel with userId parameter.
+ */
 public class UserViewModelFactory implements ViewModelProvider.Factory {
     private final String userId;
 

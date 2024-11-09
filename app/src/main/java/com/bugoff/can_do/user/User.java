@@ -21,15 +21,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Represents a user in the application. A user can be an organizer, admin, or a regular user.
+ */
 public class User implements DatabaseEntity {
+    /** The unique ID of the user. */
     private String id;
+    /** The name of the user. */
     private String name;
+    /** The email address of the user. */
     private String email;
+    /** The phone number of the user. */
     private String phoneNumber;
+    /** Indicates whether the user is an admin. */
     private Boolean isAdmin;
+    /** The facility associated with the user if the user is an organizer. */
     private Facility facility; // Associated facility if the user is an organizer
+    /** The list of event IDs where the user joined the waiting list. */
     private List<String> eventsJoined; // Event IDs where the user joined the waiting list
+    /** The list of event IDs where the user is enrolled. */
     private List<String> eventsEnrolled; // Event IDs where the user is enrolled
+    /** The list of notifications for the user. */
     private List<Notification> notificationList; // List of Notification objects
 
     private FirebaseFirestore db;
@@ -107,6 +119,11 @@ public class User implements DatabaseEntity {
         return map;
     }
 
+    /**
+     * Deserializes the eventsJoined field from Firestore.
+     *
+     * @param data The data to deserialize.
+     */
     private void deserializeEventsJoined(Object data) {
         if (data instanceof List<?>) {
             List<?> eventIds = (List<?>) data;
@@ -119,6 +136,11 @@ public class User implements DatabaseEntity {
         }
     }
 
+    /**
+     * Deserializes the eventsEnrolled field from Firestore.
+     *
+     * @param data The data to deserialize.
+     */
     private void deserializeEventsEnrolled(Object data) {
         if (data instanceof List<?>) {
             List<?> eventIds = (List<?>) data;

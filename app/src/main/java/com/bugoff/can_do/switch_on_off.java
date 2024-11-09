@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
+/**
+ * Activity for the notification settings screen. Allows users to toggle different types of notifications on and off.
+ */
 public class switch_on_off extends AppCompatActivity {
 
     @Override

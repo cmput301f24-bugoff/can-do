@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugoff.can_do.R;
 
+/**
+ * Activity for managing notification settings.
+ * This activity allows the user to configure notification preferences.
+ */
 public class NotificationSettingsActivity extends AppCompatActivity {
 
     @Override

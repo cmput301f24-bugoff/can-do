@@ -17,6 +17,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for displaying a list of notifications for the current user.
+ * This activity fetches the user's notification list from Firestore and displays it in a ListView.
+ */
 public class NotificationsActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;

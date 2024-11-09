@@ -12,12 +12,31 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.event.EventsFragment;
 import com.bugoff.can_do.user.BrowseProfilesFragment;
 
+/**
+ * {@code AdminActivity} serves as the main interface for admin users,
+ * allowing them to browse events, profiles, and images. It manages
+ * fragment transactions to display the corresponding sections based on
+ * the admin's interactions.
+ */
 public class AdminActivity extends AppCompatActivity {
 
+    /** Button to browse and manage events. */
     private Button browseEventsButton;
+
+    /** Button to browse and manage user profiles. */
     private Button browseProfilesButton;
+
+    /** Button to browse and manage images. */
     private Button browseImagesButton;
 
+    /**
+     * Called when the activity is first created. Initializes the layout,
+     * binds the UI components, and sets up click listeners for admin actions.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains
+     *                           the data it most recently supplied in {@link #onSaveInstanceState}.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +49,12 @@ public class AdminActivity extends AppCompatActivity {
 
         // Set click listeners
         browseEventsButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles the click event for browsing events. Loads the {@code EventsFragment}
+             * with admin privileges.
+             *
+             * @param view The view that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 loadFragment(EventsFragment.newInstance(true)); // Pass isAdmin = true
@@ -37,6 +62,11 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         browseProfilesButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles the click event for browsing profiles. Loads the {@code BrowseProfilesFragment}.
+             *
+             * @param view The view that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 loadFragment(new BrowseProfilesFragment());
@@ -44,6 +74,11 @@ public class AdminActivity extends AppCompatActivity {
         });
 
         browseImagesButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handles the click event for browsing images. Loads the {@code BrowseImagesFragment}.
+             *
+             * @param view The view that was clicked.
+             */
             @Override
             public void onClick(View view) {
                 loadFragment(new BrowseImagesFragment());
@@ -64,6 +99,13 @@ public class AdminActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * Handles the behavior when the Up button in the action bar is pressed.
+     * If there are fragments in the back stack, it pops the last fragment.
+     * Otherwise, it finishes the activity.
+     *
+     * @return {@code true} if the Up navigation was handled successfully, {@code false} otherwise.
+     */
     @Override
     public boolean onSupportNavigateUp() {
         // Handle the Up button behavior

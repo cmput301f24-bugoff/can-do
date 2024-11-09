@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugoff.can_do.R;
 
+/**
+ * The EventDetailActivityEntrant activity displays the details of an event for an entrant.
+ * It shows the name and date of the event.
+ */
 public class EventDetailActivityEntrant extends AppCompatActivity {
 
     @Override

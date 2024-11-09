@@ -23,6 +23,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * {@code Event} represents an event that can be held at a facility. It contains
+ * details such as the event name, description, dates, registration details, and
+ * participant information. Events can be created, updated, and monitored in real-time
+ * through Firestore, allowing for dynamic updates to event details and participant lists.
+ */
 public class Event implements DatabaseEntity {
     // Data fields
     private String id; // Unique ID of the event

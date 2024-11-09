@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bugoff.can_do.R;
 
+/**
+ * {@code BrowseImagesFragment} is unfinished
+ */
 public class BrowseImagesFragment extends Fragment {
 
     public BrowseImagesFragment() {

@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.notification.NotificationsActivity;
 
+/**
+ * Fragment for the Home screen.
+ */
 public class HomeActivity extends Fragment {
 
     @Nullable
