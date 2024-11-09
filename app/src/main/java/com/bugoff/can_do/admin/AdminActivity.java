@@ -1,8 +1,9 @@
 package com.bugoff.can_do.admin;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.event.EventsFragment;
+import com.bugoff.can_do.organizer.ProfileFragment;
 import com.bugoff.can_do.user.BrowseProfilesFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * {@code AdminActivity} serves as the main interface for admin users,
@@ -20,71 +23,44 @@ import com.bugoff.can_do.user.BrowseProfilesFragment;
  */
 public class AdminActivity extends AppCompatActivity {
 
-    /** Button to browse and manage events. */
-    private Button browseEventsButton;
-
-    /** Button to browse and manage user profiles. */
-    private Button browseProfilesButton;
-
-    /** Button to browse and manage images. */
-    private Button browseImagesButton;
-
-    /**
-     * Called when the activity is first created. Initializes the layout,
-     * binds the UI components, and sets up click listeners for admin actions.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           previously being shut down then this Bundle contains
-     *                           the data it most recently supplied in {@link #onSaveInstanceState}.
-     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        // Initialize buttons
-        browseEventsButton = findViewById(R.id.button_browse_events);
-        browseProfilesButton = findViewById(R.id.button_browse_profiles);
-        browseImagesButton = findViewById(R.id.button_browse_images);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_admin);
 
-        // Set click listeners
-        browseEventsButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Handles the click event for browsing events. Loads the {@code EventsFragment}
-             * with admin privileges.
-             *
-             * @param view The view that was clicked.
-             */
-            @Override
-            public void onClick(View view) {
-                loadFragment(EventsFragment.newInstance(true)); // Pass isAdmin = true
-            }
-        });
+        // Load the default fragment only once, without setting the bottom navigation item again
+        if (savedInstanceState == null) {
+            loadFragment(EventsFragment.newInstance(true));
+        }
 
-        browseProfilesButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Handles the click event for browsing profiles. Loads the {@code BrowseProfilesFragment}.
-             *
-             * @param view The view that was clicked.
-             */
-            @Override
-            public void onClick(View view) {
-                loadFragment(new BrowseProfilesFragment());
-            }
-        });
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment;
 
-        browseImagesButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Handles the click event for browsing images. Loads the {@code BrowseImagesFragment}.
-             *
-             * @param view The view that was clicked.
-             */
-            @Override
-            public void onClick(View view) {
-                loadFragment(new BrowseImagesFragment());
+            if (item.getItemId() == R.id.browse_events) {
+                Log.d(TAG, "Browsing events");
+                selectedFragment = EventsFragment.newInstance(true);
+                loadFragment(selectedFragment);
+            } else if (item.getItemId() == R.id.browse_profiles) {
+                Log.d(TAG, "Browsing profiles");
+                selectedFragment = new BrowseProfilesFragment();
+                loadFragment(selectedFragment);
+            } else if (item.getItemId() == R.id.browse_images) {
+                Log.d(TAG, "Browsing images");
+                selectedFragment = new BrowseImagesFragment();
+            } else if (item.getItemId() == R.id.logout) {
+                logOutUser();
+                return true;
+            } else {
+                return false;
             }
+
+            loadFragment(selectedFragment);
+            return true;
         });
     }
+
 
     /**
      * Loads the specified fragment into the fragment container.
@@ -115,5 +91,13 @@ public class AdminActivity extends AppCompatActivity {
         }
         finish();
         return true;
+    }
+
+    /**
+     * Logs out the user and finishes the activity.
+     */
+    private void logOutUser() {
+        Log.d(TAG, "User logged out");
+        finish();
     }
 }
