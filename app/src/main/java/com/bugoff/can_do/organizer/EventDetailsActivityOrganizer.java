@@ -46,7 +46,7 @@ import java.util.Locale;
  * along with a list of entrants. It also allows the user to perform actions such as joining or leaving the waiting list,
  * viewing the event's watch list or selected list, sharing event details, and opening a map to the event's location.
  */
-public class EventDetailsActivity extends AppCompatActivity {
+public class EventDetailsActivityOrganizer extends AppCompatActivity {
     private FirebaseFirestore db;
     private TextView eventNameTextView; // Assume you have these TextViews in your layout
     private TextView eventDateTextView;
@@ -70,7 +70,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         eventId = getIntent().getStringExtra("selected_event_id");
-        setContentView(R.layout.activity_event_details_entrant); // Ensure layout name is correct
+        setContentView(R.layout.activity_event_details_organizer); // Ensure layout name is correct
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();

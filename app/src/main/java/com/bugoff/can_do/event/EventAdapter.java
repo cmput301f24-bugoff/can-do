@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.organizer.EventDetailsActivity;
+import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -177,7 +177,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Event event2 = eventList.get(position);
-                    Intent intent = new Intent(itemView.getContext(), EventDetailsActivity.class);
+                    Intent intent = new Intent(itemView.getContext(), EventDetailsActivityOrganizer.class);
                     intent.putExtra("selected_event_id", event2.getId());
                     itemView.getContext().startActivity(intent);
                 }

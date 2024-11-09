@@ -23,6 +23,8 @@ public class HomeActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_screen, container, false);
 
+
+
         // Functionality of notifications button on HomeScreen
         view.findViewById(R.id.notif_hs_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationsActivity.class);
