@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/browse_events"
+        android:icon="@drawable/event_24px"
+        android:title="Browse Events" />
+    <item
+        android:id="@+id/browse_profiles"
+        android:icon="@drawable/account_circle_24px"
+        android:title="Browse Profiles" />
+    <item
+        android:id="@+id/browse_images"
+        android:icon="@drawable/image_24px"
+        android:title="Browse Images" />
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/logout_24px"
+        android:title="Logout" />
+</menu>
