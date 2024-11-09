@@ -4,6 +4,7 @@ $dokka.location:com.bugoff.can_do.admin////PointingToDeclaration/app/com.bugoff
 $dokka.location:com.bugoff.can_do.admin/AdminActivity///PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/index.html
 $dokka.location:com.bugoff.can_do.admin/AdminActivity/AdminActivity/#/PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/-admin-activity.html
 $dokka.location:com.bugoff.can_do.admin/AdminActivity/loadFragment/#Fragment/PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/load-fragment.html
+$dokka.location:com.bugoff.can_do.admin/AdminActivity/logOutUser/#/PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/log-out-user.html
 $dokka.location:com.bugoff.can_do.admin/AdminActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/on-create.html
 $dokka.location:com.bugoff.can_do.admin/AdminActivity/onSupportNavigateUp/#/PointingToDeclaration/app/com.bugoff.can_do.admin/-admin-activity/on-support-navigate-up.html
 $dokka.location:com.bugoff.can_do.admin/BrowseImagesFragment///PointingToDeclaration/app/com.bugoff.can_do.admin/-browse-images-fragment/index.html
