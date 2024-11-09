@@ -34,9 +34,20 @@ import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Fragment for the user profile screen.
+ */
 public class UserProfileActivity extends Fragment {
     private User user;
 
+    /**
+     * Initializes the user profile screen and sets up the buttons for editing user information.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container          The parent view that the fragment's UI should be attached to
+     * @param savedInstanceState The previously saved state of the fragment
+     * @return The view for the user profile screen
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -147,6 +158,12 @@ public class UserProfileActivity extends Fragment {
     }
 
 
+    /**
+     * Helper for generating default avatar when custom avatar is removed
+     *
+     * @param letter First letter of user's name
+     * @return Bitmap of default avatar
+     */
     // Helper for generating default avatar when custom avatar is removed
     private Bitmap generateAvatar(String letter) {
         int size = 175;
@@ -174,6 +191,9 @@ public class UserProfileActivity extends Fragment {
         return bitmap;
     }
 
+    /**
+     * Helper for launching gallery and camera intents
+     */
     // For gallery launching
     private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -186,6 +206,9 @@ public class UserProfileActivity extends Fragment {
             }
     );
 
+    /**
+     * Helper for launching gallery and camera intents
+     */
     // For camera launching
     private ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -198,6 +221,12 @@ public class UserProfileActivity extends Fragment {
             }
     );
 
+    /**
+     * Helper for loading user data from Firestore
+     *
+     * @param db        Firestore instance
+     * @param androidID Android ID of the user
+     */
     private void loadUserData(FirebaseFirestore db, String androidID) {
         db.collection("users").document(androidID).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -224,6 +253,12 @@ public class UserProfileActivity extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure to load data", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Helper for saving user data to Firestore
+     *
+     * @param firstNameTxt First name TextView
+     * @param lastNameTxt  Last name TextView
+     */
     private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
         if (user == null) {
             Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
@@ -235,6 +270,12 @@ public class UserProfileActivity extends Fragment {
         user.setRemote();
     }
 
+    /**
+     * Helper for editing user name
+     *
+     * @param firstName First name TextView
+     * @param lastName  Last name TextView
+     */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -266,6 +307,9 @@ public class UserProfileActivity extends Fragment {
                 .show();
     }
 
+    /**
+     * Helper for editing user email
+     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -282,6 +326,9 @@ public class UserProfileActivity extends Fragment {
                 .show();
     }
 
+    /**
+     * Helper for adding phone number
+     */
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -317,6 +364,11 @@ public class UserProfileActivity extends Fragment {
                 .show();
     }
 
+    /**
+     * Helper for setting up admin button
+     *
+     * @param view Fragment view
+     */
     private void setupAdminButton(View view) {
         Button adminButton = view.findViewById(R.id.admin_button);
         if (GlobalRepository.getLoggedInUser() != null && GlobalRepository.getLoggedInUser().getIsAdmin()) {

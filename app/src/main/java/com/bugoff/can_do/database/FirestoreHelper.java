@@ -2,6 +2,9 @@ package com.bugoff.can_do.database;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * {@code FirestoreHelper} is a singleton class that provides a single instance of Firestore.
+ */
 public class FirestoreHelper {
     private static FirestoreHelper instance;
     private FirebaseFirestore db;

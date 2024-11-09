@@ -24,6 +24,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment to display a list of events.
+ * Shows a RecyclerView of events, and manages visibility of a FAB to add events.
+ */
 public class EventsFragment extends Fragment {
     private static final String ARG_IS_ADMIN = "isAdmin";
     private boolean isAdmin;

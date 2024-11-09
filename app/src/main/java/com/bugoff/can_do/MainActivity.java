@@ -17,10 +17,18 @@ import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Main activity for the app. Handles navigation between different fragments using a BottomNavigationView.
+ */
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UserViewModel userViewModel;
 
+    /**
+     * Initializes the activity and sets up the BottomNavigationView for navigation between different fragments.
+     *
+     * @param savedInstanceState The saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

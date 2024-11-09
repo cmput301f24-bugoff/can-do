@@ -18,6 +18,10 @@ import com.bugoff.can_do.R;
 
 import java.util.List;
 
+/**
+ * Custom ArrayAdapter for displaying Notification items in a ListView.
+ * This adapter also handles the click events for the "More" button in each item.
+ */
 public class NotificationAdapter extends ArrayAdapter<Notification> {
     private Context context;
     private List<Notification> notifications;

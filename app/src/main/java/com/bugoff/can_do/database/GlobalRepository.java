@@ -18,6 +18,9 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * {@code GlobalRepository} is a global class that helps manage Firestore operations.
+ */
 public class GlobalRepository {
     private static CollectionReference usersCollection;
     private static CollectionReference facilitiesCollection;
@@ -77,6 +80,12 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Retrieves a User object from Firestore based on the Android ID.
+     *
+     * @param androidId The Android ID of the user to retrieve.
+     * @return A Task representing the retrieval operation.
+     */
     @NonNull
     public static Task<User> getUser(String androidId) {
         TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();

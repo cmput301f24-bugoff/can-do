@@ -8,7 +8,9 @@ import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 
-// Intended to be a purely stateless class
+/**
+ * {@code UserAuthenticator} is a class that authenticates users by their Android ID.
+ */
 public class UserAuthenticator {
     private static final String TAG = "UserAuthenticator";
 

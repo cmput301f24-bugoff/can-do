@@ -18,13 +18,21 @@ import com.bugoff.can_do.R;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment for browsing user profiles. This fragment displays a list of user profiles in a RecyclerView.
+ * The profiles are fetched from a ViewModel that retrieves the data from a data source.
+ */
 public class BrowseProfilesFragment extends Fragment {
-
+    /** RecyclerView for displaying user profiles */
     private RecyclerView recyclerViewProfiles;
+    /** Adapter for the RecyclerView */
     private UserAdapter userAdapter;
+    /** ProgressBar for indicating loading state */
     private ProgressBar progressBar;
+    /** TextView for displaying an empty state message */
     private TextView emptyTextView;
 
+    /** ViewModel for fetching user profiles */
     private BrowseProfilesViewModel browseProfilesViewModel;
 
     public BrowseProfilesFragment() {

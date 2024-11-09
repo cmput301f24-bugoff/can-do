@@ -3,22 +3,24 @@ package com.bugoff.can_do.user;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.bugoff.can_do.database.GlobalRepository;
-import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.organizer.EventDetailsActivity;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
-import com.google.firebase.firestore.DocumentSnapshot;
 
+/**
+ * Handles the processing of QR codes scanned by the user.
+ */
 public class HandleQRScan {
 
     private static final String TAG = "HandleQRScan";
 
+    /**
+     * Processes the scanned QR code and navigates to the event details activity if the QR code is valid.
+     *
+     * @param qrCode  The scanned QR code.
+     * @param context The context from which the QR code was scanned.
+     */
     public static void processQRCode(String qrCode, Context context) {
         if (qrCode.startsWith("cando-")) {
             String eventId = qrCode.substring(6);  // Extract the ID part
@@ -28,6 +30,12 @@ public class HandleQRScan {
         }
     }
 
+    /**
+     * Fetches the event details from Firestore using the event ID.
+     *
+     * @param eventId The ID of the event to fetch.
+     * @param context The context from which the event details are fetched.
+     */
     private static void fetchEvent(String eventId, Context context) {
         if (eventId == null || eventId.isEmpty()) {
             Log.e(TAG, "Event ID is null or empty. Cannot fetch event.");

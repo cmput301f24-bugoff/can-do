@@ -1,5 +1,8 @@
 package com.bugoff.can_do.notification;
 
+/**
+ * Represents a notification that can be sent to a user.
+ */
 public class Notification {
     private String id; // Unique identifier for the notification
     private String type; // Can be "message", "selected", "rejected"

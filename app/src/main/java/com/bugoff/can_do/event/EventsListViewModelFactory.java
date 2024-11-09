@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Factory class for creating an instance of EventsListViewModel with a specific isAdmin flag.
+ * Used to pass the isAdmin
+ */
 public class EventsListViewModelFactory implements ViewModelProvider.Factory {
     private final boolean isAdmin;
 
