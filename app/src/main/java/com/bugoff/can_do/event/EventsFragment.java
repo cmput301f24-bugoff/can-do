@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.organizer.CreateEventFragment;
-import com.bugoff.can_do.organizer.EventDetailsActivity;
+import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -146,7 +146,7 @@ public class EventsFragment extends Fragment {
      * @param event The event clicked.
      */
     private void onEventClicked(Event event) {
-        Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+        Intent intent = new Intent(getContext(), EventDetailsActivityOrganizer.class);
         intent.putExtra("selected_event_id", event.getId());
         startActivity(intent);
     }

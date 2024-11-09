@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
                         userViewModel = new ViewModelProvider(this, new UserViewModelFactory(user.getId()))
                                 .get(UserViewModel.class);
                         GlobalRepository.setLoggedInUser(user);
-                        Toast.makeText(MainActivity.this, "Welcome " + GlobalRepository.getLoggedInUser().getName() + "!", Toast.LENGTH_SHORT).show();
 
 
                         if (savedInstanceState == null) {
@@ -65,32 +64,29 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-                        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                int id = item.getItemId();
-                                Fragment selectedFragment = null;
+                        bottomNavigationView.setOnItemSelectedListener(item -> {
+                            int id = item.getItemId();
+                            Fragment selectedFragment = null;
 
-                                if (id == R.id.nav_home) {
-                                    // Handle "Home" click
-                                    Log.d(TAG, "Home clicked");
-                                    selectedFragment = new HomeActivity();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                                    return true;
-                                } else if (id == R.id.nav_scan) {
-                                    Log.d(TAG, "Scan Activity clicked");
-                                    selectedFragment = new QrCodeScannerFragment();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                                    return true;
-                                } else if (id == R.id.nav_profile) {
-                                    // Handle "Profile" click
-                                    Log.d(TAG, "Profile clicked");
-                                    selectedFragment = new UserProfileActivity();
-                                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-                                    return true;
-                                } else {
-                                    return false;
-                                }
+                            if (id == R.id.nav_home) {
+                                // Handle "Home" click
+                                Log.d(TAG, "Home clicked");
+                                selectedFragment = new HomeActivity();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                return true;
+                            } else if (id == R.id.nav_scan) {
+                                Log.d(TAG, "Scan Activity clicked");
+                                selectedFragment = new QrCodeScannerFragment();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                return true;
+                            } else if (id == R.id.nav_profile) {
+                                // Handle "Profile" click
+                                Log.d(TAG, "Profile clicked");
+                                selectedFragment = new UserProfileActivity();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                                return true;
+                            } else {
+                                return false;
                             }
                         });
                     }
@@ -98,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
+    /**
+     * Initializes the sign-in screen by setting up the UI elements and handling the submit button click.
+     */
     private void initializeSignInScreen() {
         EditText nameEditText = findViewById(R.id.nameEditText);
         Button submitButton = findViewById(R.id.submitButton);
@@ -112,12 +112,16 @@ public class MainActivity extends AppCompatActivity {
             UserAuthenticator.authenticateUser(androidId).addOnSuccessListener(user -> {
                 user.setName(name);
                 GlobalRepository.addUser(user).addOnSuccessListener(aVoid -> {
+                    Toast.makeText(MainActivity.this, "Welcome " + name + "!", Toast.LENGTH_SHORT).show();
                     switchToHomeScreen();
                 }).addOnFailureListener(e -> Log.e(TAG, "Failed to save user to database", e));
             }).addOnFailureListener(e -> Log.e(TAG, "User authentication failed", e));
         });
     }
 
+    /**
+     * Switches to the home screen activity.
+     */
     private void switchToHomeScreen() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

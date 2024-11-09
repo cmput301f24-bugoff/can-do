@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bugoff.can_do.database.GlobalRepository;
-import com.bugoff.can_do.organizer.EventDetailsActivity;
+import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
 
 /**
  * Handles the processing of QR codes scanned by the user.
@@ -46,7 +46,7 @@ public class HandleQRScan {
         GlobalRepository.getEvent(eventId)
                 .addOnSuccessListener(event -> {
                     // Show Event Activity with fetched data
-                    Intent intent = new Intent(context, EventDetailsActivity.class);
+                    Intent intent = new Intent(context, EventDetailsActivityEntrant.class);
                     intent.putExtra("event_name", event.getName());
                     intent.putExtra("event_date", event.getEventStartDate().toString());
                     intent.putExtra("selected_event_id", eventId); // Pass eventId explicitly for further use
