@@ -404,7 +404,9 @@ $dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#View
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
 $dokka.location:com.bugoff.can_do/MainActivity/getUserViewModel/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-user-view-model.html
+$dokka.location:com.bugoff.can_do/MainActivity/initializeSignInScreen/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/initialize-sign-in-screen.html
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/MainActivity/switchToHomeScreen/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/switch-to-home-screen.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity///PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/index.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/UserProfileActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/-user-profile-activity.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/addPNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/add-p-number-dialog.html
@@ -416,6 +418,10 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/loadUserData/#FirebaseFire
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-data.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/setupAdminButton/#View/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-admin-button.html
+$dokka.location:com.bugoff.can_do/signInActivity///PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/index.html
+$dokka.location:com.bugoff.can_do/signInActivity/navigateToMainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/navigate-to-main-activity.html
+$dokka.location:com.bugoff.can_do/signInActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/on-create.html
+$dokka.location:com.bugoff.can_do/signInActivity/signInActivity/#/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/sign-in-activity.html
 $dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
 $dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
 $dokka.location:com.bugoff.can_do/switch_on_off/switch_on_off/#/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/switch_on_off.html
