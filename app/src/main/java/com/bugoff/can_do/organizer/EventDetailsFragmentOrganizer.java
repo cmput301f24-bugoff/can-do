@@ -96,8 +96,8 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         Button viewSelectedButton = view.findViewById(R.id.view_selected_list);
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
 
-        Button joinWaitingListButton = view.findViewById(R.id.join_waiting_list);
-        Button leaveWaitingListButton = view.findViewById(R.id.leave_waiting_list);
+        View progressBar = view.findViewById(R.id.progress_bar);
+        View mainContent =view.findViewById(R.id.main_content);
 
         // Set click listeners
         backArrowButton.setOnClickListener(v -> requireActivity().onBackPressed());
@@ -107,13 +107,13 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
         EventViewModel viewModel = new ViewModelProvider(this, new EventViewModelFactory(eventId)).get(EventViewModel.class);
 
-        joinWaitingListButton.setOnClickListener(v -> joinWaitingList(viewModel));
-        leaveWaitingListButton.setOnClickListener(v -> leaveWaitingList(viewModel));
-
         editGraphButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit Graph clicked", Toast.LENGTH_SHORT).show());
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
         sendNotificationButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Send Notification clicked", Toast.LENGTH_SHORT).show());
+
+        progressBar.setVisibility(View.VISIBLE);
+        mainContent.setVisibility(View.INVISIBLE);
 
         fetchEventDetails(eventId);
 
@@ -122,6 +122,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
 
     private void fetchEventDetails(String eventId) {
+
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -134,6 +135,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                             eventLocation = facility.getAddress();
                             Log.d(TAG, "fetchEventDetails: " + eventLocation);
                             eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
+
+                            checkLoadingComplete();
+
                         });
                         Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
                         String imageUrl = documentSnapshot.getString("imageUrl"); // Get imageUrl
@@ -161,6 +165,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                                     .into(eventImageView);
                         }
 
+                        checkLoadingComplete();
+
+
                     } else {
                         Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
@@ -171,29 +178,16 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     }
 
 
-    private void joinWaitingList(EventViewModel viewModel) {
-        User currentUser = GlobalRepository.getLoggedInUser();
-        if (currentUser == null) {
-            throw new IllegalStateException("User not logged in");
-        }
+    private void checkLoadingComplete() {
+        if (eventLocation != null && !eventNameTextView.getText().toString().equals("N/A")) {
+            View progressBar = requireView().findViewById(R.id.progress_bar);
+            View mainContent = requireView().findViewById(R.id.main_content);
 
-        String userId = currentUser.getId();
-        viewModel.addWaitingListEntrant(userId);
-        currentUser.addEventJoined(eventId);
-        Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            mainContent.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void leaveWaitingList(EventViewModel viewModel) {
-        User currentUser = GlobalRepository.getLoggedInUser();
-        if (currentUser == null) {
-            throw new IllegalStateException("User not logged in");
-        }
-
-        String userId = currentUser.getId();
-        viewModel.removeWaitingListEntrant(userId);
-        currentUser.removeEventJoined(eventId);
-        Toast.makeText(requireContext(), "Successfully left the waiting list.", Toast.LENGTH_SHORT).show();
-    }
 
     private void openMapToLocation() {
         if (eventLocation != null && !eventLocation.isEmpty()) {
