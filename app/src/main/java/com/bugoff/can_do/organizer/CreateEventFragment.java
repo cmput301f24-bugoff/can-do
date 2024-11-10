@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -102,13 +103,13 @@ public class CreateEventFragment extends Fragment {
     }
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+
     /**
      * Initializes the fragment view and its components after creation.
      *
      * @param view The fragment's view.
      * @param savedInstanceState Previously saved instance state.
      */
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -116,6 +117,15 @@ public class CreateEventFragment extends Fragment {
         setupDateTimePickers();
         setupCreateEventButton();
         setupImagePicker();
+        setupBackButton();
+    }
+
+    /**
+     * Sets up the back button to navigate back to the previous fragment.
+     */
+    private void setupBackButton() {
+        ImageButton backButton = requireView().findViewById(R.id.back_button_create_event);
+        backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
     }
 
     /**

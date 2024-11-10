@@ -8,10 +8,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
+//import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
+import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -177,11 +180,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Event event2 = eventList.get(position);
-                    Intent intent = new Intent(itemView.getContext(), EventDetailsActivityOrganizer.class);
-                    intent.putExtra("selected_event_id", event2.getId());
-                    itemView.getContext().startActivity(intent);
+
+                    // Replace the current fragment with EventDetailsFragment
+                    Fragment eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event2.getId());
+
+                    // Assuming itemView.getContext() is an activity that has a FragmentManager
+                    AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, eventDetailsFragment) // R.id.fragment_container is your fragment container ID in activity layout
+                            .addToBackStack(null) // Optionally add to back stack
+                            .commit();
                 }
             });
+
 
         }
     }
