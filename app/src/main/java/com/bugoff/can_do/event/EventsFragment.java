@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.organizer.CreateEventFragment;
-import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
+import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -146,8 +147,16 @@ public class EventsFragment extends Fragment {
      * @param event The event clicked.
      */
     private void onEventClicked(Event event) {
-        Intent intent = new Intent(getContext(), EventDetailsActivityOrganizer.class);
-        intent.putExtra("selected_event_id", event.getId());
-        startActivity(intent);
+        EventDetailsFragmentOrganizer eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event.getId());
+
+        // Assuming getContext() returns an activity that has a FragmentManager
+        AppCompatActivity activity = (AppCompatActivity) getContext();
+        if (activity != null) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, eventDetailsFragment) // Replace with your fragment container ID
+                    .addToBackStack(null) // Optionally add to back stack
+                    .commit();
+        }
     }
+
 }

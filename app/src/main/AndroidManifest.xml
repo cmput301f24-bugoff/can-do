@@ -33,8 +33,6 @@
         <activity android:name=".organizer.OrganizerMain" />
         <activity android:name=".organizer.FacilityEdit" />
 
-        <activity android:name=".organizer.EventDetailsActivityOrganizer" />
-        <activity android:name=".user.EventDetailsActivityEntrant" />
         <activity android:name=".admin.AdminActivity"
             android:label="Admin Dashboard"
             android:parentActivityName=".UserProfileActivity">
