@@ -41,6 +41,7 @@
             android:text="Event Description"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:layout_below="@id/text_view_event_name"
+            android:maxHeight="200dp"
             android:layout_marginTop="4dp" />
 
         <!-- Event Dates and Times -->
