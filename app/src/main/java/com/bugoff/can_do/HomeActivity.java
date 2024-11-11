@@ -10,8 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
-import com.bugoff.can_do.notification.NotificationsActivity;
+import com.bugoff.can_do.notification.NotificationsFragment;
 
 /**
  * Fragment for the Home screen.
@@ -24,12 +25,18 @@ public class HomeActivity extends Fragment {
         View view = inflater.inflate(R.layout.home_screen, container, false);
 
 
+        String userId = GlobalRepository.getLoggedInUser().getId();
 
-        // Functionality of notifications button on HomeScreen
         view.findViewById(R.id.notif_hs_button).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), NotificationsActivity.class);
-            startActivity(intent);
+            NotificationsFragment notificationsFragment = NotificationsFragment.newInstance(userId);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, notificationsFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
+
+
 
         // Functionality of settings button on HomeScreen
         view.findViewById(R.id.settings_hs_button).setOnClickListener(v -> {

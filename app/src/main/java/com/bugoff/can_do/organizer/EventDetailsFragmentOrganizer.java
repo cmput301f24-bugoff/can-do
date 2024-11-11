@@ -100,7 +100,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         View mainContent =view.findViewById(R.id.main_content);
 
         // Set click listeners
-        backArrowButton.setOnClickListener(v -> requireActivity().onBackPressed());
+        backArrowButton.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
 
         mapIconButton.setOnClickListener(v -> openMapToLocation());
         shareIconButton.setOnClickListener(v -> shareEventDetails());

@@ -41,7 +41,5 @@
 
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".notification.NotificationSettingsActivity" />
-
-        <activity android:name=".notification.NotificationsActivity" android:exported="true"/>
     </application>
 </manifest>
