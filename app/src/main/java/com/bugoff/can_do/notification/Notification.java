@@ -1,21 +1,21 @@
 package com.bugoff.can_do.notification;
 
-/**
- * Represents a notification that can be sent to a user.
- */
 public class Notification {
-    private String id; // Unique identifier for the notification
-    private String type; // Can be "message", "selected", "rejected"
-    private String content; // The content of the notification
+    private String id;
+    private String type;
+    private String message;
+    private String from;
+    private String to;
 
     public Notification() {
-        // Default constructor needed for Firestore deserialization
     }
 
-    public Notification(String id, String type, String content) {
+    public Notification(String id, String type, String message, String from, String to) {
         this.id = id;
         this.type = type;
-        this.content = content;
+        this.message = message;
+        this.from = from;
+        this.to = to;
     }
 
     public String getId() {
@@ -35,10 +35,26 @@ public class Notification {
     }
 
     public String getContent() {
-        return content;
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContent(String message) {
+        this.message = message;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 }
