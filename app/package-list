@@ -28,6 +28,7 @@ $dokka.location:com.bugoff.can_do.database/GlobalRepository///PointingToDeclarat
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/GlobalRepository/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/-global-repository.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/addEvent/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/add-event.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/addFacility/#com.bugoff.can_do.facility.Facility/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/add-facility.html
+$dokka.location:com.bugoff.can_do.database/GlobalRepository/addNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/add-notification.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/addUser/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/add-user.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getDb/#/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-db.html
 $dokka.location:com.bugoff.can_do.database/GlobalRepository/getEvent/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.database/-global-repository/get-event.html
@@ -223,13 +224,16 @@ $dokka.location:com.bugoff.can_do.facility/FacilityViewModelFactory/create/#java
 $dokka.location:com.bugoff.can_do.notification////PointingToDeclaration/app/com.bugoff.can_do.notification/index.html
 $dokka.location:com.bugoff.can_do.notification/Notification///PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/index.html
 $dokka.location:com.bugoff.can_do.notification/Notification/Notification/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
-$dokka.location:com.bugoff.can_do.notification/Notification/Notification/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
+$dokka.location:com.bugoff.can_do.notification/Notification/Notification/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.Object#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
+$dokka.location:com.bugoff.can_do.notification/Notification/Notification/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getContent/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-content.html
+$dokka.location:com.bugoff.can_do.notification/Notification/getEvent/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-event.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getFrom/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-from.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getId/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-id.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getTo/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-to.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getType/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-type.html
 $dokka.location:com.bugoff.can_do.notification/Notification/setContent/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-content.html
+$dokka.location:com.bugoff.can_do.notification/Notification/setEvent/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-event.html
 $dokka.location:com.bugoff.can_do.notification/Notification/setFrom/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-from.html
 $dokka.location:com.bugoff.can_do.notification/Notification/setId/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-id.html
 $dokka.location:com.bugoff.can_do.notification/Notification/setTo/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/set-to.html
@@ -248,6 +252,11 @@ $dokka.location:com.bugoff.can_do.notification/NotificationsViewModel///Pointing
 $dokka.location:com.bugoff.can_do.notification/NotificationsViewModel/NotificationsViewModel/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-view-model/-notifications-view-model.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsViewModel/fetchNotifications/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-view-model/fetch-notifications.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsViewModel/getNotifications/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-view-model/get-notifications.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment///PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/index.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/SendNotificationFragment/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/-send-notification-fragment.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/getArrayAdapter/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/get-array-adapter.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/sendtoWaitingList/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/sendto-waiting-list.html
 $dokka.location:com.bugoff.can_do.organizer////PointingToDeclaration/app/com.bugoff.can_do.organizer/index.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment.DateSelectedListener///PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/-date-selected-listener/index.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment.DateSelectedListener/onDateSelected/#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/-date-selected-listener/on-date-selected.html
