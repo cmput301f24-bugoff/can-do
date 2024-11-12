@@ -39,7 +39,8 @@ public class NotificationsViewModel extends ViewModel {
                                 document.getString("type"),
                                 document.getString("message"),
                                 document.getString("from"),
-                                document.getString("to")
+                                document.getString("to"),
+                                document.getString("event")
                         );
                         notificationList.add(notification);
                     }
