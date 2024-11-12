@@ -28,6 +28,7 @@ import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
 import com.bugoff.can_do.event.EventWaitlistFragment;
+import com.bugoff.can_do.notification.SendNotificationFragment;
 import com.bugoff.can_do.user.User;
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
@@ -83,7 +84,6 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         eventDateTextView = view.findViewById(R.id.class_date);
         eventDescriptionTextView = view.findViewById(R.id.class_description);
         eventLocationTextView = view.findViewById(R.id.class_location);
-        entrantsListView = view.findViewById(R.id.entrants_list);
         eventImageView = view.findViewById(R.id.event_image);
         qrCodeImageView = view.findViewById(R.id.idIVQrcode);
 
@@ -110,7 +110,19 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         editGraphButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit Graph clicked", Toast.LENGTH_SHORT).show());
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
-        sendNotificationButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Send Notification clicked", Toast.LENGTH_SHORT).show());
+
+        sendNotificationButton.setOnClickListener(v -> {
+            SendNotificationFragment fragment = new SendNotificationFragment();
+            Bundle args = new Bundle();
+            args.putString("eventId", eventId);
+            fragment.setArguments(args);
+
+            showFragment(fragment, "Send Notification clicked");
+        });
+
+
+
+
 
         progressBar.setVisibility(View.VISIBLE);
         mainContent.setVisibility(View.INVISIBLE);

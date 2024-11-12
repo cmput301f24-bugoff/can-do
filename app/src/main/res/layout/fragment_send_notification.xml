@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Spinner for selecting notification group -->
+    <Spinner
+        android:id="@+id/group_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/notification_groups"
+        android:prompt="@string/select_group_prompt" />
+
+    <!-- EditText for custom message -->
+    <EditText
+        android:id="@+id/message_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your message here"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:minHeight="100dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Send button -->
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Notification"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

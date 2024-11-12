@@ -169,25 +169,6 @@
                 android:layout_marginTop="64dp"
                 android:contentDescription="QR Code" />
 
-            <!-- Entrants Section -->
-            <TextView
-                android:id="@+id/drawn_entrants_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/idIVQrcode"
-                android:layout_marginTop="16dp"
-                android:text="All Drawn Entrants"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ListView
-                android:id="@+id/entrants_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_below="@id/drawn_entrants_title"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:scrollbars="vertical" />
 
             <!-- Bottom Spacer -->
             <Space

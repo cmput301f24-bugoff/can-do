@@ -6,16 +6,21 @@ public class Notification {
     private String message;
     private String from;
     private String to;
+    private String event;
 
     public Notification() {
     }
 
-    public Notification(String id, String type, String message, String from, String to) {
+    public Notification(String id, String type, String message, String from, String to, String event) {
         this.id = id;
         this.type = type;
         this.message = message;
         this.from = from;
         this.to = to;
+        this.event = event;
+    }
+
+    public Notification(String id, String type, String message, String from, String to, Object o, String event) {
     }
 
     public String getId() {
@@ -56,5 +61,13 @@ public class Notification {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public Object getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
     }
 }

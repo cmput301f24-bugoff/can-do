@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">can-do</string>
+    <string name="select_group_prompt">Select group to notify</string>
+    <string-array name="notification_groups">
+        <item>Select Recipients</item>
+        <item>Cancelled Entrants</item>
+        <item>Selected Entrants</item>
+        <item>Waiting List Entrants</item>
+    </string-array>
+
 </resources>
