@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.notification.Notification;
 import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -42,6 +43,24 @@ public class GlobalRepository {
         usersCollection = db.collection("users");
         facilitiesCollection = db.collection("facilities");
         eventsCollection = db.collection("events");
+    }
+
+    public static void addNotification(Notification notification) {
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+        Map<String, Object> notificationMap = new HashMap<>();
+        notificationMap.put("id", notification.getId());
+        notificationMap.put("type", notification.getType());
+        notificationMap.put("message", notification.getContent());
+        notificationMap.put("from", notification.getFrom());
+        notificationMap.put("to", notification.getTo());
+        notificationMap.put("event", notification.getEvent());
+
+        FirestoreHelper.getInstance().getDb().collection("notifications")
+                .document(notification.getId())
+                .set(notificationMap)
+                .addOnSuccessListener(aVoid -> taskCompletionSource.setResult(null))
+                .addOnFailureListener(taskCompletionSource::setException);
     }
 
     public FirebaseFirestore getDb() {
