@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -29,13 +30,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        app:cardElevation="0dp"
+        android:background="@android:color/transparent"
         app:cardCornerRadius="5dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/background_fill" >
+            android:background="@android:color/transparent" >
 
             <EditText
                 android:id="@+id/input_new_email"
@@ -61,13 +64,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
+        app:cardElevation="0dp"
+        android:background="@android:color/transparent"
         app:cardCornerRadius="5dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/background_fill" >
+            android:background="@android:color/transparent" >
 
             <EditText
                 android:id="@+id/verify_new_email"
