@@ -120,6 +120,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView textViewDates;
         TextView textViewParticipants;
         ImageButton buttonDelete;
+        TextView textViewWaitingList;
 
         private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("MMM d, yyyy HH:mm", Locale.getDefault());
 
@@ -135,6 +136,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textViewDates = itemView.findViewById(R.id.text_view_event_dates);
             textViewParticipants = itemView.findViewById(R.id.text_view_num_participants);
             buttonDelete = itemView.findViewById(R.id.button_delete_event);
+            textViewWaitingList = itemView.findViewById(R.id.text_view_waitlist);
         }
 
         /**
@@ -158,8 +160,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textViewDates.setText(dates);
 
             // Display the current number of participants out of the max allowed
-            String participants = event.getEnrolledEntrants().size() + " / " + event.getMaxNumberOfParticipants();
+            String participants = "Registered Participants: " + event.getEnrolledEntrants().size() + " / " + event.getMaxNumberOfParticipants();
             textViewParticipants.setText(participants);
+
+            // Display the number of entrants on the waiting list
+            String waitingList = "Waiting List: " + event.getWaitingListEntrants().size();
+            textViewWaitingList.setText(waitingList);
 
             // Set delete button visibility
             if (isAdmin) {
