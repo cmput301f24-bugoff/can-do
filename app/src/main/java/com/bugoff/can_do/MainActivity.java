@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         // Connect to Firestore
         new GlobalRepository();
         // Get Android ID
-        String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
         UserAuthenticator.authenticateUser(androidId)
@@ -100,17 +101,24 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initializeSignInScreen() {
         EditText nameEditText = findViewById(R.id.nameEditText);
+        EditText emailEditText = findViewById(R.id.emailEditText);
         Button submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(view -> {
             String name = nameEditText.getText().toString().trim();
+            String email = emailEditText.getText().toString().trim();
             if (name.isEmpty()) {
                 Toast.makeText(MainActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            if (email.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Please enter your email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
             UserAuthenticator.authenticateUser(androidId).addOnSuccessListener(user -> {
                 user.setName(name);
+                user.setEmail(email);
                 GlobalRepository.addUser(user).addOnSuccessListener(aVoid -> {
                     Toast.makeText(MainActivity.this, "Welcome " + name + "!", Toast.LENGTH_SHORT).show();
                     switchToHomeScreen();
