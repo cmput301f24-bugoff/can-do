@@ -224,7 +224,6 @@ $dokka.location:com.bugoff.can_do.facility/FacilityViewModelFactory/create/#java
 $dokka.location:com.bugoff.can_do.notification////PointingToDeclaration/app/com.bugoff.can_do.notification/index.html
 $dokka.location:com.bugoff.can_do.notification/Notification///PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/index.html
 $dokka.location:com.bugoff.can_do.notification/Notification/Notification/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
-$dokka.location:com.bugoff.can_do.notification/Notification/Notification/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.Object#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
 $dokka.location:com.bugoff.can_do.notification/Notification/Notification/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/-notification.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getContent/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-content.html
 $dokka.location:com.bugoff.can_do.notification/Notification/getEvent/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification/get-event.html
@@ -256,6 +255,8 @@ $dokka.location:com.bugoff.can_do.notification/SendNotificationFragment///Pointi
 $dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/SendNotificationFragment/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/-send-notification-fragment.html
 $dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/getArrayAdapter/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/get-array-adapter.html
 $dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/sendtoCancelledEntrants/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/sendto-cancelled-entrants.html
+$dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/sendtoSelectedEntrants/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/sendto-selected-entrants.html
 $dokka.location:com.bugoff.can_do.notification/SendNotificationFragment/sendtoWaitingList/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.notification/-send-notification-fragment/sendto-waiting-list.html
 $dokka.location:com.bugoff.can_do.organizer////PointingToDeclaration/app/com.bugoff.can_do.organizer/index.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment.DateSelectedListener///PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/-date-selected-listener/index.html
@@ -310,7 +311,13 @@ $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/promptUserToCrea
 $dokka.location:com.bugoff.can_do.organizer/OrganizerTransition/saveFacilityAndProceed/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-organizer-transition/save-facility-and-proceed.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment///PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/index.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/ProfileFragment/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/-profile-fragment.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/addOrEditPhoneNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/add-or-edit-phone-number-dialog.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/editEmailDialog/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/edit-email-dialog.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/editNameDialog/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/edit-name-dialog.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/generateAvatar/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/generate-avatar.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/loadUserData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/load-user-data.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/save-user-data.html
 $dokka.location:com.bugoff.can_do.user////PointingToDeclaration/app/com.bugoff.can_do.user/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment///PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/BrowseProfilesFragment/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/-browse-profiles-fragment.html
@@ -445,10 +452,6 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/loadUserData/#FirebaseFire
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-data.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/setupAdminButton/#View/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-admin-button.html
-$dokka.location:com.bugoff.can_do/signInActivity///PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/index.html
-$dokka.location:com.bugoff.can_do/signInActivity/navigateToMainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/navigate-to-main-activity.html
-$dokka.location:com.bugoff.can_do/signInActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/on-create.html
-$dokka.location:com.bugoff.can_do/signInActivity/signInActivity/#/PointingToDeclaration/app/com.bugoff.can_do/sign-in-activity/sign-in-activity.html
 $dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
 $dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
 $dokka.location:com.bugoff.can_do/switch_on_off/switch_on_off/#/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/switch_on_off.html
