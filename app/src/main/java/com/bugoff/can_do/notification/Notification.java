@@ -20,9 +20,6 @@ public class Notification {
         this.event = event;
     }
 
-    public Notification(String id, String type, String message, String from, String to, Object o, String event) {
-    }
-
     public String getId() {
         return id;
     }
