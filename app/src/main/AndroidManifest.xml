@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".signInActivity" />
         <activity android:name=".organizer.OrganizerTransition" />
         <activity android:name=".organizer.OrganizerMain" />
         <activity android:name=".organizer.FacilityEdit" />
