@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
+import com.google.type.TimeOfDayOrBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +38,9 @@ public class SendNotificationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send_notification, container, false);
 
-        if (getArguments() != null) { eventId = getArguments().getString("eventId"); }
+        if (getArguments() != null) {
+            eventId = getArguments().getString("eventId");
+        }
         Log.d(TAG, "eventId: " + eventId);
 
         groupSpinner = view.findViewById(R.id.group_spinner);
@@ -62,9 +65,16 @@ public class SendNotificationFragment extends Fragment {
                 sendtoWaitingList(message, eventId);
                 // Clear message text
                 messageEditText.setText("");
-
-            }
-            else {
+            } else if ("Selected Entrants".equals(selectedGroup)) {
+                // Handle notification sending logic here
+                Toast.makeText(getContext(), "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
+                // TODO: 2024-11-11 Send notification to selected entrants
+                messageEditText.setText("");
+            } else if ("Cancelled Entrants".equals(selectedGroup)) {
+                // Handle notification sending logic here
+                Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
+                //TODO: send notification to cancelled entrants
+            } else {
                 // Handle notification sending logic here
                 Toast.makeText(getContext(), "Notification sent to " + selectedGroup, Toast.LENGTH_SHORT).show();
                 // Clear message text
@@ -75,10 +85,17 @@ public class SendNotificationFragment extends Fragment {
         return view;
     }
 
-    
+    private void sendtoSelectedEntrants(String message, String eventId) {
+        // TODO: 2024-11-11 Implement this method
+    }
+
+    private void sendtoCancelledEntrants(String message, String eventId) {
+        // TODO: 2024-11-11 Implement this method
+    }
+
+
+
     private void sendtoWaitingList(String message, String eventId) {
-        // Send notification to waiting list entrants
-        // Get the event
         Log.d(TAG, "sendtoWaitingList: made it here");
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -92,19 +109,11 @@ public class SendNotificationFragment extends Fragment {
                     // Send notification to each waiting list entrant
                     for (String entrant : waitingListEntrants) {
                         String uniqueId = UUID.randomUUID().toString();
-                        Notification notification = new Notification(
-                                uniqueId,
-                                "Event Update",
-                                message,
-                                event.getFacility().getId(),
-                                entrant,
-                                eventId
-                        );
+                        Notification notification = new Notification(uniqueId, "Event Update", message, event.getFacility().getId(), entrant, eventId);
                         GlobalRepository.addNotification(notification);
                     }
 
                     Toast.makeText(getContext(), "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
-
 
                 } else {
                     Log.w("Event", "Event not found");
@@ -117,7 +126,6 @@ public class SendNotificationFragment extends Fragment {
         });
 
     }
-
 
 
     @NonNull
@@ -140,7 +148,7 @@ public class SendNotificationFragment extends Fragment {
                 } else {
                     textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
                 }
-
+                
 
                 return view;
             }
