@@ -21,8 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.notification.SendNotificationFragment;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +95,56 @@ public class EventWaitlistFragment extends Fragment {
      */
     private void performDrawing(int numberToDraw) {
         // Randomly select users from the waitlist
+        Random random = new Random();
+        List<User> selectedUsers = new ArrayList<>();
+        for (int i = 0; i < numberToDraw && !userList.isEmpty(); i++) {
+            int randomIndex = random.nextInt(userList.size());
+            User selectedUser = userList.get(randomIndex);
+            selectedUsers.add(selectedUser);
+            userList.remove(randomIndex);
+            Log.d(TAG, "performDrawing: " + selectedUser.getId() + " selected");
+            userAdapter.notifyItemRemoved(randomIndex);
+        }
+        userAdapter.notifyItemRangeInserted(userList.size(), selectedUsers.size());
+
+
+        // Update Firestore document
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("events").document(eventId);
+
+        // Fetch current lists and update
+        docRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> waitingListEntrants = (List<String>) documentSnapshot.get("waitingListEntrants");
+                List<String> selectedEntrants = (List<String>) documentSnapshot.get("selectedEntrants");
+
+                // Prepare to move users from waitingList to selected
+                if (waitingListEntrants != null && selectedEntrants != null) {
+                    List<String> selectedUserIds = new ArrayList<>();
+
+                    // Gather selected user IDs and remove from waiting list
+                    for (User selectedUser : selectedUsers) {
+                        String userId = selectedUser.getId(); // Assuming User class has getId() method
+                        selectedUserIds.add(userId);
+                        waitingListEntrants.remove(userId);
+                    }
+                    // Add selected users to selectedEntrants list
+                    selectedEntrants.addAll(selectedUserIds);
+
+                    // Update Firestore document with new lists
+                    docRef.update("waitingListEntrants", waitingListEntrants, "selectedEntrants", selectedEntrants)
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Drawing completed and lists updated"))
+                            .addOnFailureListener(e -> Log.e(TAG, "Error updating Firestore lists", e));
+                }
+            }
+        }).addOnFailureListener(e -> Log.e(TAG, "Failed to retrieve document", e));
+
+        SendNotificationFragment.SendToSelectedEntrants("You have been selected for the event", eventId);
+
+        Toast.makeText(getContext(), "Successfully Selected " + numberToDraw + " users." + "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
+
     }
+
 
     /**
      * Initializes views, sets up the RecyclerView and ViewModel, and observes data changes for the waitlist users.

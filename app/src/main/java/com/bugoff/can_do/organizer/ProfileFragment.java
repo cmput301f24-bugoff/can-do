@@ -68,9 +68,8 @@ public class ProfileFragment extends Fragment {
 
         // If user clicks "Edit Name"
         view.findViewById(R.id.name_button).setOnClickListener(v -> {
-            TextView firstName = view.findViewById(R.id.first_name);
             TextView lastName = view.findViewById(R.id.last_name);
-            editNameDialog(firstName, lastName);
+            editNameDialog(userNameTextView, lastName);
         });
 
         // If user clicks "Edit Email"
