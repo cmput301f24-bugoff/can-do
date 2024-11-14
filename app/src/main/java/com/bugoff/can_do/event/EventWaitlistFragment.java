@@ -139,7 +139,7 @@ public class EventWaitlistFragment extends Fragment {
             }
         }).addOnFailureListener(e -> Log.e(TAG, "Failed to retrieve document", e));
 
-        SendNotificationFragment.SendToSelectedEntrants("You have been selected for the event", eventId);
+        SendNotificationFragment.sendtoSelectedEntrants("You have been selected for the event", eventId);
 
         Toast.makeText(getContext(), "Successfully Selected " + numberToDraw + " users." + "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
 

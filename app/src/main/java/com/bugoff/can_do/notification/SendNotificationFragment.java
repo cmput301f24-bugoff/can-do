@@ -85,7 +85,7 @@ public class SendNotificationFragment extends Fragment {
         return view;
     }
 
-    private void sendtoSelectedEntrants(String message, String eventId) {
+    public static void sendtoSelectedEntrants(String message, String eventId) {
         // TODO: 2024-11-11 Implement this method
     }
 
