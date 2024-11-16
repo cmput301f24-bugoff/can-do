@@ -105,6 +105,11 @@ public class EventWaitlistFragment extends Fragment {
             Log.d(TAG, "performDrawing: " + selectedUser.getId() + " selected");
             userAdapter.notifyItemRemoved(randomIndex);
         }
+        if (userList.isEmpty()) {
+            emptyTextView.setVisibility(View.VISIBLE);
+            emptyTextView.setText("No users in the watch list.");
+            Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
+        }
         userAdapter.notifyItemRangeInserted(userList.size(), selectedUsers.size());
 
 

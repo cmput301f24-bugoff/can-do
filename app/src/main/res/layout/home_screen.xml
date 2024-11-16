@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/hs_top_layout"
@@ -74,7 +73,6 @@
             app:srcCompat="@drawable/settings_24px" />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/hs_title"
         android:layout_width="wrap_content"
@@ -85,9 +83,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hs_top_layout" >
-    </TextView>
-
+        app:layout_constraintTop_toBottomOf="@id/hs_top_layout" />
 
     <!-- create content.xml for ListView to show event image & details -->
     <ListView
@@ -97,9 +93,8 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hs_title" >
-    </ListView>
-
+        app:layout_constraintBottom_toTopOf="@id/bottom_spacer"
+        app:layout_constraintTop_toBottomOf="@id/hs_title" />
 
     <!-- displays by default, but invisible when list is not empty -->
     <TextView
@@ -112,10 +107,43 @@
         android:padding="20dp"
         android:text="You have no upcoming events..."
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/hs_title"
+        app:layout_constraintTop_toBottomOf="@id/hs_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
-    </TextView>
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/get_started_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get started by scanning an activity QR code"
+        android:textStyle="italic"
+        android:textColor="#8C6B6B6B"
+        android:textSize="20sp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/arrow_down"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/arrow_down"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_spacer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop"
+        app:tint="#8C6B6B6B" />
+
+    <!-- Space at the bottom -->
+    <Space
+        android:id="@+id/bottom_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
