@@ -53,13 +53,6 @@ public class UserProfileActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
-        // Automatically set profile picture to default avatar
-        TextView userNameTextView = view.findViewById(R.id.first_name);
-        String userName = userNameTextView.getText().toString();
-        String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
-        ImageView avatar = view.findViewById(R.id.image_avatar);
-        avatar.setImageBitmap(generateAvatar(firstLetter));
-
         String androidID = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -141,7 +134,7 @@ public class UserProfileActivity extends Fragment {
                         .setNeutralButton("Remove", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                TextView userNameTextView = view.findViewById(R.id.user_name);
+                                TextView userNameTextView = view.findViewById(R.id.first_name);
                                 String userName = userNameTextView.getText().toString();
 
                                 String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
@@ -245,6 +238,12 @@ public class UserProfileActivity extends Fragment {
                             if (parts.length > 1) {
                                 lastName.setText(parts[1]);
                             }
+
+                            // Automatically set profile picture to default avatar
+                            String avatarFirstName = parts[0];
+                            String firstLetter = avatarFirstName.isEmpty() ? "A" : avatarFirstName.substring(0, 1).toUpperCase();
+                            ImageView avatar = getView().findViewById(R.id.image_avatar);
+                            avatar.setImageBitmap(generateAvatar(firstLetter));
                         }
                     } else {
                         user = new User(androidID);
