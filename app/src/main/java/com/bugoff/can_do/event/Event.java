@@ -71,7 +71,7 @@ public class Event implements DatabaseEntity {
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
         this.imageUrl = "";
-        facility.addEvent(this); // Ensure bidirectional reference
+        // facility.addEvent(this); // Ensure bidirectional reference (edit: maybe not?)
     }
 
     // Constructor from Firestore document
