@@ -127,17 +127,22 @@ public class User implements DatabaseEntity {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("name", name);
-        map.put("email", email);
-        map.put("phoneNumber", phoneNumber);
-        map.put("isAdmin", isAdmin);
+        map.put("name", name != null ? name : "");
+        map.put("email", email != null ? email : "");
+        map.put("phoneNumber", phoneNumber != null ? phoneNumber : "");
+        map.put("isAdmin", isAdmin != null ? isAdmin : false);
+
+        // Handle facility
         if (facility != null) {
             map.put("facilityId", facility.getId());
         } else {
             map.put("facilityId", null);
         }
-        map.put("eventsJoined", eventsJoined); // List of event IDs
-        map.put("eventsEnrolled", eventsEnrolled); // List of event IDs
+
+        // Handle lists - never put null for these fields
+        map.put("eventsJoined", eventsJoined != null ? new ArrayList<>(eventsJoined) : new ArrayList<>());
+        map.put("eventsEnrolled", eventsEnrolled != null ? new ArrayList<>(eventsEnrolled) : new ArrayList<>());
+
         return map;
     }
 
@@ -259,15 +264,18 @@ public class User implements DatabaseEntity {
 
         // Create a map of fields to be saved or updated
         Map<String, Object> update = this.toMap();
-        Log.d("User", "Setting remote with update map: " + update);
+        Log.d("User", "Setting remote - User ID: " + id);
+        Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
+        Log.d("User", "Setting remote - Update Map: " + update);
 
         // Save or update the facility in Firestore
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("User", "User successfully saved or updated with events: " + eventsJoined);
+                    Log.d("User", "User " + id + " successfully updated");
+                    Log.d("User", "Events Joined (after update): " + eventsJoined);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("User", "Error saving or updating user", e);
+                    Log.e("User", "Error updating user " + id, e);
                 });
     }
 
