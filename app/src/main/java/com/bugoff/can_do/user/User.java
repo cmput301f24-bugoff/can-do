@@ -85,8 +85,30 @@ public class User implements DatabaseEntity {
         this.eventsEnrolled = new ArrayList<>();
         this.notificationList = new ArrayList<>();
 
-        deserializeEventsJoined(doc.get("eventsJoined"));
-        deserializeEventsEnrolled(doc.get("eventsEnrolled"));
+        // Initialize lists during deserialization instead of creating empty ones first
+        Object eventsJoinedData = doc.get("eventsJoined");
+        this.eventsJoined = new ArrayList<>();
+        if (eventsJoinedData instanceof List<?>) {
+            List<?> eventIds = (List<?>) eventsJoinedData;
+            for (Object eventIdObj : eventIds) {
+                if (eventIdObj instanceof String) {
+                    this.eventsJoined.add((String) eventIdObj);
+                }
+            }
+        }
+
+        Object eventsEnrolledData = doc.get("eventsEnrolled");
+        this.eventsEnrolled = new ArrayList<>();
+        if (eventsEnrolledData instanceof List<?>) {
+            List<?> eventIds = (List<?>) eventsEnrolledData;
+            for (Object eventIdObj : eventIds) {
+                if (eventIdObj instanceof String) {
+                    this.eventsEnrolled.add((String) eventIdObj);
+                }
+            }
+        }
+
+        this.notificationList = new ArrayList<>();
     }
 
     // Add a method to set the Facility post-construction
@@ -117,40 +139,6 @@ public class User implements DatabaseEntity {
         map.put("eventsJoined", eventsJoined); // List of event IDs
         map.put("eventsEnrolled", eventsEnrolled); // List of event IDs
         return map;
-    }
-
-    /**
-     * Deserializes the eventsJoined field from Firestore.
-     *
-     * @param data The data to deserialize.
-     */
-    private void deserializeEventsJoined(Object data) {
-        if (data instanceof List<?>) {
-            List<?> eventIds = (List<?>) data;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    String eventId = (String) eventIdObj;
-                    this.eventsJoined.add(eventId);
-                }
-            }
-        }
-    }
-
-    /**
-     * Deserializes the eventsEnrolled field from Firestore.
-     *
-     * @param data The data to deserialize.
-     */
-    private void deserializeEventsEnrolled(Object data) {
-        if (data instanceof List<?>) {
-            List<?> eventIds = (List<?>) data;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    String eventId = (String) eventIdObj;
-                    this.eventsEnrolled.add(eventId);
-                }
-            }
-        }
     }
 
     // Getters and Setters
