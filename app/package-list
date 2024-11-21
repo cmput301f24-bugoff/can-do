@@ -359,8 +359,6 @@ $dokka.location:com.bugoff.can_do.user/User/addEventEnrolled/#java.lang.String/P
 $dokka.location:com.bugoff.can_do.user/User/addEventJoined/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-event-joined.html
 $dokka.location:com.bugoff.can_do.user/User/addNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-notification.html
 $dokka.location:com.bugoff.can_do.user/User/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/attach-listener.html
-$dokka.location:com.bugoff.can_do.user/User/deserializeEventsEnrolled/#java.lang.Object/PointingToDeclaration/app/com.bugoff.can_do.user/-user/deserialize-events-enrolled.html
-$dokka.location:com.bugoff.can_do.user/User/deserializeEventsJoined/#java.lang.Object/PointingToDeclaration/app/com.bugoff.can_do.user/-user/deserialize-events-joined.html
 $dokka.location:com.bugoff.can_do.user/User/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/detach-listener.html
 $dokka.location:com.bugoff.can_do.user/User/getEmail/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-email.html
 $dokka.location:com.bugoff.can_do.user/User/getEventsEnrolled/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-events-enrolled.html
