@@ -41,26 +41,32 @@ android {
 
 dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    testImplementation(libs.core)
-    testImplementation(libs.testng)
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    implementation(libs.firebase.storage)
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
     implementation(libs.zxing.android.embedded)
     implementation(libs.material.v190)
     implementation(libs.appcompat)
     implementation(libs.material)
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.firebase.storage)
     implementation(libs.firebase.firestore)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
 
+    testImplementation(libs.core)
+    testImplementation(libs.testng)
+    testImplementation(libs.mockito.core)
     testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
 
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("com.google.firebase:firebase-firestore:24.5.0")
+
+
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
+    testRuntimeOnly(libs.junit.jupiter.engine)
     dokkaPlugin(libs.kotlinAsJavaPlugin)
 }
 

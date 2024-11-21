@@ -41,7 +41,7 @@ public class HandleQRScan {
      * @param eventId The ID of the event to fetch.
      * @param context The context from which the event details are fetched.
      */
-    private static void fetchEvent(String eventId, Context context) {
+    public static void fetchEvent(String eventId, Context context) {
         if (eventId == null || eventId.isEmpty()) {
             Log.e(TAG, "Event ID is null or empty. Cannot fetch event.");
             Toast.makeText(context, "Invalid Event ID", Toast.LENGTH_SHORT).show();
