@@ -163,8 +163,13 @@ public class EventDetailsFragmentEntrant extends Fragment {
             throw new IllegalStateException("User not logged in");
         }
 
+        Log.d("EventDetails", "Joining waiting list for event: " + eventId);
+        Log.d("EventDetails", "Current user events joined before: " + currentUser.getEventsJoined());
+
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
+
+        Log.d("EventDetails", "Current user events joined after: " + currentUser.getEventsJoined());
 
         // Ensure the update is pushed to Firestore
         GlobalRepository.getUsersCollection().document(currentUser.getId())

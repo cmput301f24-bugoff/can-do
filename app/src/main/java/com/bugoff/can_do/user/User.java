@@ -259,6 +259,7 @@ public class User implements DatabaseEntity {
 
         // Create a map of fields to be saved or updated
         Map<String, Object> update = this.toMap();
+        Log.d("User", "Setting remote with update map: " + update);
 
         // Save or update the facility in Firestore
         userRef.set(update, SetOptions.merge())
