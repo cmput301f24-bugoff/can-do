@@ -34,11 +34,15 @@ import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Objects;
+
 /**
  * Fragment for the user profile screen.
  */
 public class UserProfileActivity extends Fragment {
     private User user;
+    private String currEmail;
+    private String currPNumber;
 
     /**
      * Initializes the user profile screen and sets up the buttons for editing user information.
@@ -57,11 +61,6 @@ public class UserProfileActivity extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         loadUserData(db, androidID);
-
-        // If user already added a phone number, change visibility to "Edit Phone Number" button
-        //-- if condition here --//
-        // view.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
-        // view.findViewById(R.id.edit_pnumber_button).setVisibility(View.VISIBLE);
 
         // User clicks "I'm an organizer"
         view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
@@ -94,18 +93,16 @@ public class UserProfileActivity extends Fragment {
             }
         });
 
-        // User clicks "Add Phone Number" or "Edit Phone Number"
+        // User clicks "Add Phone Number", only visible if no phone number registered
         view.findViewById(R.id.add_pnumber_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //-- create if condition here --//
+            public void onClick(View v) { addPNumberDialog(); }
+        });
 
-                // If no phone number added yet
-                addPNumberDialog();
-
-                // Else if there is already a phone number; to edit
-                // editPNumberDialog()
-            }
+        // User clicks "Edit Phone Number", becomes visible with existing phone number
+        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { editPNumberDialog(); }
         });
 
         setupAdminButton(view);
@@ -245,6 +242,21 @@ public class UserProfileActivity extends Fragment {
                             ImageView avatar = getView().findViewById(R.id.image_avatar);
                             avatar.setImageBitmap(generateAvatar(firstLetter));
                         }
+
+                        String oldEmail = user.getEmail();
+                        if (oldEmail != null && !oldEmail.isEmpty()) {
+                            currEmail = oldEmail;
+                        }
+
+                        String phNumber = user.getPhoneNumber();
+                        if (phNumber != null && !phNumber.isEmpty()) {
+                            currPNumber = phNumber;
+
+                            // If user already added a phone number, change visibility to "Edit Phone Number" button
+                            getView().findViewById(R.id.add_pnumber_button).setVisibility(View.INVISIBLE);
+                            getView().findViewById(R.id.edit_pnumber_button).setVisibility(View.VISIBLE);
+                        }
+
                     } else {
                         user = new User(androidID);
                     }
@@ -266,6 +278,30 @@ public class UserProfileActivity extends Fragment {
         String name = firstNameTxt.getText().toString() + " " + lastNameTxt.getText().toString();
 
         user.setName(name);
+        user.setRemote();
+
+        // Automatically set profile picture to default avatar
+        String avatarFirstName = firstNameTxt.getText().toString();
+        String firstLetter = avatarFirstName.isEmpty() ? "A" : avatarFirstName.substring(0, 1).toUpperCase();
+        ImageView avatar = getView().findViewById(R.id.image_avatar);
+        avatar.setImageBitmap(generateAvatar(firstLetter));
+    }
+
+    private void saveUserEmail(String email) {
+        if (user == null) {
+            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
+        }
+
+        user.setEmail(email);
+        user.setRemote();
+    }
+
+    private void saveUserPNumber(String pnumber) {
+        if (user == null) {
+            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
+        }
+
+        user.setPhoneNumber(pnumber);
         user.setRemote();
     }
 
@@ -313,13 +349,21 @@ public class UserProfileActivity extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
 
+        TextView oldEmail = emailView.findViewById(R.id.textview_old_email);
+        EditText editEmail = emailView.findViewById(R.id.input_new_email);
+
+        oldEmail.setText(currEmail);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         builder
                 .setView(emailView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    dialog.dismiss();
+                    String newEmail = editEmail.getText().toString();
+
+                    currEmail = newEmail;
+                    saveUserEmail(newEmail);
                 })
                 .create()
                 .show();
@@ -331,6 +375,7 @@ public class UserProfileActivity extends Fragment {
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+        EditText inputPNumber = pnumberView.findViewById(R.id.input_add_pnumber);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -338,7 +383,10 @@ public class UserProfileActivity extends Fragment {
                 .setView(pnumberView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    dialog.dismiss();
+                    String newPNumber = inputPNumber.getText().toString();
+
+                    currPNumber = newPNumber;
+                    saveUserPNumber(newPNumber);
                 })
                 .create()
                 .show();
@@ -347,9 +395,13 @@ public class UserProfileActivity extends Fragment {
     private void editPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+        EditText editPNumber = pnumberView.findViewById(R.id.input_edit_pnumber);
 
         pnumberView.findViewById(R.id.input_add_pnumber).setVisibility(View.INVISIBLE);
         pnumberView.findViewById(R.id.input_edit_pnumber).setVisibility(View.VISIBLE);
+
+        pnumberView.findViewById(R.id.title_add_pnumber).setVisibility(View.INVISIBLE);
+        pnumberView.findViewById(R.id.title_edit_pnumber).setVisibility(View.VISIBLE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -357,7 +409,10 @@ public class UserProfileActivity extends Fragment {
                 .setView(pnumberView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    dialog.dismiss();
+                    String newPNumber = editPNumber.getText().toString();
+
+                    currPNumber = newPNumber;
+                    saveUserPNumber(newPNumber);
                 })
                 .create()
                 .show();
