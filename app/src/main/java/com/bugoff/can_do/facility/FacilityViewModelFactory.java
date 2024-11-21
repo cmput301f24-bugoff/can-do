@@ -1,8 +1,12 @@
 package com.bugoff.can_do.facility;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.bugoff.can_do.database.GlobalRepository;
+
 /**
  * Factory class for creating instances of {@link FacilityViewModel}.
  *
@@ -10,30 +14,26 @@ import androidx.lifecycle.ViewModelProvider;
  * which is necessary for initializing the ViewModel with the correct data.</p>
  */
 public class FacilityViewModelFactory implements ViewModelProvider.Factory {
-    /** The unique identifier of the facility to be used by the ViewModel. */
     private final String facilityId;
-    /**
-     * Constructs a new FacilityViewModelFactory with the specified facility ID.
-     *
-     * @param facilityId The unique identifier of the facility.
-     */
+    private final GlobalRepository repository;
+
     public FacilityViewModelFactory(String facilityId) {
         this.facilityId = facilityId;
+        this.repository = new GlobalRepository();
     }
-    /**
-     * Creates a new instance of the given {@link ViewModel} class.
-     *
-     * @param modelClass The class of the ViewModel to create.
-     * @param <T>        The type parameter for the ViewModel.
-     * @return A new instance of the requested ViewModel.
-     * @throws IllegalArgumentException if the modelClass is not assignable from {@link FacilityViewModel}.
-     */
+
+    @VisibleForTesting
+    public FacilityViewModelFactory(String facilityId, GlobalRepository repository) {
+        this.facilityId = facilityId;
+        this.repository = repository;
+    }
+
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(FacilityViewModel.class)) {
-            return (T) new FacilityViewModel(facilityId);
+            return (T) new FacilityViewModel(facilityId, repository);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

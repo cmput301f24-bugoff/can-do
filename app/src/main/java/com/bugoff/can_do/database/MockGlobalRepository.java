@@ -9,10 +9,9 @@ import com.bugoff.can_do.notification.Notification;
 import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,6 +82,10 @@ public class MockGlobalRepository extends GlobalRepository {
             return Tasks.forResult(facility);
         }
         return Tasks.forException(new Exception("Facility not found"));
+    }
+
+    public Map<String, Facility> getFacilities() {
+        return Collections.unmodifiableMap(mockFacilities);
     }
 
     @NonNull

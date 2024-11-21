@@ -2,7 +2,6 @@ package com.bugoff.can_do;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,7 +10,6 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,125 +26,130 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bugoff.can_do.admin.AdminActivity;
-import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
+import com.bugoff.can_do.user.UserViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Objects;
 
 /**
  * Fragment for the user profile screen.
  */
 public class UserProfileActivity extends Fragment {
     private User user;
+    private UserViewModel userViewModel;
     private String currEmail;
     private String currPNumber;
 
-    /**
-     * Initializes the user profile screen and sets up the buttons for editing user information.
-     *
-     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment
-     * @param container          The parent view that the fragment's UI should be attached to
-     * @param savedInstanceState The previously saved state of the fragment
-     * @return The view for the user profile screen
-     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Get the UserViewModel from the MainActivity
+        MainActivity activity = (MainActivity) requireActivity();
+        userViewModel = activity.getUserViewModel();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
-        String androidID = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        loadUserData(db, androidID);
-
-        // User clicks "I'm an organizer"
-        view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), OrganizerTransition.class);
-            startActivity(intent);
+        // Set up UserViewModel observers
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
+            if (name != null) {
+                TextView firstName = view.findViewById(R.id.first_name);
+                TextView lastName = view.findViewById(R.id.last_name);
+                String[] parts = name.split(" ");
+                if (parts.length > 0) {
+                    firstName.setText(parts[0]);
+                    // Update avatar with first letter of name
+                    String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
+                    ImageView avatar = view.findViewById(R.id.image_avatar);
+                    avatar.setImageBitmap(generateAvatar(firstLetter));
+                }
+                if (parts.length > 1) {
+                    lastName.setText(parts[1]);
+                }
+            }
         });
 
-        // User clicks "Notification Settings"
+        userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
+            currEmail = email;
+        });
+
+        userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
+            currPNumber = phoneNumber;
+            updatePhoneNumberButtonVisibility(view, phoneNumber);
+        });
+
+        userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
+            setupAdminButton(view, isAdmin);
+        });
+
+        // Set up click listeners
+        view.findViewById(R.id.name_button).setOnClickListener(v -> {
+            TextView firstName = view.findViewById(R.id.first_name);
+            TextView lastName = view.findViewById(R.id.last_name);
+            editNameDialog(firstName, lastName);
+        });
+
+        view.findViewById(R.id.email_button).setOnClickListener(v -> {
+            editEmailDialog();
+        });
+
+        view.findViewById(R.id.add_pnumber_button).setOnClickListener(v -> {
+            addPNumberDialog();
+        });
+
+        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(v -> {
+            editPNumberDialog();
+        });
+
         view.findViewById(R.id.notif_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
             startActivity(intent);
         });
 
-        // User clicks "Edit Name"
-        view.findViewById(R.id.name_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TextView firstName = view.findViewById(R.id.first_name);
-                TextView lastName = view.findViewById(R.id.last_name);
-
-                editNameDialog(firstName, lastName);
-            }
+        view.findViewById(R.id.organizer_button).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrganizerTransition.class);
+            startActivity(intent);
         });
 
-        // User clicks "Edit Email"
-        view.findViewById(R.id.email_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editEmailDialog();
-            }
+        // Set up avatar click listener
+        view.findViewById(R.id.image_avatar).setOnClickListener(v -> {
+            TextView firstName = view.findViewById(R.id.first_name);
+            String userName = firstName.getText().toString();
+            String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
+            ImageView avatar = view.findViewById(R.id.image_avatar);
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Change Profile Picture")
+                    .setMessage("Choose a source")
+                    .setPositiveButton("Gallery", (dialog, which) -> {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        galleryLauncher.launch(galleryIntent);
+                    })
+                    .setNegativeButton("Camera", (dialog, which) -> {
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        cameraLauncher.launch(cameraIntent);
+                    })
+                    .setNeutralButton("Remove", (dialog, which) -> {
+                        avatar.setImageBitmap(generateAvatar(firstLetter));
+                    })
+                    .show();
         });
 
-        // User clicks "Add Phone Number", only visible if no phone number registered
-        view.findViewById(R.id.add_pnumber_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { addPNumberDialog(); }
-        });
+        // Initialize admin button state (will be updated by observer)
+        Button adminButton = view.findViewById(R.id.admin_button);
+        adminButton.setVisibility(View.GONE);
 
-        // User clicks "Edit Phone Number", becomes visible with existing phone number
-        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { editPNumberDialog(); }
-        });
-
-        setupAdminButton(view);
-
-        // User clicks avatar to change or add profile picture
-        view.findViewById(R.id.image_avatar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(getContext())
-                        .setTitle("Change Profile Picture")
-                        .setMessage("Choose a source")
-                        .setPositiveButton("Gallery", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                galleryLauncher.launch(galleryIntent);
-                            }
-                        })
-                        .setNegativeButton("Camera", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                cameraLauncher.launch(cameraIntent);
-                            }
-                        })
-                        .setNeutralButton("Remove", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                TextView userNameTextView = view.findViewById(R.id.first_name);
-                                String userName = userNameTextView.getText().toString();
-
-                                String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
-
-                                ImageView avatar = view.findViewById(R.id.image_avatar);
-                                avatar.setImageBitmap(generateAvatar(firstLetter));
-                            }
-                        })
-                        .show();
-            }
-        });
+        // Initialize phone number button states (will be updated by observer)
+        view.findViewById(R.id.add_pnumber_button).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.edit_pnumber_button).setVisibility(View.GONE);
 
         return view;
     }
-
 
     /**
      * Helper for generating default avatar when custom avatar is removed
@@ -271,38 +274,16 @@ public class UserProfileActivity extends Fragment {
      * @param lastNameTxt  Last name TextView
      */
     private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
-        if (user == null) {
-            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
-        }
-
         String name = firstNameTxt.getText().toString() + " " + lastNameTxt.getText().toString();
-
-        user.setName(name);
-        user.setRemote();
-
-        // Automatically set profile picture to default avatar
-        String avatarFirstName = firstNameTxt.getText().toString();
-        String firstLetter = avatarFirstName.isEmpty() ? "A" : avatarFirstName.substring(0, 1).toUpperCase();
-        ImageView avatar = getView().findViewById(R.id.image_avatar);
-        avatar.setImageBitmap(generateAvatar(firstLetter));
+        userViewModel.setName(name);
     }
 
     private void saveUserEmail(String email) {
-        if (user == null) {
-            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
-        }
-
-        user.setEmail(email);
-        user.setRemote();
+        userViewModel.setEmail(email);
     }
 
     private void saveUserPNumber(String pnumber) {
-        if (user == null) {
-            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
-        }
-
-        user.setPhoneNumber(pnumber);
-        user.setRemote();
+        userViewModel.setPhoneNumber(pnumber);
     }
 
     /**
@@ -418,21 +399,32 @@ public class UserProfileActivity extends Fragment {
                 .show();
     }
 
+    private void updatePhoneNumberButtonVisibility(View view, String phoneNumber) {
+        View addButton = view.findViewById(R.id.add_pnumber_button);
+        View editButton = view.findViewById(R.id.edit_pnumber_button);
+
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            addButton.setVisibility(View.INVISIBLE);
+            editButton.setVisibility(View.VISIBLE);
+        } else {
+            addButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
     /**
      * Helper for setting up admin button
-     *
-     * @param view Fragment view
      */
-    private void setupAdminButton(View view) {
+    private void setupAdminButton(View view, Boolean isAdmin) {
         Button adminButton = view.findViewById(R.id.admin_button);
-        if (GlobalRepository.getLoggedInUser() != null && GlobalRepository.getLoggedInUser().getIsAdmin()) {
+        if (isAdmin != null && isAdmin) {
             adminButton.setVisibility(View.VISIBLE);
             adminButton.setOnClickListener(v -> {
                 Intent intent = new Intent(getActivity(), AdminActivity.class);
                 startActivity(intent);
             });
         } else {
-            adminButton.setVisibility(View.GONE); // Hide if not admin
+            adminButton.setVisibility(View.GONE);
         }
     }
 }
