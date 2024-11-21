@@ -32,12 +32,12 @@ import java.util.Set;
  * deserialized to/from a database.</p>
  */
 public class Facility implements DatabaseEntity {
-    // data fields
     private String id;
-    private User owner; // Owner (organizer) of the facility
+    private User owner;
     private String name;
-    private List<Event> events; // Events held at the facility
-    private String address; // Physical display address of the facility
+    private List<Event> events;
+    private String address;
+    private boolean shouldUpdateRemote = true;
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
@@ -56,7 +56,9 @@ public class Facility implements DatabaseEntity {
         this.name = "";
         this.address = "";
         this.events = new ArrayList<>();
-        this.db = FirestoreHelper.getInstance().getDb();
+        if (!GlobalRepository.isInTestMode()) {
+            this.db = FirestoreHelper.getInstance().getDb();
+        }
     }
     /**
      * Constructs a Facility from a Firestore document.
@@ -66,15 +68,17 @@ public class Facility implements DatabaseEntity {
      * @param doc The Firestore DocumentSnapshot representing the facility. Must not be null.
      */
     public Facility(@NonNull DocumentSnapshot doc) {
+        shouldUpdateRemote = false;
         this.id = doc.getId();
         this.owner = deserializeUser(doc.getString("ownerId"));
         this.name = doc.getString("name");
         this.address = doc.getString("address");
         this.events = new ArrayList<>();
-        this.db = FirestoreHelper.getInstance().getDb();
-
-        // Deserialize events asynchronously
-        deserializeEvents(doc.get("events"));
+        if (!GlobalRepository.isInTestMode()) {
+            this.db = FirestoreHelper.getInstance().getDb();
+            deserializeEvents(doc.get("events"));
+        }
+        shouldUpdateRemote = true;
     }
     /**
      * Deserializes a User object from a given user ID.
@@ -265,8 +269,17 @@ public class Facility implements DatabaseEntity {
     // Method to save the facility to Firestore
     @Override
     public void setRemote() {
-        DocumentReference facilityRef = GlobalRepository.getFacilitiesCollection().document(id);
+        if (!shouldUpdateRemote) {
+            Log.d("Facility", "Skipping remote update due to flag");
+            return;
+        }
 
+        if (GlobalRepository.isInTestMode()) {
+            Log.d("Facility", "Skipping remote update due to test mode");
+            return;
+        }
+
+        DocumentReference facilityRef = GlobalRepository.getFacilitiesCollection().document(id);
         Map<String, Object> update = this.toMap();
 
         facilityRef.set(update, SetOptions.merge())
@@ -299,6 +312,11 @@ public class Facility implements DatabaseEntity {
      */
     @Override
     public void attachListener() {
+        if (GlobalRepository.isInTestMode()) {
+            Log.d("Facility", "Skipping listener attachment in test mode");
+            return;
+        }
+
         DocumentReference facilityRef = GlobalRepository.getFacilitiesCollection().document(id);
 
         // Attach a listener to the Facility document
