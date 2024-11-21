@@ -43,6 +43,7 @@ public class User implements DatabaseEntity {
     private List<String> eventsEnrolled; // Event IDs where the user is enrolled
     /** The list of notifications for the user. */
     private List<Notification> notificationList; // List of Notification objects
+    private boolean shouldUpdateRemote = true;
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
@@ -73,6 +74,7 @@ public class User implements DatabaseEntity {
     }
 
     public User(@NonNull DocumentSnapshot doc) {
+        shouldUpdateRemote = false;
         this.id = doc.getId();
         this.name = doc.getString("name");
         this.email = doc.getString("email");
@@ -81,34 +83,15 @@ public class User implements DatabaseEntity {
 
         this.facility = new Facility(this); // placeholder
 
-        this.eventsJoined = new ArrayList<>();
-        this.eventsEnrolled = new ArrayList<>();
-        this.notificationList = new ArrayList<>();
+        // Initialize lists from the document data
+        List<String> joinedList = (List<String>) doc.get("eventsJoined");
+        this.eventsJoined = joinedList != null ? new ArrayList<>(joinedList) : new ArrayList<>();
 
-        // Initialize lists during deserialization instead of creating empty ones first
-        Object eventsJoinedData = doc.get("eventsJoined");
-        this.eventsJoined = new ArrayList<>();
-        if (eventsJoinedData instanceof List<?>) {
-            List<?> eventIds = (List<?>) eventsJoinedData;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    this.eventsJoined.add((String) eventIdObj);
-                }
-            }
-        }
-
-        Object eventsEnrolledData = doc.get("eventsEnrolled");
-        this.eventsEnrolled = new ArrayList<>();
-        if (eventsEnrolledData instanceof List<?>) {
-            List<?> eventIds = (List<?>) eventsEnrolledData;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    this.eventsEnrolled.add((String) eventIdObj);
-                }
-            }
-        }
+        List<String> enrolledList = (List<String>) doc.get("eventsEnrolled");
+        this.eventsEnrolled = enrolledList != null ? new ArrayList<>(enrolledList) : new ArrayList<>();
 
         this.notificationList = new ArrayList<>();
+        shouldUpdateRemote = true;
     }
 
     // Add a method to set the Facility post-construction
@@ -202,13 +185,16 @@ public class User implements DatabaseEntity {
     }
 
     public void addEventJoined(String eventId) {
-        Log.d("User", "Adding event to joined list: " + eventId);
+        // Log.d("User", "Adding event to joined list: " + eventId);
+        if (this.eventsJoined == null) {
+            this.eventsJoined = new ArrayList<>();
+        }
         if (!this.eventsJoined.contains(eventId)) {
             this.eventsJoined.add(eventId);
-            Log.d("User", "Updated eventsJoined list: " + this.eventsJoined);
+            // Log.d("User", "Updated eventsJoined list: " + this.eventsJoined);
             setRemote();
         } else {
-            Log.d("User", "Event already in joined list");
+            // Log.d("User", "Event already in joined list");
         }
     }
 
@@ -260,15 +246,17 @@ public class User implements DatabaseEntity {
 
     @Override
     public void setRemote() {
-        DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
+        if (!shouldUpdateRemote) {
+            Log.d("User", "Skipping remote update due to flag");
+            return;
+        }
 
-        // Create a map of fields to be saved or updated
+        DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
         Map<String, Object> update = this.toMap();
         Log.d("User", "Setting remote - User ID: " + id);
         Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
         Log.d("User", "Setting remote - Update Map: " + update);
 
-        // Save or update the facility in Firestore
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     Log.d("User", "User " + id + " successfully updated");

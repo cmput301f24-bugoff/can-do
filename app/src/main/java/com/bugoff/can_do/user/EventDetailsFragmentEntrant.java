@@ -163,23 +163,23 @@ public class EventDetailsFragmentEntrant extends Fragment {
             throw new IllegalStateException("User not logged in");
         }
 
-        Log.d("EventDetails", "Joining waiting list for event: " + eventId);
-        Log.d("EventDetails", "Current user events joined before: " + currentUser.getEventsJoined());
+        // Log.d("EventDetails", "Joining waiting list for event: " + eventId);
+        // Log.d("EventDetails", "Current user events joined before: " + currentUser.getEventsJoined());
 
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
 
-        Log.d("EventDetails", "Current user events joined after: " + currentUser.getEventsJoined());
+        // Log.d("EventDetails", "Current user events joined after: " + currentUser.getEventsJoined());
 
         // Ensure the update is pushed to Firestore
         GlobalRepository.getUsersCollection().document(currentUser.getId())
                 .update("eventsJoined", currentUser.getEventsJoined())
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("EventDetails", "Successfully updated user's eventsJoined in Firestore");
+                    // Log.d("EventDetails", "Successfully updated user's eventsJoined in Firestore");
                     Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("EventDetails", "Failed to update user's eventsJoined in Firestore", e);
+                    // Log.e("EventDetails", "Failed to update user's eventsJoined in Firestore", e);
                     Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
                 });
     }
