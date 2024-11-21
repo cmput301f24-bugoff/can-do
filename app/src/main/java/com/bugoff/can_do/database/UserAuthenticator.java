@@ -12,6 +12,13 @@ import com.google.android.gms.tasks.TaskCompletionSource;
  * {@code UserAuthenticator} is a class that authenticates users by their Android ID.
  */
 public class UserAuthenticator {
+    private static Task<User> mockTask = null;
+
+    // For testing only
+    public static void setMockTask(Task<User> task) {
+        mockTask = task;
+    }
+
     private static final String TAG = "UserAuthenticator";
 
     /**
@@ -24,6 +31,9 @@ public class UserAuthenticator {
      */
     @NonNull
     public static Task<User> authenticateUser(@NonNull String androidId) {
+        if (mockTask != null) {
+            return mockTask;
+        }
         TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
 
         // Attempt to get the user from Firestore

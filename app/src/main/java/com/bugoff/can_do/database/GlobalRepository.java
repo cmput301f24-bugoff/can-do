@@ -23,6 +23,28 @@ import java.util.Map;
  * {@code GlobalRepository} is a global class that helps manage Firestore operations.
  */
 public class GlobalRepository {
+    // Testing
+    private static boolean isTestMode = false;
+    private static FirebaseFirestore mockDb = null;
+    private static CollectionReference mockUsersCollection = null;
+    private static CollectionReference mockFacilitiesCollection = null;
+    private static CollectionReference mockEventsCollection = null;
+
+    // For testing only
+    public static void setTestMode(boolean testMode) {
+        isTestMode = testMode;
+    }
+
+    // For testing only
+    public static void setMockFirestore(FirebaseFirestore db) {
+        mockDb = db;
+        if (db != null) {
+            mockUsersCollection = db.collection("users");
+            mockFacilitiesCollection = db.collection("facilities");
+            mockEventsCollection = db.collection("events");
+        }
+    }
+
     private static CollectionReference usersCollection;
     private static CollectionReference facilitiesCollection;
     private static CollectionReference eventsCollection;
@@ -39,10 +61,16 @@ public class GlobalRepository {
 
     // Constructor to initialize Firestore
     public GlobalRepository() {
-        FirebaseFirestore db = FirestoreHelper.getInstance().getDb();
-        usersCollection = db.collection("users");
-        facilitiesCollection = db.collection("facilities");
-        eventsCollection = db.collection("events");
+        if (!isTestMode) {
+            FirebaseFirestore db = FirestoreHelper.getInstance().getDb();
+            usersCollection = db.collection("users");
+            facilitiesCollection = db.collection("facilities");
+            eventsCollection = db.collection("events");
+        } else {
+            usersCollection = mockDb.collection("users");
+            facilitiesCollection = mockDb.collection("facilities");
+            eventsCollection = mockDb.collection("events");
+        }
     }
 
     public static void addNotification(Notification notification) {
@@ -68,15 +96,15 @@ public class GlobalRepository {
     }
 
     public static CollectionReference getUsersCollection() {
-        return usersCollection;
+        return isTestMode ? mockUsersCollection : usersCollection;
     }
 
     public static CollectionReference getFacilitiesCollection() {
-        return facilitiesCollection;
+        return isTestMode ? mockFacilitiesCollection : facilitiesCollection;
     }
 
     public static CollectionReference getEventsCollection() {
-        return eventsCollection;
+        return isTestMode ? mockEventsCollection : eventsCollection;
     }
 
     /**

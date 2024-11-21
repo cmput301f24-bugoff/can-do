@@ -203,6 +203,8 @@ public class UserViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        user.detachListener();
+        if (user != null) {
+            user.detachListener();
+        }
     }
 }

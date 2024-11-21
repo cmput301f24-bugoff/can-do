@@ -62,6 +62,10 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
 
     dokkaPlugin(libs.kotlinAsJavaPlugin)
+
+    androidTestImplementation("org.mockito:mockito-android:5.7.0")
+    androidTestImplementation("org.mockito:mockito-core:5.7.0")
+    androidTestImplementation("com.google.android.gms:play-services-tasks:18.0.2")
 }
 
 tasks.withType<Test> {
