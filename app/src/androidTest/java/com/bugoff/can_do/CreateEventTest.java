@@ -7,13 +7,16 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.anyString;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import android.content.Intent;
+import android.os.SystemClock;
 import android.provider.Settings;
 
 import androidx.test.core.app.ActivityScenario;
@@ -23,11 +26,14 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.MockGlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.organizer.OrganizerMain;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +43,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
 public class CreateEventTest {
@@ -63,11 +71,16 @@ public class CreateEventTest {
                 Settings.Secure.ANDROID_ID
         );
 
-        // Setup mock Firestore
+        // Setup mock Firestore and collections
         mockDb = mock(FirebaseFirestore.class);
-        mockDocRef = mock(DocumentReference.class);
-        when(mockDb.collection(anyString())).thenReturn(mock(com.google.firebase.firestore.CollectionReference.class));
-        when(mockDb.collection(anyString()).document(anyString())).thenReturn(mockDocRef);
+        DocumentReference mockEventDocRef = mock(DocumentReference.class);
+        when(mockEventDocRef.getId()).thenReturn("test-event-id");
+        when(mockEventDocRef.set(any(Map.class))).thenReturn(Tasks.forResult(null));
+
+        CollectionReference mockEventsCollection = mock(CollectionReference.class);
+        when(mockEventsCollection.document()).thenReturn(mockEventDocRef);
+        when(mockEventsCollection.document(anyString())).thenReturn(mockEventDocRef);
+        when(mockDb.collection("events")).thenReturn(mockEventsCollection);
 
         // Enable test mode and set mock Firestore
         GlobalRepository.setTestMode(true);
@@ -130,8 +143,12 @@ public class CreateEventTest {
 
     @Test
     public void testOrganizerTransition() {
-        // First complete user setup
+        // Launch main activity and complete user setup
         ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
+
+        mainScenario.onActivity(activity -> {
+            activity.setRepository(mockRepository);
+        });
 
         // Complete user profile setup
         onView(withId(R.id.nameEditText))
@@ -140,17 +157,22 @@ public class CreateEventTest {
                 .perform(typeText(TEST_EMAIL), closeSoftKeyboard());
         onView(withId(R.id.submitButton)).perform(click());
 
-        // Navigate to profile
+        // Navigate to profile and verify
         onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.organizer_button)).check(matches(isDisplayed()));
 
-        // Launch organizer transition activity
-        mainScenario.onActivity(activity -> {
-            Intent intent = new Intent(activity, OrganizerTransition.class);
-            activity.startActivity(intent);
-        });
+        // Click organizer button and verify transition
+        onView(withId(R.id.organizer_button)).perform(click());
 
-        ActivityScenario<OrganizerTransition> orgScenario =
-                ActivityScenario.launch(OrganizerTransition.class);
+        // Inject mock repository into OrganizerTransition
+        ActivityScenario.launch(OrganizerTransition.class)
+                .onActivity(activity -> {
+                    activity.setRepository(mockRepository);
+                });
+
+        // Verify facility creation screen
+        onView(withId(R.id.facilityNameInput)).check(matches(isDisplayed()));
+        onView(withId(R.id.facilityAddressInput)).check(matches(isDisplayed()));
 
         // Enter facility information
         onView(withId(R.id.facilityNameInput))
@@ -160,6 +182,14 @@ public class CreateEventTest {
 
         // Save the facility
         onView(withId(R.id.saveFacilityButton)).perform(click());
+
+        ActivityScenario.launch(OrganizerMain.class)
+                .onActivity(activity -> {
+                    activity.setRepository(mockRepository);
+                });
+
+        // Verify we moved to the organizer main screen
+        onView(withId(R.id.bottom_navigation_organizer)).check(matches(isDisplayed()));
 
         // Verify facility was created in mock repository
         User user = mockRepository.getUser(androidId).getResult();
@@ -174,7 +204,103 @@ public class CreateEventTest {
         // Verify we moved to the organizer main screen
         onView(withId(R.id.bottom_navigation_organizer)).check(matches(isDisplayed()));
 
-        orgScenario.close();
         mainScenario.close();
+    }
+
+    @Test
+    public void testEventCreation() {
+        // First complete the necessary setup steps from previous tests
+        ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
+        mainScenario.onActivity(activity -> activity.setRepository(mockRepository));
+
+        // Complete user profile setup
+        onView(withId(R.id.nameEditText)).perform(typeText(TEST_NAME), closeSoftKeyboard());
+        onView(withId(R.id.emailEditText)).perform(typeText(TEST_EMAIL), closeSoftKeyboard());
+        onView(withId(R.id.submitButton)).perform(click());
+
+        // Navigate to organizer section and set up facility
+        onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.organizer_button)).perform(click());
+
+        ActivityScenario.launch(OrganizerTransition.class)
+                .onActivity(activity -> activity.setRepository(mockRepository));
+
+        onView(withId(R.id.facilityNameInput)).perform(typeText(TEST_FACILITY_NAME), closeSoftKeyboard());
+        onView(withId(R.id.facilityAddressInput)).perform(typeText(TEST_FACILITY_ADDRESS), closeSoftKeyboard());
+        onView(withId(R.id.saveFacilityButton)).perform(click());
+
+        // Launch OrganizerMain and set repository
+        ActivityScenario<OrganizerMain> organizerScenario = ActivityScenario.launch(OrganizerMain.class);
+        organizerScenario.onActivity(activity -> activity.setRepository(mockRepository));
+
+        // Click FAB to create new event
+        onView(withId(R.id.fab_add_event)).perform(click());
+
+        // Fill in event details
+        String testEventName = "Test Event";
+        String testEventDescription = "This is a test event description";
+        int testMaxParticipants = 50;
+
+        onView(withId(R.id.editTextEventName))
+                .perform(typeText(testEventName), closeSoftKeyboard());
+        onView(withId(R.id.editTextEventDescription))
+                .perform(typeText(testEventDescription), closeSoftKeyboard());
+        onView(withId(R.id.editTextMaxNumParticipants))
+                .perform(typeText(String.valueOf(testMaxParticipants)), closeSoftKeyboard());
+
+        // Set all dates and times using the buttons - accepting defaults
+        onView(withId(R.id.buttonRegStartDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonRegStartTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonRegEndDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonRegEndTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonEventStartDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonEventStartTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonEventEndDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonEventEndTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        // Set geolocation requirement
+        onView(withId(R.id.checkBoxGeolocation)).perform(click());
+
+        // Create the event
+        onView(withId(R.id.buttonCreateEvent)).perform(click());
+
+        // Verify the event was created in mock repository
+        User user = mockRepository.getUser(androidId).getResult();
+        Facility facility = user.getFacility();
+        assertNotNull("Facility should exist", facility);
+
+        // Wait for the event to be created and added to the facility
+        SystemClock.sleep(1000); // Give time for async operations
+
+        // Verify event details
+        assertEquals("Facility should have 1 event", 1, facility.getEvents().size());
+        Event createdEvent = facility.getEvents().stream()
+                .filter(e -> e.getName().equals(testEventName))
+                .findFirst()
+                .orElse(null);
+        assertNotNull("Should find the created event", createdEvent);
+        assertEquals("Event name should match", testEventName, createdEvent.getName());
+        assertEquals("Event description should match", testEventDescription, createdEvent.getDescription());
+        assertEquals("Max participants should match", testMaxParticipants, createdEvent.getMaxNumberOfParticipants().intValue());
+        assertTrue("Geolocation should be required", createdEvent.getGeolocationRequired());
+
+        // Verify we're back at the events list
+        onView(withId(R.id.recycler_view_events))
+                .check(matches(isDisplayed()));
+
+        // Clean up
+        mainScenario.close();
+        organizerScenario.close();
     }
 }

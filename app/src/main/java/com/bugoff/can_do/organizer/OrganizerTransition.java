@@ -14,42 +14,24 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * The OrganizerTransition activity checks whether the logged-in user has an associated facility.
- * If the user has a facility, it redirects them to the main organizer activity. If no facility is
- * found, it prompts the user to create a new facility.
- */
 public class OrganizerTransition extends AppCompatActivity {
-    private FirebaseFirestore db;
+    private GlobalRepository repository;
     private String androidId;
 
-    /**
-     * Called when the activity is created. Initializes Firebase Firestore and retrieves the device's Android ID.
-     * It then checks whether the user has an associated facility.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
-     *                           this Bundle contains the most recent data. Otherwise, it is null.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        repository = new GlobalRepository();
 
         checkUserFacility();
     }
 
-    /**
-     * Checks if the logged-in user has an associated facility in Firestore.
-     * If a facility exists, the user is redirected to the next activity.
-     * If not, the user is prompted to create a new facility.
-     */
     private void checkUserFacility() {
-        db.collection("facilities").document(androidId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+        repository.getFacility(androidId)
+                .addOnSuccessListener(facility -> {
+                    if (facility != null) {
                         // Facility exists, redirect to the next activity
                         navigateToNextActivity();
                     } else {
@@ -57,15 +39,12 @@ public class OrganizerTransition extends AppCompatActivity {
                         promptUserToCreateFacility();
                     }
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to check facility data", Toast.LENGTH_SHORT).show()
-                );
+                .addOnFailureListener(e -> {
+                    // If facility doesn't exist, this is expected
+                    promptUserToCreateFacility();
+                });
     }
 
-    /**
-     * Prompts the user to create a new facility by displaying the facility edit screen.
-     * Sets up the continue button to save the facility and proceed.
-     */
     private void promptUserToCreateFacility() {
         setContentView(R.layout.activity_facility_edit);
 
@@ -76,58 +55,42 @@ public class OrganizerTransition extends AppCompatActivity {
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
 
-    /**
-     * Navigates the user to the next activity (OrganizerMain).
-     */
     private void navigateToNextActivity() {
-        Intent intent = new Intent(this, OrganizerMain.class); // Replace NewActivity with the target activity class
+        Intent intent = new Intent(this, OrganizerMain.class);
         startActivity(intent);
         finish();
     }
 
-    /**
-     * Saves the new facility entered by the user and proceeds to the main organizer activity.
-     * If the facility name or address is missing, a toast message is shown.
-     */
     private void saveFacilityAndProceed() {
-        // Retrieve input fields
         EditText facilityNameInput = findViewById(R.id.facilityNameInput);
         EditText facilityAddressInput = findViewById(R.id.facilityAddressInput);
 
         String facilityName = facilityNameInput.getText().toString().trim();
         String facilityAddress = facilityAddressInput.getText().toString().trim();
 
-        // Validate inputs
         if (facilityName.isEmpty() || facilityAddress.isEmpty()) {
             Toast.makeText(this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         User currentUser = GlobalRepository.getLoggedInUser();
-
-        // Retrieve the existing Facility or create a new one
-        Facility facility = currentUser.getFacility();
-        if (facility == null) {
-            facility = new Facility(currentUser);
-            currentUser.setFacility(facility); // Ensure bidirectional reference
-            currentUser.setRemote(); // Persist the facilityId to Firestore
-        }
-
-        // Set the facility properties
+        Facility facility = new Facility(currentUser);
         facility.setName(facilityName);
         facility.setAddress(facilityAddress);
 
-        // Set an update listener to handle post-save actions
-        facility.setOnUpdateListener(() -> {
-            Toast.makeText(OrganizerTransition.this, "Facility saved successfully!", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(OrganizerTransition.this, OrganizerMain.class));
-            finish();
-        });
+        repository.addFacility(facility)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Facility saved successfully!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, OrganizerMain.class));
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error saving facility", Toast.LENGTH_SHORT).show()
+                );
+    }
 
-        // Attach the snapshot listener
-        facility.attachListener();
-
-        // Save the facility to Firestore
-        facility.setRemote();
+    // For testing purposes
+    public void setRepository(GlobalRepository repository) {
+        this.repository = repository;
     }
 }

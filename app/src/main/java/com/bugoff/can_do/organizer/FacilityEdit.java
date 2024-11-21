@@ -3,52 +3,69 @@ package com.bugoff.can_do.organizer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.facility.Facility;
-import com.bugoff.can_do.user.User;
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.facility.FacilityViewModel;
+import com.bugoff.can_do.facility.FacilityViewModelFactory;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Activity for editing a facility. Allows the user to view, create, or update facility details such as
- * name and address. Facility data is loaded from or saved to Firebase Firestore.
+ * name and address. Uses FacilityViewModel to handle data operations.
  */
 public class FacilityEdit extends AppCompatActivity {
     private TextInputEditText facilityNameInput, facilityAddressInput;
     private Button saveFacilityButton;
-    private Facility facility;
-    /**
-     * Called when the activity is first created. Initializes UI components and loads facility data
-     * from Firestore if it exists.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
-     *                           this Bundle contains the most recent data. Otherwise, it is null.
-     */
+    private FacilityViewModel facilityViewModel;
+    private GlobalRepository repository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facility_edit);
+
+        // Initialize repository
+        repository = new GlobalRepository();
 
         facilityNameInput = findViewById(R.id.facilityNameInput);
         facilityAddressInput = findViewById(R.id.facilityAddressInput);
         saveFacilityButton = findViewById(R.id.saveFacilityButton);
 
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Initialize or load facility
-        loadFacilityData(db, androidId);
+        // Initialize ViewModel using the Factory
+        FacilityViewModelFactory factory = new FacilityViewModelFactory(androidId, repository);
+        facilityViewModel = new ViewModelProvider(this, factory).get(FacilityViewModel.class);
 
         // Set up the back button
         ImageButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
+
+        // Observe facility data
+        facilityViewModel.getName().observe(this, name -> {
+            if (name != null) {
+                facilityNameInput.setText(name);
+            }
+        });
+
+        facilityViewModel.getAddress().observe(this, address -> {
+            if (address != null) {
+                facilityAddressInput.setText(address);
+            }
+        });
+
+        facilityViewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(FacilityEdit.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Save button functionality
         saveFacilityButton.setOnClickListener(v -> {
@@ -60,51 +77,32 @@ public class FacilityEdit extends AppCompatActivity {
         });
     }
 
-    /**
-     * Loads the facility data from Firestore using the specified Android ID.
-     *
-     * @param db        The FirebaseFirestore instance for accessing Firestore.
-     * @param androidId The unique Android ID used to identify the user's facility data in Firestore.
-     */
-    private void loadFacilityData(FirebaseFirestore db, String androidId) {
-        db.collection("facilities").document(androidId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        facility = new Facility(documentSnapshot);
-                        facilityNameInput.setText(facility.getName());
-                        facilityAddressInput.setText(facility.getAddress());
-                    } else {
-                        // Facility does not exist; create a new instance
-                        User owner = new User(androidId); // Ensure User class has a constructor accepting ID
-                        facility = new Facility(owner);
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(FacilityEdit.this, "Failed to load facility data", Toast.LENGTH_SHORT).show());
-    }
-
-    /**
-     * Checks if the facility name and address fields are not empty.
-     *
-     * @return True if both fields are not empty, false otherwise.
-     */
     private boolean areFieldsValid() {
         return facilityNameInput.getText() != null && !facilityNameInput.getText().toString().isEmpty()
                 && facilityAddressInput.getText() != null && !facilityAddressInput.getText().toString().isEmpty();
     }
 
-    /**
-     * Saves the current facility data to Firestore and displays a success message.
-     * Updates the facility name and address based on user input, then saves the facility data.
-     */
     private void saveFacilityData() {
         String name = facilityNameInput.getText().toString();
         String address = facilityAddressInput.getText().toString();
 
-        facility.setName(name);
-        facility.setAddress(address);
+        facilityViewModel.setName(name);
+        facilityViewModel.setAddress(address);
 
-        facility.setRemote(); // Save to Firestore using Facility's method
         Toast.makeText(FacilityEdit.this, "Facility saved successfully", Toast.LENGTH_SHORT).show();
+
+        // Navigate to OrganizerMain
+        Intent intent = new Intent(this, OrganizerMain.class);
+        startActivity(intent);
         finish();
+    }
+
+    // For testing purposes
+    public void setRepository(GlobalRepository repository) {
+        this.repository = repository;
+        // Reinitialize ViewModel with new repository
+        String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        FacilityViewModelFactory factory = new FacilityViewModelFactory(androidId, repository);
+        facilityViewModel = new ViewModelProvider(this, factory).get(FacilityViewModel.class);
     }
 }

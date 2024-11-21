@@ -1,6 +1,5 @@
 package com.bugoff.can_do.event;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bugoff.can_do.MainActivity;
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.organizer.CreateEventFragment;
 import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
+import com.bugoff.can_do.organizer.OrganizerMain;
+import com.bugoff.can_do.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ public class EventsFragment extends Fragment {
     private EventAdapter eventAdapter;
     private FloatingActionButton fabAddEvent;
     private EventsListViewModel eventsListViewModel;
+    private EventsListViewModel viewModel;
 
     /**
      * Use this factory method to create a new instance of
@@ -58,12 +62,32 @@ public class EventsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Retrieve the isAdmin flag from arguments
-        if (getArguments() != null) {
-            isAdmin = getArguments().getBoolean(ARG_IS_ADMIN, false);
+
+        boolean isAdmin = false;
+        User currentUser = GlobalRepository.getLoggedInUser();
+        if (currentUser != null) {
+            isAdmin = currentUser.getIsAdmin() != null ? currentUser.getIsAdmin() : false;
         }
+
+        // Get the repository from the activity if we're testing
+        GlobalRepository repository = null;
+        if (getActivity() instanceof MainActivity) {
+            repository = ((MainActivity) getActivity()).getRepository();
+        } else if (getActivity() instanceof OrganizerMain) {
+            repository = ((OrganizerMain) getActivity()).getRepository();
+        }
+
+        // Create the ViewModel using the appropriate factory
+        EventsListViewModelFactory factory;
+        if (repository != null) {
+            factory = new EventsListViewModelFactory(repository, isAdmin);
+        } else {
+            factory = new EventsListViewModelFactory(isAdmin);
+        }
+
+        eventsListViewModel = new ViewModelProvider(this, factory).get(EventsListViewModel.class);
     }
 
     @Nullable
