@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -154,5 +155,10 @@ public class MainActivity extends AppCompatActivity {
     // For testing purposes
     public void setRepository(GlobalRepository repository) {
         this.repository = repository;
+    }
+
+    @VisibleForTesting
+    public GlobalRepository getRepository() {
+        return repository;
     }
 }

@@ -13,7 +13,6 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import android.content.Intent;
 import android.provider.Settings;
 
 import androidx.test.core.app.ActivityScenario;
@@ -24,6 +23,7 @@ import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.MockGlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
 import com.bugoff.can_do.facility.Facility;
+import com.bugoff.can_do.organizer.OrganizerMain;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
@@ -130,8 +130,12 @@ public class CreateEventTest {
 
     @Test
     public void testOrganizerTransition() {
-        // First complete user setup
+        // Launch main activity and complete user setup
         ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
+
+        mainScenario.onActivity(activity -> {
+            activity.setRepository(mockRepository);
+        });
 
         // Complete user profile setup
         onView(withId(R.id.nameEditText))
@@ -140,17 +144,22 @@ public class CreateEventTest {
                 .perform(typeText(TEST_EMAIL), closeSoftKeyboard());
         onView(withId(R.id.submitButton)).perform(click());
 
-        // Navigate to profile
+        // Navigate to profile and verify
         onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.organizer_button)).check(matches(isDisplayed()));
 
-        // Launch organizer transition activity
-        mainScenario.onActivity(activity -> {
-            Intent intent = new Intent(activity, OrganizerTransition.class);
-            activity.startActivity(intent);
-        });
+        // Click organizer button and verify transition
+        onView(withId(R.id.organizer_button)).perform(click());
 
-        ActivityScenario<OrganizerTransition> orgScenario =
-                ActivityScenario.launch(OrganizerTransition.class);
+        // Inject mock repository into OrganizerTransition
+        ActivityScenario.launch(OrganizerTransition.class)
+                .onActivity(activity -> {
+                    activity.setRepository(mockRepository);
+                });
+
+        // Verify facility creation screen
+        onView(withId(R.id.facilityNameInput)).check(matches(isDisplayed()));
+        onView(withId(R.id.facilityAddressInput)).check(matches(isDisplayed()));
 
         // Enter facility information
         onView(withId(R.id.facilityNameInput))
@@ -160,6 +169,14 @@ public class CreateEventTest {
 
         // Save the facility
         onView(withId(R.id.saveFacilityButton)).perform(click());
+
+        ActivityScenario.launch(OrganizerMain.class)
+                .onActivity(activity -> {
+                    activity.setRepository(mockRepository);
+                });
+
+        // Verify we moved to the organizer main screen
+        onView(withId(R.id.bottom_navigation_organizer)).check(matches(isDisplayed()));
 
         // Verify facility was created in mock repository
         User user = mockRepository.getUser(androidId).getResult();
@@ -174,7 +191,6 @@ public class CreateEventTest {
         // Verify we moved to the organizer main screen
         onView(withId(R.id.bottom_navigation_organizer)).check(matches(isDisplayed()));
 
-        orgScenario.close();
         mainScenario.close();
     }
 }
