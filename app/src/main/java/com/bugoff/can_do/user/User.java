@@ -197,9 +197,13 @@ public class User implements DatabaseEntity {
     }
 
     public void addEventJoined(String eventId) {
+        Log.d("User", "Adding event to joined list: " + eventId);
         if (!this.eventsJoined.contains(eventId)) {
             this.eventsJoined.add(eventId);
+            Log.d("User", "Updated eventsJoined list: " + this.eventsJoined);
             setRemote();
+        } else {
+            Log.d("User", "Event already in joined list");
         }
     }
 
@@ -259,10 +263,10 @@ public class User implements DatabaseEntity {
         // Save or update the facility in Firestore
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "User successfully saved or updated.");
+                    Log.d("User", "User successfully saved or updated with events: " + eventsJoined);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error saving or updating user", e);
+                    Log.e("User", "Error saving or updating user", e);
                 });
     }
 

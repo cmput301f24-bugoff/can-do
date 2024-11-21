@@ -165,7 +165,18 @@ public class EventDetailsFragmentEntrant extends Fragment {
 
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
-        Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+
+        // Ensure the update is pushed to Firestore
+        GlobalRepository.getUsersCollection().document(currentUser.getId())
+                .update("eventsJoined", currentUser.getEventsJoined())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("EventDetails", "Successfully updated user's eventsJoined in Firestore");
+                    Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EventDetails", "Failed to update user's eventsJoined in Firestore", e);
+                    Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void leaveWaitingList(EventViewModel viewModel) {
