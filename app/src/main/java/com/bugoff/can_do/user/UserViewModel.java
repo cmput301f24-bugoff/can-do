@@ -43,22 +43,15 @@ public class UserViewModel extends ViewModel {
         repository.getUser(userId)
                 .addOnSuccessListener(fetchedUser -> {
                     this.user = fetchedUser;
-                    userName.setValue(user.getName());
-                    email.setValue(user.getEmail());
-                    phoneNumber.setValue(user.getPhoneNumber());
-                    isAdmin.setValue(user.getIsAdmin());
-                    facility.setValue(user.getFacility());
-                    eventsJoined.setValue(user.getEventsJoined());
-                    eventsEnrolled.setValue(user.getEventsEnrolled());
+                    updateLiveData();
 
-                    fetchEventsDetails(user.getEventsJoined(), eventsJoinedDetails);
-                    fetchEventsDetails(user.getEventsEnrolled(), eventsEnrolledDetails);
-
+                    // Setup listener for updates
                     this.user.setOnUpdateListener(this::updateLiveData);
                     this.user.attachListener();
                 })
                 .addOnFailureListener(e -> {
                     errorMessage.setValue(e.getMessage());
+                    Log.e("UserViewModel", "Error fetching user", e);
                 });
     }
 
@@ -68,11 +61,6 @@ public class UserViewModel extends ViewModel {
             email.postValue(user.getEmail());
             phoneNumber.postValue(user.getPhoneNumber());
             isAdmin.postValue(user.getIsAdmin());
-            facility.postValue(user.getFacility());
-            eventsJoined.postValue(user.getEventsJoined());
-            eventsEnrolled.postValue(user.getEventsEnrolled());
-            fetchEventsDetails(user.getEventsJoined(), eventsJoinedDetails);
-            fetchEventsDetails(user.getEventsEnrolled(), eventsEnrolledDetails);
         }
     }
 
@@ -111,82 +99,42 @@ public class UserViewModel extends ViewModel {
     public LiveData<String> getPhoneNumber() { return phoneNumber; }
     public LiveData<Boolean> getIsAdmin() { return isAdmin; }
     public LiveData<Facility> getFacility() { return facility; }
-    public LiveData<List<String>> getEventsJoined() { return eventsJoined; }
-    public LiveData<List<String>> getEventsEnrolled() { return eventsEnrolled; }
-    public LiveData<List<Event>> getEventsJoinedDetails() { return eventsJoinedDetails; }
-    public LiveData<List<Event>> getEventsEnrolledDetails() { return eventsEnrolledDetails; }
     public LiveData<String> getErrorMessage() { return errorMessage; }
 
     // User interaction methods
     public void setName(String name) {
-        user.setName(name);
-        user.setRemote();
+        if (user != null && name != null) {
+            user.setName(name);
+            // Update LiveData immediately for UI response
+            userName.setValue(name);
+            // Then update remote
+            user.setRemote();
+        }
     }
 
     public void setEmail(String email) {
-        user.setEmail(email);
-        user.setRemote();
+        if (user != null && email != null) {
+            user.setEmail(email);
+            // Update LiveData immediately
+            this.email.setValue(email);
+            // Then update remote
+            user.setRemote();
+        }
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        user.setPhoneNumber(phoneNumber);
-        user.setRemote();
-    }
-
-    public void setIsAdmin(Boolean adminStatus) {
-        user.setIsAdmin(adminStatus);
-        user.setRemote();
+        if (user != null && phoneNumber != null) {
+            user.setPhoneNumber(phoneNumber);
+            // Update LiveData immediately
+            this.phoneNumber.setValue(phoneNumber);
+            // Then update remote
+            user.setRemote();
+        }
     }
 
     public void setFacility(Facility newFacility) {
         user.setFacility(newFacility);
         user.setRemote();
-    }
-
-    public void addEventJoined(String eventId) {
-        user.addEventJoined(eventId);
-        repository.getEvent(eventId)
-                .addOnSuccessListener(event -> {
-                    if (event != null) {
-                        List<Event> currentEvents = eventsJoinedDetails.getValue();
-                        if (currentEvents != null) {
-                            currentEvents.add(event);
-                            eventsJoinedDetails.postValue(currentEvents);
-                        }
-                    }
-                });
-    }
-
-    public void removeEventJoined(String eventId) {
-        user.removeEventJoined(eventId);
-        List<Event> currentEvents = eventsJoinedDetails.getValue();
-        if (currentEvents != null) {
-            currentEvents.removeIf(event -> event.getId().equals(eventId));
-            eventsJoinedDetails.postValue(currentEvents);
-        }
-    }
-
-    public void addEventEnrolled(String eventId) {
-        user.addEventEnrolled(eventId);
-        repository.getEvent(eventId)
-                .addOnSuccessListener(event -> {
-                    if (event != null) {
-                        List<Event> currentEvents = eventsEnrolledDetails.getValue();
-                        if (currentEvents != null) {
-                            currentEvents.add(event);
-                            eventsEnrolledDetails.postValue(currentEvents);
-                        }
-                    }
-                });
-    }
-
-    public void removeEventEnrolled(String eventId) {
-        user.removeEventEnrolled(eventId);
-        List<Event> currentEvents = eventsEnrolledDetails.getValue();
-        if (currentEvents != null) {
-            currentEvents.removeIf(event -> event.getId().equals(eventId));
-            eventsEnrolledDetails.postValue(currentEvents);
-        }
     }
 
     @Override

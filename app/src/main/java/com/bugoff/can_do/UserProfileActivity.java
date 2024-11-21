@@ -55,7 +55,7 @@ public class UserProfileActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
-        // Set up UserViewModel observers
+        // Register observers
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
                 TextView firstName = view.findViewById(R.id.first_name);
@@ -70,21 +70,30 @@ public class UserProfileActivity extends Fragment {
                 }
                 if (parts.length > 1) {
                     lastName.setText(parts[1]);
+                } else {
+                    lastName.setText("");
                 }
             }
         });
 
         userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
-            currEmail = email;
+            currEmail = email != null ? email : "";
         });
 
         userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
-            currPNumber = phoneNumber;
+            currPNumber = phoneNumber != null ? phoneNumber : "";
             updatePhoneNumberButtonVisibility(view, phoneNumber);
         });
 
         userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
             setupAdminButton(view, isAdmin);
+        });
+
+        // Error message observer
+        userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMsg -> {
+            if (errorMsg != null && !errorMsg.isEmpty()) {
+                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Set up click listeners
@@ -94,17 +103,11 @@ public class UserProfileActivity extends Fragment {
             editNameDialog(firstName, lastName);
         });
 
-        view.findViewById(R.id.email_button).setOnClickListener(v -> {
-            editEmailDialog();
-        });
+        view.findViewById(R.id.email_button).setOnClickListener(v -> editEmailDialog());
 
-        view.findViewById(R.id.add_pnumber_button).setOnClickListener(v -> {
-            addPNumberDialog();
-        });
+        view.findViewById(R.id.add_pnumber_button).setOnClickListener(v -> addPNumberDialog());
 
-        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(v -> {
-            editPNumberDialog();
-        });
+        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(v -> editPNumberDialog());
 
         view.findViewById(R.id.notif_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
@@ -116,14 +119,27 @@ public class UserProfileActivity extends Fragment {
             startActivity(intent);
         });
 
-        // Set up avatar click listener
-        view.findViewById(R.id.image_avatar).setOnClickListener(v -> {
+        // Set up avatar click listener with proper null checks
+        setupAvatarClickListener(view);
+
+        // Initialize button states
+        Button adminButton = view.findViewById(R.id.admin_button);
+        adminButton.setVisibility(View.GONE);
+
+        view.findViewById(R.id.add_pnumber_button).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.edit_pnumber_button).setVisibility(View.GONE);
+
+        return view;
+    }
+
+    private void setupAvatarClickListener(View view) {
+        ImageView avatar = view.findViewById(R.id.image_avatar);
+        avatar.setOnClickListener(v -> {
             TextView firstName = view.findViewById(R.id.first_name);
             String userName = firstName.getText().toString();
             String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
-            ImageView avatar = view.findViewById(R.id.image_avatar);
 
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(requireContext())
                     .setTitle("Change Profile Picture")
                     .setMessage("Choose a source")
                     .setPositiveButton("Gallery", (dialog, which) -> {
@@ -139,16 +155,6 @@ public class UserProfileActivity extends Fragment {
                     })
                     .show();
         });
-
-        // Initialize admin button state (will be updated by observer)
-        Button adminButton = view.findViewById(R.id.admin_button);
-        adminButton.setVisibility(View.GONE);
-
-        // Initialize phone number button states (will be updated by observer)
-        view.findViewById(R.id.add_pnumber_button).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.edit_pnumber_button).setVisibility(View.GONE);
-
-        return view;
     }
 
     /**
@@ -286,12 +292,6 @@ public class UserProfileActivity extends Fragment {
         userViewModel.setPhoneNumber(pnumber);
     }
 
-    /**
-     * Helper for editing user name
-     *
-     * @param firstName First name TextView
-     * @param lastName  Last name TextView
-     */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -305,27 +305,22 @@ public class UserProfileActivity extends Fragment {
         editFirstName.setText(first);
         editLastName.setText(last);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-        builder
+        new AlertDialog.Builder(getContext())
                 .setView(nameView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    String newFirstName = editFirstName.getText().toString();
-                    String newLastName = editLastName.getText().toString();
-
-                    firstName.setText(newFirstName);
-                    lastName.setText(newLastName);
-
-                    saveUserData(firstName, lastName);
+                    String newFirstName = editFirstName.getText().toString().trim();
+                    String newLastName = editLastName.getText().toString().trim();
+                    String fullName = newFirstName;
+                    if (!newLastName.isEmpty()) {
+                        fullName += " " + newLastName;
+                    }
+                    userViewModel.setName(fullName);
                 })
                 .create()
                 .show();
     }
 
-    /**
-     * Helper for editing user email
-     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -335,39 +330,32 @@ public class UserProfileActivity extends Fragment {
 
         oldEmail.setText(currEmail);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-        builder
+        new AlertDialog.Builder(getContext())
                 .setView(emailView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    String newEmail = editEmail.getText().toString();
-
-                    currEmail = newEmail;
-                    saveUserEmail(newEmail);
+                    String newEmail = editEmail.getText().toString().trim();
+                    if (!newEmail.isEmpty()) {
+                        userViewModel.setEmail(newEmail);
+                    }
                 })
                 .create()
                 .show();
     }
 
-    /**
-     * Helper for adding phone number
-     */
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
         EditText inputPNumber = pnumberView.findViewById(R.id.input_add_pnumber);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-        builder
+        new AlertDialog.Builder(getContext())
                 .setView(pnumberView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    String newPNumber = inputPNumber.getText().toString();
-
-                    currPNumber = newPNumber;
-                    saveUserPNumber(newPNumber);
+                    String newPNumber = inputPNumber.getText().toString().trim();
+                    if (!newPNumber.isEmpty()) {
+                        userViewModel.setPhoneNumber(newPNumber);
+                    }
                 })
                 .create()
                 .show();
@@ -384,16 +372,16 @@ public class UserProfileActivity extends Fragment {
         pnumberView.findViewById(R.id.title_add_pnumber).setVisibility(View.INVISIBLE);
         pnumberView.findViewById(R.id.title_edit_pnumber).setVisibility(View.VISIBLE);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        editPNumber.setText(currPNumber);
 
-        builder
+        new AlertDialog.Builder(getContext())
                 .setView(pnumberView)
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    String newPNumber = editPNumber.getText().toString();
-
-                    currPNumber = newPNumber;
-                    saveUserPNumber(newPNumber);
+                    String newPNumber = editPNumber.getText().toString().trim();
+                    if (!newPNumber.isEmpty()) {
+                        userViewModel.setPhoneNumber(newPNumber);
+                    }
                 })
                 .create()
                 .show();
