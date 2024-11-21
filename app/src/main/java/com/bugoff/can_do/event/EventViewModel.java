@@ -144,13 +144,7 @@ public class EventViewModel extends ViewModel {
             fetchUsersForList(event.getEnrolledEntrants(), enrolledEntrantsUsers);
         }
     }
-    /**
-     * Fetches user details for a given list of user IDs in batches and updates the target LiveData map.
-     * Each batch is fetched asynchronously to avoid limitations on query size.
-     *
-     * @param userIds       A list of user IDs to fetch.
-     * @param targetLiveData The target LiveData map to store the fetched User objects, mapped by their ID.
-     */
+
     private void fetchUsersForList(List<String> userIds, MutableLiveData<Map<String, User>> targetLiveData) {
         if (userIds == null || userIds.isEmpty()) {
             Log.d(TAG, "fetchUsersForList: userIds is null or empty");
@@ -182,9 +176,11 @@ public class EventViewModel extends ViewModel {
                         if (result instanceof QuerySnapshot) {
                             QuerySnapshot snapshot = (QuerySnapshot) result;
                             for (DocumentSnapshot document : snapshot.getDocuments()) {
+                                // Create user without triggering remote updates
                                 User user = new User(document);
                                 usersMap.put(user.getId(), user);
-                                Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName());
+                                Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName() +
+                                        " with events: " + user.getEventsJoined());
                             }
                         }
                     }

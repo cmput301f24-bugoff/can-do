@@ -43,6 +43,7 @@ public class User implements DatabaseEntity {
     private List<String> eventsEnrolled; // Event IDs where the user is enrolled
     /** The list of notifications for the user. */
     private List<Notification> notificationList; // List of Notification objects
+    private boolean shouldUpdateRemote = true;
 
     private FirebaseFirestore db;
     private ListenerRegistration listener;
@@ -73,6 +74,7 @@ public class User implements DatabaseEntity {
     }
 
     public User(@NonNull DocumentSnapshot doc) {
+        shouldUpdateRemote = false;
         this.id = doc.getId();
         this.name = doc.getString("name");
         this.email = doc.getString("email");
@@ -81,12 +83,15 @@ public class User implements DatabaseEntity {
 
         this.facility = new Facility(this); // placeholder
 
-        this.eventsJoined = new ArrayList<>();
-        this.eventsEnrolled = new ArrayList<>();
-        this.notificationList = new ArrayList<>();
+        // Initialize lists from the document data
+        List<String> joinedList = (List<String>) doc.get("eventsJoined");
+        this.eventsJoined = joinedList != null ? new ArrayList<>(joinedList) : new ArrayList<>();
 
-        deserializeEventsJoined(doc.get("eventsJoined"));
-        deserializeEventsEnrolled(doc.get("eventsEnrolled"));
+        List<String> enrolledList = (List<String>) doc.get("eventsEnrolled");
+        this.eventsEnrolled = enrolledList != null ? new ArrayList<>(enrolledList) : new ArrayList<>();
+
+        this.notificationList = new ArrayList<>();
+        shouldUpdateRemote = true;
     }
 
     // Add a method to set the Facility post-construction
@@ -105,52 +110,23 @@ public class User implements DatabaseEntity {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
-        map.put("name", name);
-        map.put("email", email);
-        map.put("phoneNumber", phoneNumber);
-        map.put("isAdmin", isAdmin);
+        map.put("name", name != null ? name : "");
+        map.put("email", email != null ? email : "");
+        map.put("phoneNumber", phoneNumber != null ? phoneNumber : "");
+        map.put("isAdmin", isAdmin != null ? isAdmin : false);
+
+        // Handle facility
         if (facility != null) {
             map.put("facilityId", facility.getId());
         } else {
             map.put("facilityId", null);
         }
-        map.put("eventsJoined", eventsJoined); // List of event IDs
-        map.put("eventsEnrolled", eventsEnrolled); // List of event IDs
+
+        // Handle lists - never put null for these fields
+        map.put("eventsJoined", eventsJoined != null ? new ArrayList<>(eventsJoined) : new ArrayList<>());
+        map.put("eventsEnrolled", eventsEnrolled != null ? new ArrayList<>(eventsEnrolled) : new ArrayList<>());
+
         return map;
-    }
-
-    /**
-     * Deserializes the eventsJoined field from Firestore.
-     *
-     * @param data The data to deserialize.
-     */
-    private void deserializeEventsJoined(Object data) {
-        if (data instanceof List<?>) {
-            List<?> eventIds = (List<?>) data;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    String eventId = (String) eventIdObj;
-                    this.eventsJoined.add(eventId);
-                }
-            }
-        }
-    }
-
-    /**
-     * Deserializes the eventsEnrolled field from Firestore.
-     *
-     * @param data The data to deserialize.
-     */
-    private void deserializeEventsEnrolled(Object data) {
-        if (data instanceof List<?>) {
-            List<?> eventIds = (List<?>) data;
-            for (Object eventIdObj : eventIds) {
-                if (eventIdObj instanceof String) {
-                    String eventId = (String) eventIdObj;
-                    this.eventsEnrolled.add(eventId);
-                }
-            }
-        }
     }
 
     // Getters and Setters
@@ -209,9 +185,16 @@ public class User implements DatabaseEntity {
     }
 
     public void addEventJoined(String eventId) {
+        // Log.d("User", "Adding event to joined list: " + eventId);
+        if (this.eventsJoined == null) {
+            this.eventsJoined = new ArrayList<>();
+        }
         if (!this.eventsJoined.contains(eventId)) {
             this.eventsJoined.add(eventId);
+            // Log.d("User", "Updated eventsJoined list: " + this.eventsJoined);
             setRemote();
+        } else {
+            // Log.d("User", "Event already in joined list");
         }
     }
 
@@ -263,18 +246,24 @@ public class User implements DatabaseEntity {
 
     @Override
     public void setRemote() {
+        if (!shouldUpdateRemote) {
+            Log.d("User", "Skipping remote update due to flag");
+            return;
+        }
+
         DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
-
-        // Create a map of fields to be saved or updated
         Map<String, Object> update = this.toMap();
+        Log.d("User", "Setting remote - User ID: " + id);
+        Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
+        Log.d("User", "Setting remote - Update Map: " + update);
 
-        // Save or update the facility in Firestore
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "User successfully saved or updated.");
+                    Log.d("User", "User " + id + " successfully updated");
+                    Log.d("User", "Events Joined (after update): " + eventsJoined);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error saving or updating user", e);
+                    Log.e("User", "Error updating user " + id, e);
                 });
     }
 
