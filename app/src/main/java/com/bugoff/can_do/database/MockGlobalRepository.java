@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Avoids making actual Firebase connections by storing data in memory.
  * This class is only meant to be used for testing purposes.
  */
-@VisibleForTesting
+@VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class MockGlobalRepository extends GlobalRepository {
     // In-memory storage for mock data
     private final Map<String, User> mockUsers = new ConcurrentHashMap<>();
