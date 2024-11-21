@@ -1,9 +1,8 @@
 package com.bugoff.can_do.database;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.notification.Notification;
@@ -19,9 +18,6 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * {@code GlobalRepository} is a global class that helps manage Firestore operations.
- */
 public class GlobalRepository {
     // Testing
     private static boolean isTestMode = false;
@@ -29,6 +25,8 @@ public class GlobalRepository {
     private static CollectionReference mockUsersCollection = null;
     private static CollectionReference mockFacilitiesCollection = null;
     private static CollectionReference mockEventsCollection = null;
+
+    private static User loggedInUser;
 
     // For testing only
     public static void setTestMode(boolean testMode) {
@@ -48,8 +46,7 @@ public class GlobalRepository {
     private static CollectionReference usersCollection;
     private static CollectionReference facilitiesCollection;
     private static CollectionReference eventsCollection;
-
-    private static User loggedInUser;
+    private FirebaseFirestore db;
 
     public static User getLoggedInUser() {
         return loggedInUser;
@@ -62,19 +59,23 @@ public class GlobalRepository {
     // Constructor to initialize Firestore
     public GlobalRepository() {
         if (!isTestMode) {
-            FirebaseFirestore db = FirestoreHelper.getInstance().getDb();
+            db = FirestoreHelper.getInstance().getDb();
             usersCollection = db.collection("users");
             facilitiesCollection = db.collection("facilities");
             eventsCollection = db.collection("events");
         } else {
-            usersCollection = mockDb.collection("users");
-            facilitiesCollection = mockDb.collection("facilities");
-            eventsCollection = mockDb.collection("events");
+            db = mockDb;
+            usersCollection = mockUsersCollection;
+            facilitiesCollection = mockFacilitiesCollection;
+            eventsCollection = mockEventsCollection;
         }
     }
 
     public static void addNotification(Notification notification) {
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+        if (isTestMode) {
+            // Handle mock notification add
+            return;
+        }
 
         Map<String, Object> notificationMap = new HashMap<>();
         notificationMap.put("id", notification.getId());
@@ -86,13 +87,11 @@ public class GlobalRepository {
 
         FirestoreHelper.getInstance().getDb().collection("notifications")
                 .document(notification.getId())
-                .set(notificationMap)
-                .addOnSuccessListener(aVoid -> taskCompletionSource.setResult(null))
-                .addOnFailureListener(taskCompletionSource::setException);
+                .set(notificationMap);
     }
 
     public FirebaseFirestore getDb() {
-        return FirestoreHelper.getInstance().getDb();
+        return db;
     }
 
     public static CollectionReference getUsersCollection() {
@@ -107,41 +106,42 @@ public class GlobalRepository {
         return isTestMode ? mockEventsCollection : eventsCollection;
     }
 
-    /**
-     * Adds a user to Firestore.
-     *
-     * @param user The User object to add.
-     * @return A Task representing the add operation.
-     */
+    @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Void> addUser(@NonNull User user) {
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+        if (isTestMode) {
+            return MockGlobalRepository.addUser(user);
+        }
 
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         Map<String, Object> userMap = user.toMap();
 
-        usersCollection.document(user.getId())
+        getUsersCollection().document(user.getId())
                 .set(userMap)
-                .addOnSuccessListener(aVoid -> taskCompletionSource.setResult(null))
-                .addOnFailureListener(taskCompletionSource::setException);
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("GlobalRepository", "User added successfully: " + user.getId());
+                    taskCompletionSource.setResult(null);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GlobalRepository", "Error adding user: " + user.getId(), e);
+                    taskCompletionSource.setException(e);
+                });
 
         return taskCompletionSource.getTask();
     }
 
-    /**
-     * Retrieves a User object from Firestore based on the Android ID.
-     *
-     * @param androidId The Android ID of the user to retrieve.
-     * @return A Task representing the retrieval operation.
-     */
+    @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<User> getUser(String androidId) {
-        TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
+        if (isTestMode) {
+            return MockGlobalRepository.getUser(androidId);
+        }
 
-        usersCollection.document(androidId)
+        TaskCompletionSource<User> taskCompletionSource = new TaskCompletionSource<>();
+        getUsersCollection().document(androidId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Use the updated User constructor that handles deserialization
                         User user = new User(documentSnapshot);
                         taskCompletionSource.setResult(user);
                     } else {
@@ -153,26 +153,21 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
-    /**
-     * Adds a facility to Firestore and associates it with the user (owner) by using a batch write.
-     * This ensures both the facility and the user's association with the facility are updated atomically.
-     *
-     * @param facility The Facility object to add.
-     * @return A Task representing the add operation.
-     */
+    @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Void> addFacility(@NonNull Facility facility) {
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+        if (isTestMode) {
+            return MockGlobalRepository.addFacility(facility);
+        }
 
-        // Prepare Facility data
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
         Map<String, Object> facilityMap = new HashMap<>();
         facilityMap.put("id", facility.getId());
         facilityMap.put("ownerId", facility.getOwner().getId());
 
-        DocumentReference facilityRef = facilitiesCollection.document(facility.getId());
-        DocumentReference userRef = usersCollection.document(facility.getOwner().getId());
+        DocumentReference facilityRef = getFacilitiesCollection().document(facility.getId());
+        DocumentReference userRef = getUsersCollection().document(facility.getOwner().getId());
 
-        // Prevent partial updates by using a batch write
         WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
         batch.set(facilityRef, facilityMap);
         batch.update(userRef, "facilityId", facility.getId());
@@ -184,65 +179,16 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
-    /**
-     * Adds an event to Firestore and associates it with a facility by updating the facility's event list.
-     * The operation is performed using a batch write to ensure atomicity.
-     *
-     * @param event The Event object to add.
-     * @return A Task representing the add operation.
-     */
-    @NonNull
-    public static Task<Void> addEvent(@NonNull Event event) {
-        // Create a TaskCompletionSource to handle the asynchronous task
-        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
-
-        // Serialize all Event fields into a Map using the toMap() method
-        Map<String, Object> eventMap = event.toMap();
-
-        // Get references to the Event document and the corresponding Facility document
-        DocumentReference eventRef = eventsCollection.document(event.getId());
-        DocumentReference facilityRef = facilitiesCollection.document(event.getFacility().getId());
-
-        // Create a Firestore batch to perform atomic writes
-        WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
-
-        // Set the Event document with the serialized data
-        batch.set(eventRef, eventMap);
-
-        // Update the Facility's "events" array to include the new Event ID
-        batch.update(facilityRef, "events", FieldValue.arrayUnion(event.getId()));
-
-        // Commit the batch
-        batch.commit()
-                .addOnSuccessListener(aVoid -> {
-                    // Log success and complete the task
-                    Log.d("GlobalRepository", "Event added successfully: " + event.getId());
-                    taskCompletionSource.setResult(null);
-                })
-                .addOnFailureListener(e -> {
-                    // Log the error and set the exception for the task
-                    Log.e("GlobalRepository", "Error adding Event: " + event.getId(), e);
-                    taskCompletionSource.setException(e);
-                });
-
-        // Return the Task to allow callers to attach listeners
-        return taskCompletionSource.getTask();
-    }
-
-    /**
-     * Retrieves an Event object from the database based on its ID.
-     *
-     * @param eventId The ID of the event to retrieve.
-     * @return A {@link Task} that represents the asynchronous operation of retrieving the event.
-     *         If the event is found, the task will be successful and the result will contain the Event object.
-     *         If the event is not found or an error occurs during retrieval, the task will fail with an exception.
-     * @throws NullPointerException If the provided eventId is null.
-     */
+    @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Event> getEvent(String eventId) {
+        if (isTestMode) {
+            return MockGlobalRepository.getEvent(eventId);
+        }
+
         TaskCompletionSource<Event> taskCompletionSource = new TaskCompletionSource<>();
 
-        eventsCollection.document(eventId)
+        getEventsCollection().document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -262,21 +208,19 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
-    /**
-     * Fetches a Facility from Firestore using the facilityId.
-     *
-     * @param facilityId The ID of the Facility to fetch.
-     * @return A Task representing the fetch operation, containing the Facility.
-     */
+    @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Facility> getFacility(String facilityId) {
+        if (isTestMode) {
+            return MockGlobalRepository.getFacility(facilityId);
+        }
+
         TaskCompletionSource<Facility> taskCompletionSource = new TaskCompletionSource<>();
 
-        facilitiesCollection.document(facilityId)
+        getFacilitiesCollection().document(facilityId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Initialize Facility using the DocumentSnapshot constructor
                         Facility facility = new Facility(documentSnapshot);
                         taskCompletionSource.setResult(facility);
                     } else {
@@ -286,5 +230,43 @@ public class GlobalRepository {
                 .addOnFailureListener(taskCompletionSource::setException);
 
         return taskCompletionSource.getTask();
+    }
+
+    @SuppressLint("RestrictedApi")
+    @NonNull
+    public static Task<Void> addEvent(@NonNull Event event) {
+        if (isTestMode) {
+            return MockGlobalRepository.addEvent(event);
+        }
+
+        TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+        Map<String, Object> eventMap = event.toMap();
+
+        DocumentReference eventRef = getEventsCollection().document(event.getId());
+        DocumentReference facilityRef = getFacilitiesCollection().document(event.getFacility().getId());
+
+        WriteBatch batch = FirestoreHelper.getInstance().getDb().batch();
+        batch.set(eventRef, eventMap);
+        batch.update(facilityRef, "events", FieldValue.arrayUnion(event.getId()));
+
+        batch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("GlobalRepository", "Event added successfully: " + event.getId());
+                    taskCompletionSource.setResult(null);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GlobalRepository", "Error adding Event: " + event.getId(), e);
+                    taskCompletionSource.setException(e);
+                });
+
+        return taskCompletionSource.getTask();
+    }
+
+    /**
+     * Checks if the repository is running in test mode.
+     * @return true if in test mode, false otherwise
+     */
+    public static boolean isInTestMode() {
+        return isTestMode;
     }
 }

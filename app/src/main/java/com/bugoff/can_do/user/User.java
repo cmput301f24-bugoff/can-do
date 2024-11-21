@@ -251,7 +251,18 @@ public class User implements DatabaseEntity {
             return;
         }
 
+        // Check if we're in test mode
+        if (GlobalRepository.isInTestMode()) {
+            Log.d("User", "Skipping remote update due to test mode");
+            return;
+        }
+
         DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
+        if (userRef == null) {
+            Log.e("User", "Cannot update remote: userRef is null");
+            return;
+        }
+
         Map<String, Object> update = this.toMap();
         Log.d("User", "Setting remote - User ID: " + id);
         Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
@@ -269,7 +280,17 @@ public class User implements DatabaseEntity {
 
     @Override
     public void attachListener() {
+        // Don't attach listeners in test mode
+        if (GlobalRepository.isInTestMode()) {
+            Log.d("User", "Skipping listener attachment in test mode");
+            return;
+        }
+
         DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
+        if (userRef == null) {
+            Log.e("User", "Cannot attach listener: userRef is null");
+            return;
+        }
 
         // Attach a listener to the User document
         listener = userRef.addSnapshotListener((documentSnapshot, e) -> {
