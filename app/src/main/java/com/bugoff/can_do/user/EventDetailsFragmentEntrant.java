@@ -157,7 +157,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
 
-    private void joinWaitingList(EventViewModel viewModel) {
+    public void joinWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {
             throw new IllegalStateException("User not logged in");
@@ -184,7 +184,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
                 });
     }
 
-    private void leaveWaitingList(EventViewModel viewModel) {
+    public void leaveWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {
             throw new IllegalStateException("User not logged in");
