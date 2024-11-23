@@ -86,7 +86,6 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # Cache Gradle dependencies to speed up builds
       - name: Cache Gradle Dependencies
         uses: actions/cache@v4
         with:
@@ -104,27 +103,36 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Set up Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3.2.2
         with:
           sdk-version: 35
           build-tools-version: 35.0.0
 
-      # Start Android Emulator
-      - name: Start Emulator
+      # Accept licenses and enable KVM
+      - name: Enable KVM and accept licenses
         run: |
-          echo "Starting Android Emulator"
-          adb start-server
-          $ANDROID_HOME/emulator/emulator -avd test -no-snapshot -no-window -no-audio -wipe-data &
-          adb wait-for-device
-          adb shell input keyevent 82
+          echo "y" | sdkmanager --licenses
+          sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+          sudo adduser $USER kvm
 
-      # Wait for Emulator to Boot
-      - name: Wait for Emulator
+      # Install system image
+      - name: Install Android system image
         run: |
-          adb wait-for-device
-          adb shell getprop init.svc.bootanim | grep -m 1 stopped
+          echo "Installing system image"
+          sdkmanager "system-images;android-35;google_apis;x86_64"
+          echo "y" | sdkmanager --licenses
+
+      # Create and start AVD
+      - name: Create and start AVD
+        run: |
+          echo "Creating AVD"
+          echo no | avdmanager create avd -n test_device -k "system-images;android-35;google_apis;x86_64" --force
+          echo "Starting Android Emulator"
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect &
+          echo "Waiting for emulator to start..."
+          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+          echo "Emulator started"
 
       # Run UI Tests
       - name: Run UI Tests
