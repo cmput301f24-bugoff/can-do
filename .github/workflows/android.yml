@@ -75,6 +75,61 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --tests "com.bugoff.can_do.*" --info --stacktrace
 
+  android-ui-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      # Cache Gradle dependencies to speed up builds
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Create google-services.json
+        run: |
+          echo "$GOOGLE_SERVICES_JSON" > "$GITHUB_WORKSPACE/app/google-services.json"
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Set up Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3.2.2
+        with:
+          sdk-version: 35
+          build-tools-version: 35.0.0
+
+      # Start Android Emulator
+      - name: Start Emulator
+        run: |
+          echo "Starting Android Emulator"
+          adb start-server
+          $ANDROID_HOME/emulator/emulator -avd test -no-snapshot -no-window -no-audio -wipe-data &
+          adb wait-for-device
+          adb shell input keyevent 82
+
+      # Wait for Emulator to Boot
+      - name: Wait for Emulator
+        run: |
+          adb wait-for-device
+          adb shell getprop init.svc.bootanim | grep -m 1 stopped
+
+      # Run UI Tests
+      - name: Run UI Tests
+        run: ./gradlew connectedAndroidTest
+
   generate-javadoc:
 
     runs-on: ubuntu-latest
