@@ -113,7 +113,7 @@ jobs:
       # Removed AVD Cache steps to ensure fresh emulator creation
 
       - name: Run UI Tests with Emulator
-        uses: wzieba/android-emulator-runner@v2
+        uses: wzieba/android-emulator-runner@v2.0.0
         with:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
