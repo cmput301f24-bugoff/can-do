@@ -110,11 +110,14 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Android Emulator Runner
+      - name: Run UI Tests with Emulator
         uses: ReactiveCircus/android-emulator-runner@v2.33.0
         with:
-          api-level: 35
+          api-level: 30
+          target: google_apis
+          arch: x86_64
           script: ./gradlew connectedCheck
+          disable-animations: true
 
   generate-javadoc:
 

@@ -97,7 +97,7 @@ jobs:
       - if: matrix.build-mode == 'manual'
         shell: bash
         run: |
-          ./gradlew build # Explicit command to build the project
+          ./gradlew build -x test  # Explicit command to build the project without running tests
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
