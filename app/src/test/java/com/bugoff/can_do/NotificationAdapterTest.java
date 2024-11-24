@@ -1,5 +1,7 @@
 package com.bugoff.can_do;
 
+import static org.junit.Assert.assertEquals;
+
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -8,12 +10,10 @@ import com.bugoff.can_do.notification.Notification;
 import com.bugoff.can_do.notification.NotificationAdapter;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class NotificationAdapterTest {
 

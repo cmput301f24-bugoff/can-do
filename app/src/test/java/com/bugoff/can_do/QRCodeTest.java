@@ -1,17 +1,13 @@
 package com.bugoff.can_do;
 
 
-import static com.google.common.base.Verify.verify;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.bugoff.can_do.database.MockGlobalRepository;
 import com.bugoff.can_do.event.Event;
@@ -21,15 +17,12 @@ import com.bugoff.can_do.user.User;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
 
-@RunWith(JUnit4.class)
 public class QRCodeTest {
 
     private MockGlobalRepository mockRepository;
