@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
-
     id("com.google.gms.google-services")
-
     id("org.jetbrains.dokka") version "2.0.0-Beta"
 }
 
@@ -42,13 +40,11 @@ android {
         animationsDisabled = true
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
 
-        // Configure the Android test orchestrator
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
 
-        // Make tests more stable in CI
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 }
@@ -57,10 +53,12 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation(libs.core)
-    testImplementation(libs.testng)
+    // testImplementation(libs.testng) # I think this is the correct decision
     testImplementation(libs.mockito.core)
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("org.mockito:mockito-core:3.6.28")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.vintage:junit-vintage-engine:5.8.2")
+    testImplementation("org.mockito:mockito-core:5.7.0")
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(libs.firebase.storage)
