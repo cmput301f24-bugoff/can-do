@@ -113,7 +113,7 @@ jobs:
       - name: Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.33.0
         with:
-          api-level: 35
+          api-level: 29
           script: ./gradlew connectedCheck
 
   generate-javadoc:
