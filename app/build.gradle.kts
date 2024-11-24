@@ -37,6 +37,20 @@ android {
     buildFeatures {
         dataBinding = true
     }
+
+    testOptions {
+        animationsDisabled = true
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+
+        // Configure the Android test orchestrator
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+
+        // Make tests more stable in CI
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
 }
 
 dependencies {
@@ -70,6 +84,11 @@ dependencies {
     androidTestImplementation("org.mockito:mockito-android:5.7.0")
     androidTestImplementation("org.mockito:mockito-core:5.7.0")
     androidTestImplementation("com.google.android.gms:play-services-tasks:18.0.2")
+
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.2.0")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test:orchestrator:1.4.2")
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
 }
 
 tasks.withType<Test> {
