@@ -80,9 +80,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [35]
+        api-level: [33] # Changed from 35 to 33
         target: [google_apis]
-        arch: [x86_64]
+        arch: [x86] # Changed from x86_64 to x86
     steps:
       - uses: actions/checkout@v4
 
@@ -110,36 +110,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: AVD Cache
-        uses: actions/cache@v4
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}-${{ matrix.target }}-${{ matrix.arch }}
-
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: ${{ matrix.arch }}
-          force-avd-creation: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -verbose
-          disable-animations: true
-          script: echo "Generated AVD snapshot for caching."
+      # Removed AVD Cache steps to ensure fresh emulator creation
 
       - name: Run UI Tests with Emulator
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: wzieba/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: ${{ matrix.arch }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -verbose
           disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -verbose
           script: |
             ./gradlew connectedAndroidTest
 
