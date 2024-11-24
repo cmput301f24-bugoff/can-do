@@ -109,30 +109,44 @@ jobs:
           sdk-version: 35
           build-tools-version: 35.0.0
 
-      # Accept licenses and enable KVM
-      - name: Enable KVM and accept licenses
+      # Accept licenses before installing anything
+      - name: Accept SDK Licenses and Install Emulator
         run: |
-          echo "y" | sdkmanager --licenses
-          sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
-          sudo adduser $USER kvm
+          yes | sdkmanager --licenses
+          sdkmanager --install "emulator"
+          yes | sdkmanager --install "platform-tools"
+          yes | sdkmanager --install "platforms;android-35"
+          yes | sdkmanager --install "system-images;android-35;google_apis;x86_64"
 
-      # Install system image
-      - name: Install Android system image
+      # Create AVD and verify it exists
+      - name: Create and verify AVD
         run: |
-          echo "Installing system image"
-          sdkmanager "system-images;android-35;google_apis;x86_64"
-          echo "y" | sdkmanager --licenses
+          echo "Creating AVD..."
+          echo "no" | avdmanager create avd \
+            --name "test_device" \
+            --package "system-images;android-35;google_apis;x86_64" \
+            --device "pixel_6"
+          echo "Verifying AVD..."
+          avdmanager list avd
+          echo "Starting emulator..."
+          nohup $ANDROID_HOME/emulator/emulator \
+            -avd test_device \
+            -no-audio \
+            -no-window \
+            -no-boot-anim \
+            -gpu swiftshader_indirect \
+            -memory 2048 \
+            -accel on &
 
-      # Create and start AVD
-      - name: Create and start AVD
+      # Wait for emulator to be ready
+      - name: Wait for Emulator
+        timeout-minutes: 10
         run: |
-          echo "Creating AVD"
-          echo no | avdmanager create avd -n test_device -k "system-images;android-35;google_apis;x86_64" --force
-          echo "Starting Android Emulator"
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect &
           echo "Waiting for emulator to start..."
-          adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell \
+            'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 3; done; input keyevent 82'
           echo "Emulator started"
+          adb devices
 
       # Run UI Tests
       - name: Run UI Tests
