@@ -1,5 +1,6 @@
 package com.bugoff.can_do.organizer;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,13 +23,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventWaitlistFragment;
 import com.bugoff.can_do.notification.SendNotificationFragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -107,10 +111,37 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         ImageButton mapIconButton = view.findViewById(R.id.map_icon);
         ImageButton shareIconButton = view.findViewById(R.id.share_icon);
         ImageButton editGraphButton = view.findViewById(R.id.edit_graph);
+        ImageButton deleteQrCodeButton = view.findViewById(R.id.delete_qr_code_button);
+        ImageButton deleteFacilityButton = view.findViewById(R.id.delete_facility_button);
         Button viewWatchListButton = view.findViewById(R.id.view_watch_list);
         Button viewSelectedButton = view.findViewById(R.id.view_selected_list);
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
 
+        // Check if we're in admin view
+        boolean isFromAdmin = getActivity() instanceof AdminActivity;
+
+        // Set visibility based on admin view
+        if (isFromAdmin) {
+            // Show admin-only delete buttons
+            deleteQrCodeButton.setVisibility(View.VISIBLE);
+            deleteFacilityButton.setVisibility(View.VISIBLE);
+
+            // Hide organizer-specific buttons
+            viewWatchListButton.setVisibility(View.GONE);
+            viewSelectedButton.setVisibility(View.GONE);
+            sendNotificationButton.setVisibility(View.GONE);
+        } else {
+            // Hide admin-only delete buttons
+            deleteQrCodeButton.setVisibility(View.GONE);
+            deleteFacilityButton.setVisibility(View.GONE);
+
+            // Show organizer-specific buttons
+            viewWatchListButton.setVisibility(View.VISIBLE);
+            viewSelectedButton.setVisibility(View.VISIBLE);
+            sendNotificationButton.setVisibility(View.VISIBLE);
+        }
+
+        // Setup click listeners
         backArrowButton.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         mapIconButton.setOnClickListener(v -> openMapToLocation());
         shareIconButton.setOnClickListener(v -> shareEventDetails());
@@ -126,6 +157,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             fragment.setArguments(args);
             showFragment(fragment, "Send Notification clicked");
         });
+
+        deleteQrCodeButton.setOnClickListener(v -> confirmAndDeleteQrHash());
+        deleteFacilityButton.setOnClickListener(v -> confirmAndDeleteFacilityEvents());
     }
 
     private void fetchEventDetails(View rootView) {
@@ -210,6 +244,115 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         }
     }
 
+    private void confirmAndDeleteQrHash() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete QR Code")
+                .setMessage("Are you sure you want to delete the QR code for this event?")
+                .setPositiveButton("Delete", (dialog, which) -> deleteQrHash())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void deleteQrHash() {
+        if (eventId == null) return;
+
+        db.collection("events").document(eventId)
+                .update("qrCodeHash", null)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(requireContext(), "QR code deleted successfully", Toast.LENGTH_SHORT).show();
+                    // Refresh QR code view
+                    if (qrCodeImageView != null) {
+                        qrCodeImageView.setImageDrawable(null);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Failed to delete QR code: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error deleting QR code", e);
+                });
+    }
+
+    private void confirmAndDeleteFacilityEvents() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Facility")
+                .setMessage("Are you sure you want to delete this facility and ALL its associated events? This action cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> deleteFacilityEvents())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void deleteFacilityEvents() {
+        if (eventId == null) return;
+
+        // First, get the facility ID and owner ID of the current event
+        db.collection("events").document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String facilityId = documentSnapshot.getString("facilityId");
+                    if (facilityId == null) {
+                        Toast.makeText(requireContext(), "Facility ID not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Get the facility document to find its owner
+                    db.collection("facilities").document(facilityId)
+                            .get()
+                            .addOnSuccessListener(facilityDoc -> {
+                                String ownerId = facilityDoc.getString("ownerId");
+
+                                // Query all events with this facility ID
+                                db.collection("events")
+                                        .whereEqualTo("facilityId", facilityId)
+                                        .get()
+                                        .addOnSuccessListener(querySnapshot -> {
+                                            // Create a batch for all operations
+                                            WriteBatch batch = db.batch();
+
+                                            // Delete all events
+                                            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                                batch.delete(db.collection("events").document(doc.getId()));
+                                            }
+
+                                            // Delete the facility document
+                                            batch.delete(db.collection("facilities").document(facilityId));
+
+                                            // Execute the batch
+                                            batch.commit()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Toast.makeText(requireContext(),
+                                                                "Facility and all associated events deleted successfully",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        // Return to previous screen
+                                                        requireActivity().onBackPressed();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        Toast.makeText(requireContext(),
+                                                                "Failed to delete facility data: " + e.getMessage(),
+                                                                Toast.LENGTH_SHORT).show();
+                                                        Log.e(TAG, "Error in batch deletion", e);
+                                                    });
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(requireContext(),
+                                                    "Failed to query facility events: " + e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                            Log.e(TAG, "Error querying facility events", e);
+                                        });
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(requireContext(),
+                                        "Failed to get facility details: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Error getting facility details", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(),
+                            "Failed to get event details: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error getting event details", e);
+                });
+    }
 
     private void openMapToLocation() {
         if (eventLocation != null && !eventLocation.isEmpty()) {

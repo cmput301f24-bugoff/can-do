@@ -184,8 +184,8 @@ public class EventsFragment extends Fragment {
         boolean isFromAdmin = getActivity() instanceof AdminActivity;
 
         if (isFromAdmin) {
-            // If viewing from admin interface, always show entrant view
-            Fragment eventDetailsFragment = EventDetailsFragmentEntrant.newInstance(event.getId());
+            // If viewing from admin interface, always show organizer view
+            Fragment eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event.getId());
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, eventDetailsFragment)
                     .addToBackStack(null)
