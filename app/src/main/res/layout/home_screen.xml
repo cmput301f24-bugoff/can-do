@@ -85,16 +85,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/hs_top_layout" />
 
-    <!-- create content.xml for ListView to show event image & details -->
-    <ListView
+    <!-- create content.xml for RecyclerView to show event details -->
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hs_events_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_spacer"
-        app:layout_constraintTop_toBottomOf="@id/hs_title" />
+        app:layout_constraintTop_toBottomOf="@id/hs_title"  />
 
     <!-- displays by default, but invisible when list is not empty -->
     <TextView
