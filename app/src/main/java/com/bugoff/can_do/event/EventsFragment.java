@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.MainActivity;
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.organizer.CreateEventFragment;
 import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
@@ -64,11 +65,15 @@ public class EventsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        boolean isAdmin = false;
+        // Set isAdmin as class field
+        this.isAdmin = false;
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser != null) {
-            isAdmin = currentUser.getIsAdmin() != null ? currentUser.getIsAdmin() : false;
+            this.isAdmin = currentUser.getIsAdmin() != null ? currentUser.getIsAdmin() : false;
         }
+
+        // Check if we're inside AdminActivity
+        boolean isFromAdmin = getActivity() != null && getActivity() instanceof AdminActivity;
 
         // Get the repository from the activity if we're testing
         GlobalRepository repository = null;
@@ -81,9 +86,9 @@ public class EventsFragment extends Fragment {
         // Create the ViewModel using the appropriate factory
         EventsListViewModelFactory factory;
         if (repository != null) {
-            factory = new EventsListViewModelFactory(repository, isAdmin);
+            factory = new EventsListViewModelFactory(repository, this.isAdmin, isFromAdmin);
         } else {
-            factory = new EventsListViewModelFactory(isAdmin);
+            factory = new EventsListViewModelFactory(this.isAdmin, isFromAdmin);
         }
 
         eventsListViewModel = new ViewModelProvider(this, factory).get(EventsListViewModel.class);
@@ -103,13 +108,17 @@ public class EventsFragment extends Fragment {
             Log.e("EventsFragment", "fragment_container not found in activity layout.");
         }
 
-        // Set up RecyclerView
+        // Check if we're inside AdminActivity
+        boolean isFromAdmin = getActivity() != null && getActivity() instanceof AdminActivity;
+
+        // Set up RecyclerView with both isAdmin and isFromAdmin flags
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        eventAdapter = new EventAdapter(new ArrayList<>(), isAdmin, this::onDeleteEventClick, this::onEventClicked);
+        eventAdapter = new EventAdapter(new ArrayList<>(), this.isAdmin, isFromAdmin,
+                this::onDeleteEventClick, this::onEventClicked);
         recyclerViewEvents.setAdapter(eventAdapter);
 
-        // Initialize ViewModel with isAdmin flag
-        EventsListViewModelFactory factory = new EventsListViewModelFactory(isAdmin);
+        // Initialize ViewModel with isAdmin and isFromAdmin flags
+        EventsListViewModelFactory factory = new EventsListViewModelFactory(this.isAdmin, isFromAdmin);
         eventsListViewModel = new ViewModelProvider(this, factory).get(EventsListViewModel.class);
 
         // Observe LiveData for events list
