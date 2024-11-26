@@ -355,18 +355,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     }
 
     private void openMapToLocation() {
-        if (eventLocation != null && !eventLocation.isEmpty()) {
-            Uri geoLocation = Uri.parse("geo:0,0?q=" + Uri.encode(eventLocation));
-            Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
-            intent.setPackage("com.google.android.apps.maps");
-            if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
-                startActivity(intent);
-            } else {
-                Toast.makeText(requireContext(), "No map application found", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(requireContext(), "Event location not available", Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(requireContext(), WaitingListMapActivity.class);
+        intent.putExtra("EVENT_ID", eventId);
+        startActivity(intent);
     }
 
     private void shareEventDetails() {

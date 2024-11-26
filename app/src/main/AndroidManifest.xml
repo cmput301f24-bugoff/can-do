@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="false"
@@ -40,5 +42,9 @@
 
         <!-- Add your NotificationSettingsActivity here -->
         <activity android:name=".notification.NotificationSettingsActivity" />
+        <activity android:name=".organizer.WaitingListMapActivity" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDxJDwr2BysYLwQTiXl5GBBMuxiNp5peB4" />
     </application>
 </manifest>
