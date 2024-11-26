@@ -13,7 +13,10 @@ import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.organizer.OrganizerMain;
+import com.bugoff.can_do.user.User;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,21 +41,34 @@ public class CreateEventFragmentTest {
 
     @Before
     public void setUp() {
-        // Initialize Intents before each test
         Intents.init();
-        // Launch the OrganizerMain activity
+
+        // Simulate authentication by creating a test user
+        String testUserId = "testUserId";
+        User testUser = new User(testUserId);
+
+        // Create a test facility and associate it with the test user
+        Facility testFacility = new Facility(testUser);
+        testUser.setFacility(testFacility);
+
+        // Set the test user as the logged-in user in GlobalRepository
+        GlobalRepository.setLoggedInUser(testUser);
+
+        // Proceed to launch the activity
         scenario = ActivityScenario.launch(OrganizerMain.class);
     }
 
+
     @After
     public void tearDown() {
-        // Release Intents after each test
         Intents.release();
-        // Close the activity scenario
         if (scenario != null) {
             scenario.close();
         }
+        // Reset GlobalRepository
+        GlobalRepository.setLoggedInUser(null);
     }
+
 
     @Test
     public void testEventCreation() {
@@ -139,7 +155,7 @@ public class CreateEventFragmentTest {
 
         // Set Max Number of Participants
         onView(withId(R.id.editTextMaxNumParticipants))
-                .perform(typeText("50"), closeSoftKeyboard());
+                .perform(typeText("10"), closeSoftKeyboard());
 
         // Check Geolocation Required
         onView(withId(R.id.checkBoxGeolocation)).perform(click());
@@ -147,10 +163,11 @@ public class CreateEventFragmentTest {
         // Click Create Event Button
         onView(withId(R.id.buttonCreateEvent)).perform(click());
 
-        // Wait for Toast to appear
+        // Wait for the Toast to appear and verify it
         onView(withText("Event created successfully!"))
                 .inRoot(withDecorView(not(is(getCurrentActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
+
     }
 
     // Helper method to get the current activity

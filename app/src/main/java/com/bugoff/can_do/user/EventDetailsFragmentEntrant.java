@@ -163,23 +163,44 @@ public class EventDetailsFragmentEntrant extends Fragment {
             throw new IllegalStateException("User not logged in");
         }
 
-        // Log.d("EventDetails", "Joining waiting list for event: " + eventId);
-        // Log.d("EventDetails", "Current user events joined before: " + currentUser.getEventsJoined());
+        // Check if the event requires geolocation
+        db.collection("events").document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Boolean requiresGeolocation = documentSnapshot.getBoolean("geolocationRequired");
+                        if (Boolean.TRUE.equals(requiresGeolocation)) {
+                            // Display warning dialog if geolocation is required
+                            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                    .setTitle("Geolocation Required")
+                                    .setMessage("This event requires geolocation tracking. Do you want to proceed?")
+                                    .setPositiveButton("Yes", (dialog, which) -> proceedWithJoining(viewModel, currentUser))
+                                    .setNegativeButton("No", null)
+                                    .show();
+                        } else {
+                            // Proceed directly if geolocation is not required
+                            proceedWithJoining(viewModel, currentUser);
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Failed to check event requirements", Toast.LENGTH_SHORT).show();
+                });
+    }
 
+    private void proceedWithJoining(EventViewModel viewModel, User currentUser) {
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
 
-        // Log.d("EventDetails", "Current user events joined after: " + currentUser.getEventsJoined());
-
-        // Ensure the update is pushed to Firestore
+        // Update Firestore with the user's joined events
         GlobalRepository.getUsersCollection().document(currentUser.getId())
                 .update("eventsJoined", currentUser.getEventsJoined())
                 .addOnSuccessListener(aVoid -> {
-                    // Log.d("EventDetails", "Successfully updated user's eventsJoined in Firestore");
                     Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    // Log.e("EventDetails", "Failed to update user's eventsJoined in Firestore", e);
                     Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
                 });
     }

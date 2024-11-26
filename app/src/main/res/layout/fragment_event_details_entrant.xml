@@ -87,14 +87,6 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop" />
 
-                <ImageButton
-                    android:id="@+id/edit_graph"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/edit_24px"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
-                    android:background="@null" />
             </FrameLayout>
 
             <!-- Date and Location -->
