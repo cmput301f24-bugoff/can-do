@@ -366,6 +366,15 @@ $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/generateAvatar/#java
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/loadUserData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/load-user-data.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/save-user-data.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity///PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/index.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/WaitingListMapActivity/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/-waiting-list-map-activity.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/fetchWaitingListAndPlotMarkers/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/fetch-waiting-list-and-plot-markers.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-create.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onDestroy/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-destroy.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onLowMemory/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-low-memory.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onMapReady/#GoogleMap/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-map-ready.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onPause/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-pause.html
+$dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity/onResume/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/on-resume.html
 $dokka.location:com.bugoff.can_do.user////PointingToDeclaration/app/com.bugoff.can_do.user/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment///PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/BrowseProfilesFragment/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/-browse-profiles-fragment.html
