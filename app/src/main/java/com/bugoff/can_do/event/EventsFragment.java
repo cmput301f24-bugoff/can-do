@@ -23,6 +23,7 @@ import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.organizer.CreateEventFragment;
 import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
 import com.bugoff.can_do.organizer.OrganizerMain;
+import com.bugoff.can_do.user.EventDetailsFragmentEntrant;
 import com.bugoff.can_do.user.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -179,9 +180,31 @@ public class EventsFragment extends Fragment {
      * @param event The event clicked.
      */
     private void onEventClicked(Event event) {
-        EventDetailsFragmentOrganizer eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event.getId());
+        // Check if we're in admin interface
+        boolean isFromAdmin = getActivity() instanceof AdminActivity;
 
-        // Use getParentFragmentManager() instead of activity's support fragment manager
+        if (isFromAdmin) {
+            // If viewing from admin interface, always show entrant view
+            Fragment eventDetailsFragment = EventDetailsFragmentEntrant.newInstance(event.getId());
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, eventDetailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+            return;
+        }
+
+        // Otherwise, check ownership for regular interface
+        User currentUser = GlobalRepository.getLoggedInUser();
+        boolean isOwner = false;
+
+        if (currentUser != null && currentUser.getFacility() != null && event.getFacility() != null) {
+            isOwner = currentUser.getFacility().getId().equals(event.getFacility().getId());
+        }
+
+        Fragment eventDetailsFragment = isOwner ?
+                EventDetailsFragmentOrganizer.newInstance(event.getId()) :
+                EventDetailsFragmentEntrant.newInstance(event.getId());
+
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, eventDetailsFragment)
                 .addToBackStack(null)
