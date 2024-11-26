@@ -4,7 +4,6 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +50,7 @@ public class HomeActivity extends Fragment {
         arrowDown = view.findViewById(R.id.arrow_down);
         eventsListView = view.findViewById(R.id.hs_events_list);
 
-        eventsAdapter = new EventAdapter(new ArrayList<>(), false, null);
+        eventsAdapter = new EventAdapter(new ArrayList<>(), false, null, null);
 //        eventsAdapter.setOnItemClickListener(this);
         eventsListView.setAdapter(eventsAdapter);
         eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));

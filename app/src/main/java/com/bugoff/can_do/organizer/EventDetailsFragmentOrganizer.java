@@ -20,19 +20,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventSelectedFragment;
-import com.bugoff.can_do.event.EventViewModel;
-import com.bugoff.can_do.event.EventViewModelFactory;
 import com.bugoff.can_do.event.EventWaitlistFragment;
 import com.bugoff.can_do.notification.SendNotificationFragment;
-import com.bugoff.can_do.user.User;
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -87,27 +82,40 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         eventImageView = view.findViewById(R.id.event_image);
         qrCodeImageView = view.findViewById(R.id.idIVQrcode);
 
+        View progressBar = view.findViewById(R.id.progress_bar);
+        View mainContent = view.findViewById(R.id.main_content);
+
+        // Show loading state initially
+        progressBar.setVisibility(View.VISIBLE);
+        mainContent.setVisibility(View.GONE);
+
+        // Set up buttons
+        setupButtons(view);
+
+        // Now fetch the event details
+        if (eventId != null) {
+            fetchEventDetails(view);
+        } else {
+            handleError(view, "No event ID provided");
+        }
+
+        return view;
+    }
+
+    private void setupButtons(View view) {
         ImageButton backArrowButton = view.findViewById(R.id.back_arrow);
         ImageButton mapIconButton = view.findViewById(R.id.map_icon);
         ImageButton shareIconButton = view.findViewById(R.id.share_icon);
         ImageButton editGraphButton = view.findViewById(R.id.edit_graph);
-
         Button viewWatchListButton = view.findViewById(R.id.view_watch_list);
         Button viewSelectedButton = view.findViewById(R.id.view_selected_list);
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
 
-        View progressBar = view.findViewById(R.id.progress_bar);
-        View mainContent =view.findViewById(R.id.main_content);
-
-        // Set click listeners
         backArrowButton.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
-
         mapIconButton.setOnClickListener(v -> openMapToLocation());
         shareIconButton.setOnClickListener(v -> shareEventDetails());
-
-        EventViewModel viewModel = new ViewModelProvider(this, new EventViewModelFactory(eventId)).get(EventViewModel.class);
-
         editGraphButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit Graph clicked", Toast.LENGTH_SHORT).show());
+
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
 
@@ -116,50 +124,28 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Bundle args = new Bundle();
             args.putString("eventId", eventId);
             fragment.setArguments(args);
-
             showFragment(fragment, "Send Notification clicked");
         });
-
-
-
-
-
-        progressBar.setVisibility(View.VISIBLE);
-        mainContent.setVisibility(View.INVISIBLE);
-
-        fetchEventDetails(eventId);
-
-        return view;
     }
 
-
-    private void fetchEventDetails(String eventId) {
+    private void fetchEventDetails(View rootView) {
+        View progressBar = rootView.findViewById(R.id.progress_bar);
+        View mainContent = rootView.findViewById(R.id.main_content);
 
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Fetch event details
+                        // Get all the basic event details first
                         eventName = documentSnapshot.getString("name");
                         eventDescription = documentSnapshot.getString("description");
-                        Log.d(TAG, "fetchEventDetails: " + documentSnapshot.getString("facilityId"));
-                        GlobalRepository.getFacility(documentSnapshot.getString("facilityId")).addOnSuccessListener(facility -> {
-                            eventLocation = facility.getAddress();
-                            Log.d(TAG, "fetchEventDetails: " + eventLocation);
-                            eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
-
-                            checkLoadingComplete();
-
-                        });
                         Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
-                        String imageUrl = documentSnapshot.getString("imageUrl"); // Get imageUrl
+                        String imageUrl = documentSnapshot.getString("imageUrl");
                         String qrCodeText = documentSnapshot.getString("qrCodeHash");
-                        generateQRCode(qrCodeText);
 
-                        // Update TextViews with event details
+                        // Update UI with the data we have
                         eventNameTextView.setText(eventName != null ? eventName : "N/A");
                         eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
-
 
                         if (eventDateTimestamp != null) {
                             Date eventDate = eventDateTimestamp.toDate();
@@ -170,31 +156,55 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                             eventDateTextView.setText("Date: N/A");
                         }
 
-                        // Load the image using Glide
-                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                        // Handle image
+                        if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.equals("null")) {
+                            eventImageView.setVisibility(View.VISIBLE);
                             Glide.with(this)
                                     .load(imageUrl)
+                                    .error(R.drawable.ic_launcher_background)
                                     .into(eventImageView);
+                        } else {
+                            eventImageView.setVisibility(View.GONE);
                         }
 
-                        checkLoadingComplete();
+                        // Generate QR code if we have the hash
+                        if (qrCodeText != null) {
+                            generateQRCode(qrCodeText);
+                        }
 
+                        // Now get the facility details
+                        String facilityId = documentSnapshot.getString("facilityId");
+                        if (facilityId != null) {
+                            GlobalRepository.getFacility(facilityId)
+                                    .addOnSuccessListener(facility -> {
+                                        if (facility != null) {
+                                            eventLocation = facility.getAddress();
+                                            eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
 
+                                            // Now that we have everything, show the content
+                                            progressBar.setVisibility(View.GONE);
+                                            mainContent.setVisibility(View.VISIBLE);
+                                        } else {
+                                            handleError(rootView, "Facility not found");
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> handleError(rootView, "Failed to load facility details"));
+                        } else {
+                            handleError(rootView, "No facility ID found for event");
+                        }
                     } else {
-                        Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                        handleError(rootView, "Event not found");
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to load event details", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
     }
 
-
-    private void checkLoadingComplete() {
-        if (eventLocation != null && !eventNameTextView.getText().toString().equals("N/A")) {
-            View progressBar = requireView().findViewById(R.id.progress_bar);
-            View mainContent = requireView().findViewById(R.id.main_content);
-
+    private void handleError(View rootView, String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            // Hide loading and show error state or empty content
+            View progressBar = rootView.findViewById(R.id.progress_bar);
+            View mainContent = rootView.findViewById(R.id.main_content);
             progressBar.setVisibility(View.GONE);
             mainContent.setVisibility(View.VISIBLE);
         }
