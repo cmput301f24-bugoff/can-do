@@ -17,13 +17,13 @@ public class EventsListViewModel extends ViewModel {
     private static final String TAG = "EventsListViewModel";
     private final GlobalRepository repository;
     private final boolean isAdmin;
-    private final boolean isFromAdmin; // New flag to track if we're coming from AdminActivity
+    private final boolean isFromAdmin;
     private final MutableLiveData<List<Event>> eventsList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> statusMessage = new MutableLiveData<>();
     private ListenerRegistration eventListener;
 
-    /* package */ EventsListViewModel(GlobalRepository repository, boolean isAdmin, boolean isFromAdmin) {
+    EventsListViewModel(GlobalRepository repository, boolean isAdmin, boolean isFromAdmin) {
         this.repository = repository;
         this.isAdmin = isAdmin;
         this.isFromAdmin = isFromAdmin;
