@@ -384,6 +384,7 @@ $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/leaveWaitingL
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/newInstance/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/new-instance.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/on-create-view.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/openMapToLocation/#/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/open-map-to-location.html
+$dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/proceedWithJoining/#com.bugoff.can_do.event.EventViewModel#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/proceed-with-joining.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/shareEventDetails/#/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/share-event-details.html
 $dokka.location:com.bugoff.can_do.user/HandleQRScan///PointingToDeclaration/app/com.bugoff.can_do.user/-handle-q-r-scan/index.html
 $dokka.location:com.bugoff.can_do.user/HandleQRScan/HandleQRScan/#/PointingToDeclaration/app/com.bugoff.can_do.user/-handle-q-r-scan/-handle-q-r-scan.html
