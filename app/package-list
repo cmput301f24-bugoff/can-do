@@ -454,6 +454,7 @@ $dokka.location:com.bugoff.can_do/EntrantStatus/valueOf/#java.lang.String/Pointi
 $dokka.location:com.bugoff.can_do/EntrantStatus/values/#/PointingToDeclaration/app/com.bugoff.can_do/-entrant-status/values.html
 $dokka.location:com.bugoff.can_do/HomeActivity///PointingToDeclaration/app/com.bugoff.can_do/-home-activity/index.html
 $dokka.location:com.bugoff.can_do/HomeActivity/HomeActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/-home-activity.html
+$dokka.location:com.bugoff.can_do/HomeActivity/fetchEventDetails/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/fetch-event-details.html
 $dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
