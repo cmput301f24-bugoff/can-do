@@ -24,6 +24,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private static List<Event> eventList;
     private boolean isAdmin;
+    private final boolean isFromAdmin;
     private OnDeleteClickListener deleteClickListener;
     private OnItemClickListener itemClickListener;
 
@@ -48,13 +49,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * Constructs a new EventAdapter with a list of events and a click listener.
      *
      * @param eventList The list of events to display.
+     * @param isAdmin Whether the current user is an admin
+     * @param isFromAdmin Whether we're viewing from the admin interface
+     * @param deleteClickListener Listener for delete button clicks
+     * @param itemClickListener Listener for item clicks
      */
-    public EventAdapter(List<Event> eventList, boolean isAdmin, OnDeleteClickListener deleteClickListener, OnItemClickListener itemClickListener) {
+    public EventAdapter(List<Event> eventList, boolean isAdmin, boolean isFromAdmin,
+                        OnDeleteClickListener deleteClickListener, OnItemClickListener itemClickListener) {
         this.eventList = eventList;
         this.isAdmin = isAdmin;
+        this.isFromAdmin = isFromAdmin;
         this.deleteClickListener = deleteClickListener;
         this.itemClickListener = itemClickListener;
     }
+
 
     /**
      * Updates the event list and refreshes the RecyclerView.
@@ -63,11 +71,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      */
     public void setEventList(List<Event> eventList) {
         this.eventList = eventList;
-        notifyDataSetChanged();
-    }
-
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
         notifyDataSetChanged();
     }
 
@@ -94,7 +97,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.bind(event, isAdmin, deleteClickListener, itemClickListener);
+        // Pass both isAdmin and isFromAdmin to determine delete button visibility
+        holder.bind(event, isAdmin, isFromAdmin, deleteClickListener, itemClickListener);
     }
 
     /**
@@ -139,10 +143,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         /**
          * Binds event data to the views, including formatting dates and displaying participant counts.
          *
-         * @param event    The event data to display.
-         * @param listener The listener for handling click events on the item view.
+         * @param event The event data to display.
+         * @param isAdmin Whether the current user is an admin
+         * @param isFromAdmin Whether we're viewing from the admin interface
+         * @param deleteListener The listener for handling delete button clicks
+         * @param itemClickListener The listener for handling item clicks
          */
-        public void bind(final Event event, boolean isAdmin, final OnDeleteClickListener listener, final OnItemClickListener itemClickListener) {
+        public void bind(final Event event, boolean isAdmin, boolean isFromAdmin,
+                         final OnDeleteClickListener deleteListener, final OnItemClickListener itemClickListener) {
             textViewName.setText(event.getName());
             textViewDescription.setText(event.getDescription());
 
@@ -164,17 +172,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             String waitingList = "Waiting List: " + event.getWaitingListEntrants().size();
             textViewWaitingList.setText(waitingList);
 
-            // Set delete button visibility
-            if (isAdmin) {
-                buttonDelete.setVisibility(View.VISIBLE);
-            } else {
-                buttonDelete.setVisibility(View.GONE);
-            }
+            // Set delete button visibility - only show if both isAdmin and isFromAdmin are true
+            buttonDelete.setVisibility(isAdmin && isFromAdmin ? View.VISIBLE : View.GONE);
 
             // Set click listener for delete button
             buttonDelete.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteClick(event);
+                if (deleteListener != null) {
+                    deleteListener.onDeleteClick(event);
                 }
             });
 

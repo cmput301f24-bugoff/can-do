@@ -50,7 +50,7 @@ public class HomeActivity extends Fragment {
         arrowDown = view.findViewById(R.id.arrow_down);
         eventsListView = view.findViewById(R.id.hs_events_list);
 
-        eventsAdapter = new EventAdapter(new ArrayList<>(), false, null, null);
+        eventsAdapter = new EventAdapter(new ArrayList<>(), false, false, null, null);
 //        eventsAdapter.setOnItemClickListener(this);
         eventsListView.setAdapter(eventsAdapter);
         eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));
