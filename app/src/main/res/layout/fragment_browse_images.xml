@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/fragment_browse_images.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="16dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Title -->
     <TextView
-        android:id="@+id/text_browse_images"
+        android:id="@+id/empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Browse Images"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_centerInParent="true"
+        android:text="No images found"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
-    <!-- RecyclerView for Images -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_images"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:clipToPadding="false" />
 
-</LinearLayout>
+</RelativeLayout>
