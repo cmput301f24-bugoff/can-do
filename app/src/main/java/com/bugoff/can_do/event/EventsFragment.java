@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -106,7 +105,7 @@ public class EventsFragment extends Fragment {
 
         // Set up RecyclerView
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        eventAdapter = new EventAdapter(new ArrayList<>(), isAdmin, this::onDeleteEventClick);
+        eventAdapter = new EventAdapter(new ArrayList<>(), isAdmin, this::onDeleteEventClick, this::onEventClicked);
         recyclerViewEvents.setAdapter(eventAdapter);
 
         // Initialize ViewModel with isAdmin flag
@@ -173,14 +172,10 @@ public class EventsFragment extends Fragment {
     private void onEventClicked(Event event) {
         EventDetailsFragmentOrganizer eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event.getId());
 
-        // Assuming getContext() returns an activity that has a FragmentManager
-        AppCompatActivity activity = (AppCompatActivity) getContext();
-        if (activity != null) {
-            activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, eventDetailsFragment) // Replace with your fragment container ID
-                    .addToBackStack(null) // Optionally add to back stack
-                    .commit();
-        }
+        // Use getParentFragmentManager() instead of activity's support fragment manager
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, eventDetailsFragment)
+                .addToBackStack(null)
+                .commit();
     }
-
 }

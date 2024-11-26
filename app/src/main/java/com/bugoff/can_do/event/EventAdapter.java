@@ -1,6 +1,5 @@
 package com.bugoff.can_do.event;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +7,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
-//import com.bugoff.can_do.organizer.EventDetailsActivityOrganizer;
-import com.bugoff.can_do.organizer.EventDetailsFragmentOrganizer;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -30,6 +25,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private static List<Event> eventList;
     private boolean isAdmin;
     private OnDeleteClickListener deleteClickListener;
+    private OnItemClickListener itemClickListener;
 
     // Interface for handling delete button clicks
     public interface OnDeleteClickListener {
@@ -53,10 +49,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      *
      * @param eventList The list of events to display.
      */
-    public EventAdapter(List<Event> eventList, boolean isAdmin, OnDeleteClickListener deleteClickListener) {
+    public EventAdapter(List<Event> eventList, boolean isAdmin, OnDeleteClickListener deleteClickListener, OnItemClickListener itemClickListener) {
         this.eventList = eventList;
         this.isAdmin = isAdmin;
         this.deleteClickListener = deleteClickListener;
+        this.itemClickListener = itemClickListener;
     }
 
     /**
@@ -97,7 +94,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
-        holder.bind(event, isAdmin, deleteClickListener);
+        holder.bind(event, isAdmin, deleteClickListener, itemClickListener);
     }
 
     /**
@@ -145,7 +142,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          * @param event    The event data to display.
          * @param listener The listener for handling click events on the item view.
          */
-        public void bind(final Event event, boolean isAdmin, final OnDeleteClickListener listener) {
+        public void bind(final Event event, boolean isAdmin, final OnDeleteClickListener listener, final OnItemClickListener itemClickListener) {
             textViewName.setText(event.getName());
             textViewDescription.setText(event.getDescription());
 
@@ -181,25 +178,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 }
             });
 
-            // Set click listener for the entire item
+            // Update click listener for the entire item
             itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    Event event2 = eventList.get(position);
-
-                    // Replace the current fragment with EventDetailsFragment
-                    Fragment eventDetailsFragment = EventDetailsFragmentOrganizer.newInstance(event2.getId());
-
-                    // Assuming itemView.getContext() is an activity that has a FragmentManager
-                    AppCompatActivity activity = (AppCompatActivity) itemView.getContext();
-                    activity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, eventDetailsFragment) // R.id.fragment_container is your fragment container ID in activity layout
-                            .addToBackStack(null) // Optionally add to back stack
-                            .commit();
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(event);
                 }
             });
-
-
         }
     }
 }
