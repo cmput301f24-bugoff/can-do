@@ -164,6 +164,8 @@ public class GlobalRepository {
         Map<String, Object> facilityMap = new HashMap<>();
         facilityMap.put("id", facility.getId());
         facilityMap.put("ownerId", facility.getOwner().getId());
+        facilityMap.put("name", facility.getName());
+        facilityMap.put("address", facility.getAddress());
 
         DocumentReference facilityRef = getFacilitiesCollection().document(facility.getId());
         DocumentReference userRef = getUsersCollection().document(facility.getOwner().getId());
