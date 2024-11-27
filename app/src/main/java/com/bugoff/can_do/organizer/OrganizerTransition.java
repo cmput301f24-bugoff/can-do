@@ -78,7 +78,7 @@ public class OrganizerTransition extends AppCompatActivity {
         facility.setName(facilityName);
         facility.setAddress(facilityAddress);
 
-        repository.addFacility(facility)
+        GlobalRepository.addFacility(facility)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Facility saved successfully!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, OrganizerMain.class));

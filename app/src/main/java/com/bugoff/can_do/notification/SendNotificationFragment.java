@@ -2,6 +2,10 @@ package com.bugoff.can_do.notification;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -25,6 +30,7 @@ import com.bugoff.can_do.event.Event;
 import com.google.type.TimeOfDayOrBuilder;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class SendNotificationFragment extends Fragment {
@@ -101,31 +107,58 @@ public class SendNotificationFragment extends Fragment {
             if (task.isSuccessful()) {
                 Event event = task.getResult();
                 if (event != null) {
-                    // Handle the event
                     Log.d("Event", "Event retrieved: " + event.getName());
                     List<String> waitingListEntrants = event.getWaitingListEntrants();
                     Log.d(TAG, "sendtoWaitingList: " + waitingListEntrants.size() + " waiting list entrants");
 
-                    // Send notification to each waiting list entrant
+                    // Send notifications to each waiting list entrant
                     for (String entrant : waitingListEntrants) {
+                        // Create and add notification to GlobalRepository (as in your code)
                         String uniqueId = UUID.randomUUID().toString();
                         Notification notification = new Notification(uniqueId, "Event Update", message, event.getFacility().getId(), entrant, eventId);
                         GlobalRepository.addNotification(notification);
+
+                        // Trigger on-device notification for the user
+                        sendLocalNotification("Event Update", message);
                     }
 
                     Toast.makeText(getContext(), "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
-
                 } else {
                     Log.w("Event", "Event not found");
-                    // Handle the event not found case
                 }
             } else {
                 Log.e("Event", "Error retrieving event", task.getException());
-                // Handle the failure case
             }
         });
-
     }
+
+    private void sendLocalNotification(String title, String message) {
+        // Create NotificationManager
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Notification Channel setup (required for Android O and above)
+        String channelId = "waiting_list_channel";
+        NotificationChannel channel = new NotificationChannel(
+                channelId,
+                "Waiting List Notifications",
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription("Notifications for waiting list updates");
+        notificationManager.createNotificationChannel(channel);
+
+        // Build Notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channelId)
+                .setSmallIcon(R.drawable.notifications_24px) // Replace with your app's notification icon
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        // Show Notification
+        int notificationId = new Random().nextInt(); // Unique ID for each notification
+        notificationManager.notify(notificationId, builder.build());
+    }
+
 
 
     @NonNull
