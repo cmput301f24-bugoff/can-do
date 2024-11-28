@@ -58,8 +58,8 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
                                         .addOnSuccessListener(userSnapshot -> {
                                             if (userSnapshot.exists()) {
                                                 String name = userSnapshot.getString("name");
-                                                Double latitude = userSnapshot.getDouble("Latitude");
-                                                Double longitude = userSnapshot.getDouble("Longitude");
+                                                Double latitude = userSnapshot.getDouble("latitude");
+                                                Double longitude = userSnapshot.getDouble("longitude");
 
                                                 Log.d("WaitingListMap", "User data: name=" + name + ", Latitude=" + latitude + ", Longitude=" + longitude);
 

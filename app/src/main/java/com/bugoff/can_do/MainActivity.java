@@ -1,6 +1,8 @@
 package com.bugoff.can_do;
 
 import static java.security.AccessController.getContext;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.Manifest;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
 import com.bugoff.can_do.user.QrCodeScannerFragment;
+import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private UserViewModel userViewModel;
     private GlobalRepository repository;
+    private static final int PERMISSIONS_REQUEST_LOCATION = 1002;
 
     /**
      * Initializes the activity and sets up the BottomNavigationView for navigation between different fragments.
@@ -85,8 +90,60 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         setupBottomNavigation();
+                        checkLocationPermissionAndFetchLocation(user);
                     }
                 });
+    }
+
+    private void checkLocationPermissionAndFetchLocation(User user) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_LOCATION);
+        } else {
+            getLocationAndUpdateUser(user);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                User user = GlobalRepository.getLoggedInUser();
+                if (user != null) {
+                    getLocationAndUpdateUser(user);
+                }
+            } else {
+                // Permission denied
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getLocationAndUpdateUser(User cuser) {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(location -> {
+                        if (location != null) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            // Update user object
+                            cuser.setLatitude(latitude);
+                            cuser.setLongitude(longitude);
+                            cuser.setRemote(); // Save to database
+
+                            Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
+                        } else {
+                            Log.d(TAG, "Location is null");
+                        }
+                    });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupBottomNavigation() {
