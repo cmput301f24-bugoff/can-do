@@ -393,6 +393,7 @@ $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModelFactory/create/#ja
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant///PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/index.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/EventDetailsFragmentEntrant/#/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/-event-details-fragment-entrant.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/fetchEventDetails/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/fetch-event-details.html
+$dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/getLocationAndUpdateUser/#com.bugoff.can_do.event.EventViewModel#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/get-location-and-update-user.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/joinWaitingList/#com.bugoff.can_do.event.EventViewModel/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/join-waiting-list.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/leaveWaitingList/#com.bugoff.can_do.event.EventViewModel/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/leave-waiting-list.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/newInstance/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/new-instance.html
@@ -400,6 +401,7 @@ $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/onCreateView/
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/openMapToLocation/#/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/open-map-to-location.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/proceedWithJoining/#com.bugoff.can_do.event.EventViewModel#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/proceed-with-joining.html
 $dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/shareEventDetails/#/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/share-event-details.html
+$dokka.location:com.bugoff.can_do.user/EventDetailsFragmentEntrant/updateUserInFirestore/#com.bugoff.can_do.event.EventViewModel#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-event-details-fragment-entrant/update-user-in-firestore.html
 $dokka.location:com.bugoff.can_do.user/HandleQRScan///PointingToDeclaration/app/com.bugoff.can_do.user/-handle-q-r-scan/index.html
 $dokka.location:com.bugoff.can_do.user/HandleQRScan/HandleQRScan/#/PointingToDeclaration/app/com.bugoff.can_do.user/-handle-q-r-scan/-handle-q-r-scan.html
 $dokka.location:com.bugoff.can_do.user/HandleQRScan/fetchEvent/#java.lang.String#Context/PointingToDeclaration/app/com.bugoff.can_do.user/-handle-q-r-scan/fetch-event.html
@@ -425,6 +427,8 @@ $dokka.location:com.bugoff.can_do.user/User/getEventsJoined/#/PointingToDeclarat
 $dokka.location:com.bugoff.can_do.user/User/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-facility.html
 $dokka.location:com.bugoff.can_do.user/User/getId/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-id.html
 $dokka.location:com.bugoff.can_do.user/User/getIsAdmin/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-is-admin.html
+$dokka.location:com.bugoff.can_do.user/User/getLatitude/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-latitude.html
+$dokka.location:com.bugoff.can_do.user/User/getLongitude/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-longitude.html
 $dokka.location:com.bugoff.can_do.user/User/getName/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-name.html
 $dokka.location:com.bugoff.can_do.user/User/getNotificationList/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-notification-list.html
 $dokka.location:com.bugoff.can_do.user/User/getPhoneNumber/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-phone-number.html
@@ -438,6 +442,8 @@ $dokka.location:com.bugoff.can_do.user/User/setEventsEnrolled/#java.util.List<ja
 $dokka.location:com.bugoff.can_do.user/User/setEventsJoined/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-events-joined.html
 $dokka.location:com.bugoff.can_do.user/User/setFacility/#com.bugoff.can_do.facility.Facility/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-facility.html
 $dokka.location:com.bugoff.can_do.user/User/setIsAdmin/#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-is-admin.html
+$dokka.location:com.bugoff.can_do.user/User/setLatitude/#java.lang.Double/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-latitude.html
+$dokka.location:com.bugoff.can_do.user/User/setLongitude/#java.lang.Double/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-longitude.html
 $dokka.location:com.bugoff.can_do.user/User/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-name.html
 $dokka.location:com.bugoff.can_do.user/User/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-on-update-listener.html
 $dokka.location:com.bugoff.can_do.user/User/setPhoneNumber/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-phone-number.html
@@ -489,10 +495,13 @@ $dokka.location:com.bugoff.can_do/HomeActivity/fetchEventDetails/#java.util.List
 $dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
+$dokka.location:com.bugoff.can_do/MainActivity/checkLocationPermissionAndFetchLocation/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/check-location-permission-and-fetch-location.html
+$dokka.location:com.bugoff.can_do/MainActivity/getLocationAndUpdateUser/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-location-and-update-user.html
 $dokka.location:com.bugoff.can_do/MainActivity/getRepository/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-repository.html
 $dokka.location:com.bugoff.can_do/MainActivity/getUserViewModel/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/get-user-view-model.html
 $dokka.location:com.bugoff.can_do/MainActivity/initializeSignInScreen/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/initialize-sign-in-screen.html
 $dokka.location:com.bugoff.can_do/MainActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-create.html
+$dokka.location:com.bugoff.can_do/MainActivity/onRequestPermissionsResult/#int#java.lang.String[]#int[]/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/on-request-permissions-result.html
 $dokka.location:com.bugoff.can_do/MainActivity/setRepository/#com.bugoff.can_do.database.GlobalRepository/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/set-repository.html
 $dokka.location:com.bugoff.can_do/MainActivity/setupBottomNavigation/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/setup-bottom-navigation.html
 $dokka.location:com.bugoff.can_do/MainActivity/switchToHomeScreen/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/switch-to-home-screen.html
