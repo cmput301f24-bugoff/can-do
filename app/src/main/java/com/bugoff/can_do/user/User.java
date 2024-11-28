@@ -44,7 +44,8 @@ public class User implements DatabaseEntity {
     /** The list of notifications for the user. */
     private List<Notification> notificationList; // List of Notification objects
     private boolean shouldUpdateRemote = true;
-
+    private Double latitude;
+    private Double longitude;
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
@@ -59,6 +60,8 @@ public class User implements DatabaseEntity {
         this.eventsJoined = new ArrayList<>();
         this.eventsEnrolled = new ArrayList<>();
         this.notificationList = new ArrayList<>();
+        this.latitude = null;
+        this.longitude = null;
     }
 
     public User(String id, String name, String email, String phoneNumber, Boolean isAdmin, Facility facility) {
@@ -80,7 +83,8 @@ public class User implements DatabaseEntity {
         this.email = doc.getString("email");
         this.phoneNumber = doc.getString("phoneNumber");
         this.isAdmin = doc.getBoolean("isAdmin") != null ? doc.getBoolean("isAdmin") : Boolean.FALSE;
-
+        this.latitude = doc.getDouble("latitude");
+        this.longitude = doc.getDouble("longitude");
         this.facility = new Facility(this); // placeholder
 
         // Initialize lists from the document data
@@ -125,7 +129,8 @@ public class User implements DatabaseEntity {
         // Handle lists - never put null for these fields
         map.put("eventsJoined", eventsJoined != null ? new ArrayList<>(eventsJoined) : new ArrayList<>());
         map.put("eventsEnrolled", eventsEnrolled != null ? new ArrayList<>(eventsEnrolled) : new ArrayList<>());
-
+        map.put("latitude", latitude);
+        map.put("longitude", longitude);
         return map;
     }
 
@@ -151,7 +156,23 @@ public class User implements DatabaseEntity {
     public String getName() {
         return name;
     }
+    public Double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+        setRemote();
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+        setRemote();
+    }
     public void setName(String name) {
         this.name = name;
         setRemote();
