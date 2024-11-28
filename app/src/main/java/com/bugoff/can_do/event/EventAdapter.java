@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.database.GlobalRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -122,6 +123,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         TextView textViewParticipants;
         ImageButton buttonDelete;
         TextView textViewWaitingList;
+        TextView textViewStatus;
 
         private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("MMM d, yyyy HH:mm", Locale.getDefault());
 
@@ -138,6 +140,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textViewParticipants = itemView.findViewById(R.id.text_view_num_participants);
             buttonDelete = itemView.findViewById(R.id.button_delete_event);
             textViewWaitingList = itemView.findViewById(R.id.text_view_waitlist);
+            textViewStatus = itemView.findViewById(R.id.text_view_status);
         }
 
         /**
@@ -174,6 +177,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
             // Set delete button visibility - only show if both isAdmin and isFromAdmin are true
             buttonDelete.setVisibility(isAdmin && isFromAdmin ? View.VISIBLE : View.GONE);
+
+            // Display the event status
+            List<String> waitlist_entrants = event.getWaitingListEntrants();
+            if (waitlist_entrants.contains(GlobalRepository.getLoggedInUser().getId())) {
+                textViewStatus.setText("In Waitlist");
+                textViewStatus.setVisibility(View.VISIBLE);
+            }
+
+
 
             // Set click listener for delete button
             buttonDelete.setOnClickListener(v -> {
