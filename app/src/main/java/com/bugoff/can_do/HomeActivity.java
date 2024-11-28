@@ -69,6 +69,7 @@ public class HomeActivity extends Fragment {
                     getStartedText.setVisibility(View.GONE);
                     arrowDown.setVisibility(View.GONE);
 
+
                     // Show events
                     eventsListView.setVisibility(View.VISIBLE);
                     Log.d(TAG, "test: made it here");
@@ -105,10 +106,11 @@ public class HomeActivity extends Fragment {
         for (String eventId : eventIds) {
             GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Event event = task.getResult();
-                    if (event != null) {
-                        events.add(event);
+                    Event fetchedEvent = task.getResult(); // Rename the variable here
+                    if (fetchedEvent != null) {
+                        events.add(fetchedEvent);
                     }
+
                     // Check if all events are loaded
                     if (events.size() == eventIds.size()) {
                         eventsAdapter.setEventList(events);
@@ -121,14 +123,16 @@ public class HomeActivity extends Fragment {
         }
     }
 
-//    @Override
+
+//        @Override
 //    public void onItemClick(Event event) {
 //        // Handle the click event here, e.g., navigate to event details
 //        Toast.makeText(getContext(), "Clicked on: " + event.getName(), Toast.LENGTH_SHORT).show();
 //        // You can also start a new fragment or activity with event details
 //
 //    }
-}
+    }
+
 
 
 
