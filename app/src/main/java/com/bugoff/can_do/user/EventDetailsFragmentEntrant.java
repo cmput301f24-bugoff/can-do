@@ -33,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class EventDetailsFragmentEntrant extends Fragment {
@@ -166,23 +167,31 @@ public class EventDetailsFragmentEntrant extends Fragment {
             throw new IllegalStateException("User not logged in");
         }
 
-        // Check if the event requires geolocation
+        // Check if the event exists and if it requires geolocation
         db.collection("events").document(eventId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Boolean requiresGeolocation = documentSnapshot.getBoolean("geolocationRequired");
-                        if (Boolean.TRUE.equals(requiresGeolocation)) {
-                            // Display warning dialog if geolocation is required
-                            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                                    .setTitle("Geolocation Required")
-                                    .setMessage("This event requires geolocation tracking. Do you want to proceed?")
-                                    .setPositiveButton("Yes", (dialog, which) -> proceedWithJoining(viewModel, currentUser))
-                                    .setNegativeButton("No", null)
-                                    .show();
+                        Long maxParticipants = documentSnapshot.getLong("maxNumberOfParticipants"); // Maximum allowed participants
+                        List<String> currentParticipants = (List<String>) documentSnapshot.get("waitingListEntrants"); // Current waiting list
+
+                        if (currentParticipants != null && maxParticipants != null && currentParticipants.size() >= maxParticipants) {
+                            // Show a dialog or toast to inform the user the waiting list is full
+                            Toast.makeText(requireContext(), "The waiting list is full. You cannot join this event.", Toast.LENGTH_SHORT).show();
                         } else {
-                            // Proceed directly if geolocation is not required
-                            proceedWithJoining(viewModel, currentUser);
+                            Boolean requiresGeolocation = documentSnapshot.getBoolean("geolocationRequired");
+                            if (Boolean.TRUE.equals(requiresGeolocation)) {
+                                // Display warning dialog if geolocation is required
+                                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                                        .setTitle("Geolocation Required")
+                                        .setMessage("This event requires geolocation tracking. Do you want to proceed?")
+                                        .setPositiveButton("Yes", (dialog, which) -> proceedWithJoining(viewModel, currentUser))
+                                        .setNegativeButton("No", null)
+                                        .show();
+                            } else {
+                                // Proceed directly if geolocation is not required
+                                proceedWithJoining(viewModel, currentUser);
+                            }
                         }
                     } else {
                         Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
@@ -192,6 +201,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     Toast.makeText(requireContext(), "Failed to check event requirements", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void proceedWithJoining(EventViewModel viewModel, User currentUser) {
         viewModel.addWaitingListEntrant(currentUser.getId());
