@@ -1,5 +1,6 @@
 package com.bugoff.can_do.event;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private static List<Event> eventList;
     private boolean isAdmin;
     private final boolean isFromAdmin;
+    private final boolean isFromEntrant;
     private OnDeleteClickListener deleteClickListener;
     private OnItemClickListener itemClickListener;
 
@@ -56,10 +58,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      * @param itemClickListener Listener for item clicks
      */
     public EventAdapter(List<Event> eventList, boolean isAdmin, boolean isFromAdmin,
-                        OnDeleteClickListener deleteClickListener, OnItemClickListener itemClickListener) {
+                        OnDeleteClickListener deleteClickListener, OnItemClickListener itemClickListener, boolean isFromEntrant) {
         this.eventList = eventList;
         this.isAdmin = isAdmin;
         this.isFromAdmin = isFromAdmin;
+        this.isFromEntrant = isFromEntrant;
         this.deleteClickListener = deleteClickListener;
         this.itemClickListener = itemClickListener;
     }
@@ -99,7 +102,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = eventList.get(position);
         // Pass both isAdmin and isFromAdmin to determine delete button visibility
-        holder.bind(event, isAdmin, isFromAdmin, deleteClickListener, itemClickListener);
+        holder.bind(event, isAdmin, isFromAdmin, deleteClickListener, itemClickListener, isFromEntrant);
     }
 
     /**
@@ -153,7 +156,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
          * @param itemClickListener The listener for handling item clicks
          */
         public void bind(final Event event, boolean isAdmin, boolean isFromAdmin,
-                         final OnDeleteClickListener deleteListener, final OnItemClickListener itemClickListener) {
+                         final OnDeleteClickListener deleteListener, final OnItemClickListener itemClickListener, boolean isFromEntrant) {
             textViewName.setText(event.getName());
             textViewDescription.setText(event.getDescription());
 
@@ -179,12 +182,27 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             buttonDelete.setVisibility(isAdmin && isFromAdmin ? View.VISIBLE : View.GONE);
 
             // Display the event status
-            List<String> waitlist_entrants = event.getWaitingListEntrants();
-            if (waitlist_entrants.contains(GlobalRepository.getLoggedInUser().getId())) {
-                textViewStatus.setText("In Waitlist");
-                textViewStatus.setVisibility(View.VISIBLE);
+            if (isFromEntrant) {
+                List<String> waitlist_entrants = event.getWaitingListEntrants();
+                if (waitlist_entrants.contains(GlobalRepository.getLoggedInUser().getId())) {
+                    textViewStatus.setText("In Waitlist");
+                    textViewStatus.setTextColor(Color.parseColor("#FF964F"));
+                    textViewStatus.setVisibility(View.VISIBLE);
+                } else if (event.getSelectedEntrants().contains(GlobalRepository.getLoggedInUser().getId())) {
+                    textViewStatus.setText("You have been selected, please accept or decline");
+                    textViewStatus.setTextColor(Color.parseColor("#FF0000"));
+                    textViewStatus.setVisibility(View.VISIBLE);
+                } else if (event.getEnrolledEntrants().contains(GlobalRepository.getLoggedInUser().getId())) {
+                    textViewStatus.setText("Enrolled");
+                    textViewStatus.setTextColor(Color.parseColor("#008000"));
+                    textViewStatus.setVisibility(View.VISIBLE);
+                } else {
+                    textViewStatus.setVisibility(View.GONE);
+                }
+            } else {
+                // Hide the status TextView when not in entrant section
+                textViewStatus.setVisibility(View.GONE);
             }
-
 
 
             // Set click listener for delete button

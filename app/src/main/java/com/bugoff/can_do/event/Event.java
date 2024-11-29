@@ -47,6 +47,7 @@ public class Event implements DatabaseEntity {
     private Map<String, EntrantStatus> entrantStatuses; // The statuses of the entrants (key: user ID)
     private List<String> selectedEntrants; // Entrants selected in the lottery (user IDs)
     private List<String> enrolledEntrants; // Entrants who accepted and enrolled (user IDs)
+    private List<String> cancelledEntrants; // Entrants who cancelled (user IDs)
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
@@ -70,6 +71,7 @@ public class Event implements DatabaseEntity {
         this.entrantStatuses = new HashMap<>();
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
         this.imageUrl = "";
         // facility.addEvent(this); // Ensure bidirectional reference (edit: maybe not?)
     }
@@ -95,12 +97,14 @@ public class Event implements DatabaseEntity {
         this.entrantStatuses = new HashMap<>();
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
         // Deserialize complex fields
         deserializeUserList(doc.get("waitingListEntrants"), waitingListEntrants);
         deserializeEntrantsLocations(doc.get("entrantsLocations"), entrantsLocations);
         deserializeEntrantStatuses(doc.get("entrantStatuses"), entrantStatuses);
         deserializeUserList(doc.get("selectedEntrants"), selectedEntrants);
         deserializeUserList(doc.get("enrolledEntrants"), enrolledEntrants);
+        deserializeUserList(doc.get("cancelledEntrants"), cancelledEntrants);
     }
 
     @Override
@@ -121,6 +125,7 @@ public class Event implements DatabaseEntity {
         map.put("entrantStatuses", entrantStatuses); // Map of user IDs to statuses
         map.put("selectedEntrants", selectedEntrants); // List of user IDs
         map.put("enrolledEntrants", enrolledEntrants); // List of user IDs
+        map.put("cancelledEntrants", cancelledEntrants); // List of user IDs
         map.put("imageUrl", imageUrl); // Include imageUrl in the map
         return map;
     }
@@ -379,6 +384,10 @@ public class Event implements DatabaseEntity {
         setRemote();
     }
 
+    public List<String> getCancelledEntrants() {
+        return Collections.unmodifiableList(cancelledEntrants);
+    }
+
     // Methods to interact with Event
 
     /**
@@ -529,6 +538,7 @@ public class Event implements DatabaseEntity {
 
                 // Deserialize complex fields
                 this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));
+                this.cancelledEntrants = deserializeUserList(documentSnapshot.get("cancelledEntrants"));
                 this.entrantsLocations = deserializeEntrantsLocations(documentSnapshot.get("entrantsLocations"));
                 this.entrantStatuses = deserializeEntrantStatuses(documentSnapshot.get("entrantStatuses"));
                 this.selectedEntrants = deserializeUserList(documentSnapshot.get("selectedEntrants"));

@@ -14,7 +14,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,8 @@ import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.event.EventAdapter;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.notification.NotificationsFragment;
+import com.bugoff.can_do.user.AcceptDeclineFragment;
+import com.bugoff.can_do.user.EventDetailsFragmentEntrant;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -50,7 +54,7 @@ public class HomeActivity extends Fragment {
         arrowDown = view.findViewById(R.id.arrow_down);
         eventsListView = view.findViewById(R.id.hs_events_list);
 
-        eventsAdapter = new EventAdapter(new ArrayList<>(), false, false, null, null);
+        eventsAdapter = new EventAdapter(new ArrayList<>(), false, false, null, event -> handleEventClick(event), true);
 //        eventsAdapter.setOnItemClickListener(this);
         eventsListView.setAdapter(eventsAdapter);
         eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -100,6 +104,59 @@ public class HomeActivity extends Fragment {
         return view;
     }
 
+    private void handleEventClick(Event event) {
+        String currentUserId = GlobalRepository.getLoggedInUser().getId();
+        List<String> waitlist = event.getWaitingListEntrants();
+        List<String> selectedParticipants = event.getSelectedEntrants();
+        List<String> enrolledParticipants = event.getEnrolledEntrants();
+
+        if (waitlist.contains(currentUserId)) {
+            // User is in the waitlist
+            Toast.makeText(getContext(), "Navigating to event details (waitlist)...", Toast.LENGTH_SHORT).show();
+            navigateToEventDetails(event);
+        } else if (selectedParticipants.contains(currentUserId)) {
+            // User has been selected; show accept/decline fragment
+            Toast.makeText(getContext(), "Navigating to accept/decline fragment...", Toast.LENGTH_SHORT).show();
+            navigateToAcceptDecline(event);
+        } else if (enrolledParticipants.contains(currentUserId)) {
+            // User is enrolled
+            Toast.makeText(getContext(), "Navigating to event details (enrolled)...", Toast.LENGTH_SHORT).show();
+            navigateToEventDetails(event);
+        } else {
+            // Default fallback
+            Toast.makeText(getContext(), "Unknown status for event.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void navigateToEventDetails(Event event) {
+        // Replace with navigation logic to event details screen
+        EventDetailsFragmentEntrant fragment = new EventDetailsFragmentEntrant();
+        Bundle args = new Bundle();
+        args.putString("event_name", event.getName());
+        args.putString("event_date", event.getEventStartDate().toString());
+        args.putString("selected_event_id", event.getId()); // Pass eventId explicitly for further use
+        fragment.setArguments(args);
+
+        // Replace the current fragment with EventDetailsFragment
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment); // Replace 'fragment_container' with your actual container ID
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void navigateToAcceptDecline(Event event) {
+        // Create an instance of the AcceptDeclineFragment with the event data
+        AcceptDeclineFragment fragment = AcceptDeclineFragment.newInstance(event.getId());
+
+        // Navigate to the AcceptDeclineFragment
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment) // Replace with the new fragment
+                .addToBackStack(null) // Add to the back stack for navigation
+                .commit();
+    }
+
+
     private void fetchEventDetails(List<String> eventIds) {
         List<Event> events = new ArrayList<>();
 
@@ -123,14 +180,6 @@ public class HomeActivity extends Fragment {
         }
     }
 
-
-//        @Override
-//    public void onItemClick(Event event) {
-//        // Handle the click event here, e.g., navigate to event details
-//        Toast.makeText(getContext(), "Clicked on: " + event.getName(), Toast.LENGTH_SHORT).show();
-//        // You can also start a new fragment or activity with event details
-//
-//    }
     }
 
 
