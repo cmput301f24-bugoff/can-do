@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@id/admin_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_admin" />
+        app:layout_constraintBottom_toBottomOf="@id/bottom_navigation_admin" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

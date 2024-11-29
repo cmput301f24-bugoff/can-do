@@ -115,7 +115,7 @@ public class EventsFragment extends Fragment {
         // Set up RecyclerView with both isAdmin and isFromAdmin flags
         recyclerViewEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         eventAdapter = new EventAdapter(new ArrayList<>(), this.isAdmin, isFromAdmin,
-                this::onDeleteEventClick, this::onEventClicked);
+                this::onDeleteEventClick, this::onEventClicked, false);
         recyclerViewEvents.setAdapter(eventAdapter);
 
         // Initialize ViewModel with isAdmin and isFromAdmin flags
