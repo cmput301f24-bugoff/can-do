@@ -2,19 +2,23 @@ package com.bugoff.can_do;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +36,13 @@ import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Fragment for the user profile screen.
  */
@@ -40,6 +51,7 @@ public class UserProfileActivity extends Fragment {
     private UserViewModel userViewModel;
     private String currEmail;
     private String currPNumber;
+    private Uri cameraPicUri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +67,22 @@ public class UserProfileActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
+        ImageButton avatar = view.findViewById(R.id.image_avatar);
+        String savedPath = new File(requireContext().getFilesDir(), "avatar.png").getAbsolutePath();
+        File savedFile = new File(savedPath);
+
+        if (savedFile.exists()) {
+            // Load saved profile picture
+            Bitmap savedBitmap = BitmapFactory.decodeFile(savedPath);
+            avatar.setImageBitmap(savedBitmap);
+        } else {
+            // Generate default avatar if no photo saved
+            TextView firstName = view.findViewById(R.id.first_name);
+            String userName = firstName.getText().toString();
+            String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
+            avatar.setImageBitmap(generateAvatar(firstLetter));
+        }
+
         // Register observers
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
@@ -64,9 +92,9 @@ public class UserProfileActivity extends Fragment {
                 if (parts.length > 0) {
                     firstName.setText(parts[0]);
                     // Update avatar with first letter of name
-                    String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
-                    ImageView avatar = view.findViewById(R.id.image_avatar);
-                    avatar.setImageBitmap(generateAvatar(firstLetter));
+//                    String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
+//                    ImageButton avatar = view.findViewById(R.id.image_avatar);
+//                    avatar.setImageBitmap(generateAvatar(firstLetter));
                 }
                 if (parts.length > 1) {
                     lastName.setText(parts[1]);
@@ -151,7 +179,11 @@ public class UserProfileActivity extends Fragment {
                         cameraLauncher.launch(cameraIntent);
                     })
                     .setNeutralButton("Remove", (dialog, which) -> {
-                        avatar.setImageBitmap(generateAvatar(firstLetter));
+                        Bitmap defaultAvatar = generateAvatar(firstLetter);
+                        avatar.setImageBitmap(defaultAvatar);
+
+                        // Save default avatar
+                        saveAvatar(defaultAvatar, "avatar.png");
                     })
                     .show();
         });
@@ -190,6 +222,19 @@ public class UserProfileActivity extends Fragment {
         return bitmap;
     }
 
+    private String saveAvatar(Bitmap bitmap, String filename) {
+        try {
+            FileOutputStream fos = requireContext().openFileOutput(filename, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return new File(requireContext().getFilesDir(), filename).getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
     /**
      * Helper for launching gallery and camera intents
      */
@@ -201,6 +246,15 @@ public class UserProfileActivity extends Fragment {
                     Uri selectedImageUri = result.getData().getData();
                     ImageView avatar = getView().findViewById(R.id.image_avatar);
                     avatar.setImageURI(selectedImageUri);
+
+                    // Save selected photo as profile picture
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
+                        saveAvatar(bitmap, "avatar.png");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(requireContext(), "Failed to save picture", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
     );
@@ -213,9 +267,12 @@ public class UserProfileActivity extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Bitmap photo = (Bitmap) result.getData().getExtras().get("Data");
+                    Bitmap photo = (Bitmap) result.getData().getExtras().get("data");
                     ImageView avatar = getView().findViewById(R.id.image_avatar);
                     avatar.setImageBitmap(photo);
+
+                    // Save captured profile picture
+                    saveAvatar(photo, "avatar.png");
                 }
             }
     );
