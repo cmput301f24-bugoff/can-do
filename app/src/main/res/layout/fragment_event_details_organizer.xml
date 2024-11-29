@@ -132,31 +132,52 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/idIVQrcode"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/view_watch_list"
-                    android:layout_width="0dp"
+                <!-- First Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="View Watch List" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/send_notification"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Send Notification" />
+                    <Button
+                        android:id="@+id/view_watch_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="View Watch List" />
 
-                <Button
-                    android:id="@+id/view_selected_list"
-                    android:layout_width="0dp"
+                    <Button
+                        android:id="@+id/send_notification"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Send Notification" />
+                </LinearLayout>
+
+                <!-- Second Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="View Selected" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/view_selected_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="View Selected" />
+
+                    <Button
+                        android:id="@+id/view_cancelled_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="View Cancelled" />
+                </LinearLayout>
             </LinearLayout>
+
 
 
             <!-- QR Code ImageView -->

@@ -148,7 +148,7 @@ public class SendNotificationFragment extends Fragment {
 
         // Build Notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channelId)
-                .setSmallIcon(R.drawable.notifications_24px) // Replace with your app's notification icon
+                .setSmallIcon(R.drawable.notifications_24px)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
