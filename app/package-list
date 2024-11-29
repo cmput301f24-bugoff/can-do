@@ -527,6 +527,7 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/generateAvatar/#java.lang.
 $dokka.location:com.bugoff.can_do/UserProfileActivity/loadUserData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/load-user-data.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/saveAvatar/#Bitmap#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-avatar.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-data.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserEmail/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-email.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserPNumber/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-p-number.html
