@@ -16,29 +16,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.database.FirestoreHelper;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.user.User;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class BrowseImagesFragment extends Fragment {
+public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDeleteClickListener {
     private static final String TAG = "BrowseImagesFragment";
     private RecyclerView recyclerView;
     private ImageAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyView;
-    private List<Event> eventsWithImages = new ArrayList<>();
-
-    public BrowseImagesFragment() {
-        // Required empty public constructor
-    }
-
-    public static BrowseImagesFragment newInstance() {
-        return new BrowseImagesFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -49,9 +43,8 @@ public class BrowseImagesFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar);
         emptyView = view.findViewById(R.id.empty_view);
 
-        // Set up RecyclerView
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ImageAdapter(eventsWithImages, this::handleImageDelete);
+        adapter = new ImageAdapter(this);
         recyclerView.setAdapter(adapter);
 
         loadImages();
@@ -64,18 +57,30 @@ public class BrowseImagesFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.GONE);
 
-        GlobalRepository.getEventsCollection()
-                .whereNotEqualTo("base64Image", null)  // Changed from imageUrl to base64Image
+        List<Task<?>> tasks = new ArrayList<>();
+        tasks.add(loadEventImages());
+        tasks.add(loadUserImages());
+
+        Tasks.whenAllComplete(tasks)
+                .addOnSuccessListener(taskSnapshots -> updateViewVisibility())
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error loading images", e);
+                    showError("Error loading images");
+                });
+    }
+
+    private Task<?> loadEventImages() {
+        return GlobalRepository.getEventsCollection()
+                .whereNotEqualTo("base64Image", null)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    eventsWithImages.clear();
-                    int totalDocuments = queryDocumentSnapshots.size();
-                    if (totalDocuments == 0) {
-                        updateViewVisibility();
+                    if (queryDocumentSnapshots.isEmpty()) {
                         return;
                     }
 
-                    AtomicInteger processedDocuments = new AtomicInteger(0);
+                    // Count how many events we need to process
+                    int totalEvents = queryDocumentSnapshots.size();
+                    final int[] processedEvents = {0};
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String facilityId = document.getString("facilityId");
@@ -83,84 +88,109 @@ public class BrowseImagesFragment extends Fragment {
                             GlobalRepository.getFacility(facilityId)
                                     .addOnSuccessListener(facility -> {
                                         Event event = new Event(facility, document);
-                                        if (event.getBase64Image() != null && !event.getBase64Image().isEmpty()) {
-                                            eventsWithImages.add(event);
-                                            adapter.updateEvents(eventsWithImages);
+                                        String base64Image = event.getBase64Image();
+                                        if (base64Image != null && !base64Image.isEmpty()) {
+                                            // Add individual event to avoid overwriting
+                                            List<Event> singleEvent = new ArrayList<>();
+                                            singleEvent.add(event);
+                                            adapter.addItems(singleEvent);
                                         }
+                                        processedEvents[0]++;
 
-                                        if (processedDocuments.incrementAndGet() == totalDocuments) {
+                                        // Update visibility once all events are processed
+                                        if (processedEvents[0] == totalEvents) {
                                             updateViewVisibility();
                                         }
                                     })
                                     .addOnFailureListener(e -> {
-                                        Log.e("BrowseImagesFragment", "Error loading facility: " + e.getMessage());
-                                        if (processedDocuments.incrementAndGet() == totalDocuments) {
+                                        Log.e(TAG, "Error loading facility: " + e);
+                                        processedEvents[0]++;
+                                        if (processedEvents[0] == totalEvents) {
                                             updateViewVisibility();
                                         }
                                     });
                         } else {
-                            if (processedDocuments.incrementAndGet() == totalDocuments) {
+                            processedEvents[0]++;
+                            if (processedEvents[0] == totalEvents) {
                                 updateViewVisibility();
                             }
                         }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("BrowseImagesFragment", "Error loading events: " + e.getMessage());
-                    progressBar.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
-                    emptyView.setText("Error loading images: " + e.getMessage());
-                    if (getContext() != null) {
-                        Toast.makeText(getContext(), "Failed to load images: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
                 });
     }
 
-    private void handleImageDelete(Event event) {
+    private Task<?> loadUserImages() {
+        return GlobalRepository.getUsersCollection()
+                .whereNotEqualTo("base64Image", null)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        User user = new User(document);
+                        String base64Image = user.getBase64Image();
+                        if (base64Image != null && !base64Image.isEmpty()) {
+                            users.add(user);
+                        }
+                    }
+                    if (!users.isEmpty()) {
+                        adapter.addItems(users);
+                    }
+                    updateViewVisibility();
+                });
+    }
+
+    @Override
+    public void onDeleteClick(Object item, boolean isEvent) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Image")
-                .setMessage("Are you sure you want to remove this image from the event?")
-                .setPositiveButton("Delete", (dialog, which) -> deleteImage(event))
+                .setMessage("Are you sure you want to remove this image?")
+                .setPositiveButton("Delete", (dialog, which) -> deleteImage(item, isEvent))
                 .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    private void deleteImage(Event event) {
+    private void deleteImage(Object item, boolean isEvent) {
         progressBar.setVisibility(View.VISIBLE);
 
-        // Update the event in Firestore to remove the image URL
-        GlobalRepository.getEventsCollection().document(event.getId())
+        String collectionPath = isEvent ? "events" : "users";
+        String itemId = isEvent ? ((Event) item).getId() : ((User) item).getId();
+
+        FirestoreHelper.getInstance().getDb().collection(collectionPath)
+                .document(itemId)
                 .update("base64Image", null)
                 .addOnSuccessListener(aVoid -> {
-                    // Remove from local list and update adapter
-                    eventsWithImages.remove(event);
-                    adapter.updateEvents(eventsWithImages);
-                    updateViewVisibility();
-
-                    // Show success message
-                    if (getContext() != null) {
-                        Toast.makeText(getContext(), "Image deleted successfully", Toast.LENGTH_SHORT).show();
-                    }
+                    adapter.updateItems(new ArrayList<>()); // Clear the list
+                    loadImages(); // Reload all images
+                    showSuccess("Image deleted successfully");
                 })
                 .addOnFailureListener(e -> {
                     progressBar.setVisibility(View.GONE);
-                    if (getContext() != null) {
-                        Toast.makeText(getContext(), "Failed to delete image: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    showError("Failed to delete image");
                 });
     }
 
     private void updateViewVisibility() {
         progressBar.setVisibility(View.GONE);
-        if (eventsWithImages.isEmpty()) {
+        if (adapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
             emptyView.setText("No images found");
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showError(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+        Log.e(TAG, message);
+    }
+
+    private void showSuccess(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 }
