@@ -106,12 +106,9 @@ public class EventWaitlistFragment extends Fragment {
             userAdapter.notifyItemRemoved(randomIndex);
         }
         if (userList.isEmpty()) {
-            emptyTextView.setVisibility(View.VISIBLE);
-            emptyTextView.setText("No users in the watch list.");
-            Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
+            // Handle empty state if necessary
+            Log.d(TAG, "Observer: userList is empty");
         }
-        userAdapter.notifyItemRangeInserted(userList.size(), selectedUsers.size());
-
 
         // Update Firestore document
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -138,16 +135,17 @@ public class EventWaitlistFragment extends Fragment {
 
                     // Update Firestore document with new lists
                     docRef.update("waitingListEntrants", waitingListEntrants, "selectedEntrants", selectedEntrants)
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Drawing completed and lists updated"))
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d(TAG, "Drawing completed and lists updated");
+                                // Send notifications after successfully updating Firestore
+                                SendNotificationFragment.sendtoSelectedEntrants(getContext(), "You have been chosen", eventId);
+                            })
                             .addOnFailureListener(e -> Log.e(TAG, "Error updating Firestore lists", e));
                 }
             }
         }).addOnFailureListener(e -> Log.e(TAG, "Failed to retrieve document", e));
 
-        SendNotificationFragment.sendtoSelectedEntrants(getContext(), "You have been selected for the event", eventId);
-
-        Toast.makeText(getContext(), "Successfully Selected " + numberToDraw + " users." + "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getContext(), "Successfully selected " + numberToDraw + " users.", Toast.LENGTH_SHORT).show();
     }
 
 
