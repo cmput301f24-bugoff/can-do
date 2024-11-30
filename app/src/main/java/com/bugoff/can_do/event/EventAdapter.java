@@ -171,11 +171,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textViewDates.setText(dates);
 
             // Display the current number of participants out of the max allowed
-            String participants = "Registered Participants: " + event.getEnrolledEntrants().size() + " / " + event.getMaxNumberOfParticipants();
+            String participants = "Registered Participants: " + event.getEnrolledEntrants().size();
             textViewParticipants.setText(participants);
 
             // Display the number of entrants on the waiting list
-            String waitingList = "Waiting List: " + event.getWaitingListEntrants().size();
+            String waitingList = "Waiting List: " + event.getWaitingListEntrants().size() + " / " + event.getMaxNumberOfParticipants();
             textViewWaitingList.setText(waitingList);
 
             // Set delete button visibility - only show if both isAdmin and isFromAdmin are true
