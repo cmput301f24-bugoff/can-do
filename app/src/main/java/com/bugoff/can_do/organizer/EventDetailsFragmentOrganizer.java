@@ -1,9 +1,12 @@
 package com.bugoff.can_do.organizer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -53,6 +58,8 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private String eventName;
     private String eventId;
     private ImageView qrCodeImageView;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
     private static final String ARG_EVENT_ID = "selected_event_id";
 
     private static final String TAG = "EventDetailsFragmentOrg";
@@ -63,6 +70,21 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         args.putString(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
+
+        if (getArguments() != null) {
+            eventId = getArguments().getString(ARG_EVENT_ID);
+        }
+
+        // Initialize image launchers
+        setupImageLaunchers();
     }
 
     @Nullable
@@ -144,7 +166,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         backArrowButton.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
         mapIconButton.setOnClickListener(v -> openMapToLocation());
         shareIconButton.setOnClickListener(v -> shareEventDetails());
-        editGraphButton.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit Graph clicked", Toast.LENGTH_SHORT).show());
+        editGraphButton.setOnClickListener(v -> showImageSelectionDialog());
 
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
@@ -232,6 +254,114 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
+    }
+
+    private void setupImageLaunchers() {
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        handleSelectedImage(selectedImageUri);
+                    }
+                }
+        );
+
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Bundle extras = result.getData().getExtras();
+                        if (extras != null) {
+                            Bitmap photo = (Bitmap) extras.get("data");
+                            if (photo != null) {
+                                handleCapturedPhoto(photo);
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    private void showImageSelectionDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Update Event Image")
+                .setMessage("Choose image source")
+                .setPositiveButton("Gallery", (dialog, which) -> {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    galleryLauncher.launch(galleryIntent);
+                })
+                .setNegativeButton("Camera", (dialog, which) -> {
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraLauncher.launch(cameraIntent);
+                })
+                .setNeutralButton("Remove", (dialog, which) -> {
+                    removeEventImage();
+                })
+                .show();
+    }
+
+    private void handleSelectedImage(Uri imageUri) {
+        String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
+        if (base64Image != null) {
+            updateEventImage(base64Image);
+        } else {
+            Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void handleCapturedPhoto(Bitmap photo) {
+        String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
+        if (base64Image != null) {
+            updateEventImage(base64Image);
+        } else {
+            Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateEventImage(String base64Image) {
+        if (eventId == null) return;
+
+        View progressBar = requireView().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        db.collection("events").document(eventId)
+                .update("base64Image", base64Image)
+                .addOnSuccessListener(aVoid -> {
+                    progressBar.setVisibility(View.GONE);
+                    // Update the ImageView
+                    Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+                    if (bitmap != null) {
+                        eventImageView.setImageBitmap(bitmap);
+                        eventImageView.setVisibility(View.VISIBLE);
+                    }
+                    Toast.makeText(getContext(), "Image updated successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to update image", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void removeEventImage() {
+        if (eventId == null) return;
+
+        View progressBar = requireView().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        db.collection("events").document(eventId)
+                .update("base64Image", null)
+                .addOnSuccessListener(aVoid -> {
+                    progressBar.setVisibility(View.GONE);
+                    eventImageView.setImageDrawable(null);
+                    eventImageView.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Image removed successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void handleError(View rootView, String message) {

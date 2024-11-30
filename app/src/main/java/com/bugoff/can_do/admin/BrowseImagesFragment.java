@@ -74,19 +74,46 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                 .whereNotEqualTo("base64Image", null)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Event> events = new ArrayList<>();
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        return;
+                    }
+
+                    // Count how many events we need to process
+                    int totalEvents = queryDocumentSnapshots.size();
+                    final int[] processedEvents = {0};
+
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         String facilityId = document.getString("facilityId");
                         if (facilityId != null) {
                             GlobalRepository.getFacility(facilityId)
                                     .addOnSuccessListener(facility -> {
                                         Event event = new Event(facility, document);
-                                        if (event.getBase64Image() != null && !event.getBase64Image().isEmpty()) {
-                                            events.add(event);
-                                            adapter.addItems(events);
+                                        String base64Image = event.getBase64Image();
+                                        if (base64Image != null && !base64Image.isEmpty()) {
+                                            // Add individual event to avoid overwriting
+                                            List<Event> singleEvent = new ArrayList<>();
+                                            singleEvent.add(event);
+                                            adapter.addItems(singleEvent);
+                                        }
+                                        processedEvents[0]++;
+
+                                        // Update visibility once all events are processed
+                                        if (processedEvents[0] == totalEvents) {
+                                            updateViewVisibility();
                                         }
                                     })
-                                    .addOnFailureListener(e -> Log.e(TAG, "Error loading facility"));
+                                    .addOnFailureListener(e -> {
+                                        Log.e(TAG, "Error loading facility: " + e);
+                                        processedEvents[0]++;
+                                        if (processedEvents[0] == totalEvents) {
+                                            updateViewVisibility();
+                                        }
+                                    });
+                        } else {
+                            processedEvents[0]++;
+                            if (processedEvents[0] == totalEvents) {
+                                updateViewVisibility();
+                            }
                         }
                     }
                 });
@@ -100,11 +127,15 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                     List<User> users = new ArrayList<>();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         User user = new User(document);
-                        if (user.getBase64Image() != null && !user.getBase64Image().isEmpty()) {
+                        String base64Image = user.getBase64Image();
+                        if (base64Image != null && !base64Image.isEmpty()) {
                             users.add(user);
                         }
                     }
-                    adapter.addItems(users);
+                    if (!users.isEmpty()) {
+                        adapter.addItems(users);
+                    }
+                    updateViewVisibility();
                 });
     }
 
