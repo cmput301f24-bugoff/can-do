@@ -46,6 +46,7 @@ public class User implements DatabaseEntity {
     private boolean shouldUpdateRemote = true;
     private Double latitude;
     private Double longitude;
+    private String base64Image;
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
@@ -95,6 +96,7 @@ public class User implements DatabaseEntity {
         this.eventsEnrolled = enrolledList != null ? new ArrayList<>(enrolledList) : new ArrayList<>();
 
         this.notificationList = new ArrayList<>();
+        this.base64Image = doc.getString("base64Image");
         shouldUpdateRemote = true;
     }
 
@@ -131,6 +133,7 @@ public class User implements DatabaseEntity {
         map.put("eventsEnrolled", eventsEnrolled != null ? new ArrayList<>(eventsEnrolled) : new ArrayList<>());
         map.put("latitude", latitude);
         map.put("longitude", longitude);
+        map.put("base64Image", base64Image);
         return map;
     }
 
@@ -224,6 +227,16 @@ public class User implements DatabaseEntity {
             setRemote();
         }
     }
+
+    public String getBase64Image() {
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
+        setRemote();
+    }
+
 
     public List<String> getEventsEnrolled() {
         return Collections.unmodifiableList(eventsEnrolled);

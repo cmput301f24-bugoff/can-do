@@ -51,7 +51,7 @@ public class Event implements DatabaseEntity {
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
-    private String imageUrl; // Added field for the image URL
+    private String imageUrl;
 
     // Default constructor
     public Event(@NonNull Facility facility) {
