@@ -204,7 +204,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 textViewStatus.setVisibility(View.GONE);
             }
 
-
             // Set click listener for delete button
             buttonDelete.setOnClickListener(v -> {
                 if (deleteListener != null) {

@@ -69,17 +69,15 @@ public class SendNotificationFragment extends Fragment {
             } else if ("Waiting List Entrants".equals(selectedGroup)) {
                 Log.d(TAG, "Trying to send notification to waiting list entrants");
                 sendtoWaitingList(message, eventId);
-                // Clear message text
                 messageEditText.setText("");
             } else if ("Selected Entrants".equals(selectedGroup)) {
-                // Handle notification sending logic here
                 Toast.makeText(getContext(), "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
-                // TODO: 2024-11-11 Send notification to selected entrants
+                sendtoSelectedEntrants(getContext(), message, eventId);
                 messageEditText.setText("");
             } else if ("Cancelled Entrants".equals(selectedGroup)) {
-                // Handle notification sending logic here
                 Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
-                //TODO: send notification to cancelled entrants
+                sendtoCancelledEntrants(message, eventId);
+                messageEditText.setText("");
             } else {
                 // Handle notification sending logic here
                 Toast.makeText(getContext(), "Notification sent to " + selectedGroup, Toast.LENGTH_SHORT).show();
@@ -91,15 +89,57 @@ public class SendNotificationFragment extends Fragment {
         return view;
     }
 
-    public static void sendtoSelectedEntrants(String message, String eventId) {
-        // TODO: 2024-11-11 Implement this method
+    public static void sendtoSelectedEntrants(Context context, String message, String eventId) {
+        GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Event event = task.getResult();
+
+                if (event != null) {
+                    List<String> selectedEntrants = event.getSelectedEntrants();
+                    Log.d(TAG, "sendtoSelectedEntrants: " + selectedEntrants.size() + " selected extrants");
+
+                    for (String entrant : selectedEntrants) {
+                        String uniqueID = UUID.randomUUID().toString();
+                        Notification notification = new Notification(uniqueID, "Event Update", message, event.getFacility().getId(), entrant, eventId);
+                        GlobalRepository.addNotification(notification);
+
+                        // Trigger on-device notification
+                        String eventTitle = event.getName();
+                        sendLocalNotification(context, eventTitle, message);
+                    }
+
+                    Toast.makeText(context, "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
+
+                } else { Log.w("Event", "Event not found"); }
+            } else { Log.e("Event", "Error retrieving event", task.getException()); }
+        });
     }
 
     private void sendtoCancelledEntrants(String message, String eventId) {
-        // TODO: 2024-11-11 Implement this method
+        GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Event event = task.getResult();
+
+                if (event != null) {
+                    List<String> cancelledEntrants = event.getCancelledEntrants();
+                    Log.d(TAG, "sendtoCancelledEntrants: " + cancelledEntrants.size() + " cancelled entrants");
+
+                    for (String entrant : cancelledEntrants) {
+                        String uniqueID = UUID.randomUUID().toString();
+                        Notification notification = new Notification(uniqueID, "Event Update", message, event.getFacility().getId(), entrant, eventId);
+                        GlobalRepository.addNotification(notification);
+
+                        // Trigger on-device notification
+                        String eventTitle = event.getName();
+                        sendLocalNotification(getContext(), eventTitle, message);
+                    }
+
+                    Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
+
+                } else { Log.w("Event", "Event not found"); }
+            } else { Log.e("Event", "Error retrieving event", task.getException()); }
+        });
     }
-
-
 
     private void sendtoWaitingList(String message, String eventId) {
         Log.d(TAG, "sendtoWaitingList: made it here");
@@ -118,23 +158,21 @@ public class SendNotificationFragment extends Fragment {
                         Notification notification = new Notification(uniqueId, "Event Update", message, event.getFacility().getId(), entrant, eventId);
                         GlobalRepository.addNotification(notification);
 
-                        // Trigger on-device notification for the user
-                        sendLocalNotification("Event Update", message);
+                        // Trigger on-device notification
+                        String eventTitle = event.getName();
+                        sendLocalNotification(getContext(), eventTitle, message);
                     }
 
                     Toast.makeText(getContext(), "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.w("Event", "Event not found");
-                }
-            } else {
-                Log.e("Event", "Error retrieving event", task.getException());
-            }
+
+                } else { Log.w("Event", "Event not found"); }
+            } else { Log.e("Event", "Error retrieving event", task.getException()); }
         });
     }
 
-    private void sendLocalNotification(String title, String message) {
+    private static void sendLocalNotification(Context context, String title, String message) {
         // Create NotificationManager
-        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Notification Channel setup (required for Android O and above)
         String channelId = "waiting_list_channel";
@@ -147,7 +185,7 @@ public class SendNotificationFragment extends Fragment {
         notificationManager.createNotificationChannel(channel);
 
         // Build Notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), channelId)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.notifications_24px)
                 .setContentTitle(title)
                 .setContentText(message)

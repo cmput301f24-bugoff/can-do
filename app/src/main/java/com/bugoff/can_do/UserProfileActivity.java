@@ -2,6 +2,7 @@ package com.bugoff.can_do;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +28,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bugoff.can_do.admin.AdminActivity;
+import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Fragment for the user profile screen.
@@ -40,6 +47,7 @@ public class UserProfileActivity extends Fragment {
     private UserViewModel userViewModel;
     private String currEmail;
     private String currPNumber;
+    private Uri cameraPicUri;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +63,8 @@ public class UserProfileActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
+        ImageButton avatar = view.findViewById(R.id.image_avatar);
+
         // Register observers
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
@@ -63,10 +73,8 @@ public class UserProfileActivity extends Fragment {
                 String[] parts = name.split(" ");
                 if (parts.length > 0) {
                     firstName.setText(parts[0]);
-                    // Update avatar with first letter of name
                     String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
-                    ImageView avatar = view.findViewById(R.id.image_avatar);
-                    avatar.setImageBitmap(generateAvatar(firstLetter));
+                    loadUserProfileImage(avatar, firstLetter);
                 }
                 if (parts.length > 1) {
                     lastName.setText(parts[1]);
@@ -151,7 +159,11 @@ public class UserProfileActivity extends Fragment {
                         cameraLauncher.launch(cameraIntent);
                     })
                     .setNeutralButton("Remove", (dialog, which) -> {
-                        avatar.setImageBitmap(generateAvatar(firstLetter));
+                        User currentUser = GlobalRepository.getLoggedInUser();
+                        if (currentUser != null) {
+                            currentUser.setBase64Image(null);
+                            avatar.setImageBitmap(generateAvatar(firstLetter));
+                        }
                     })
                     .show();
         });
@@ -190,35 +202,80 @@ public class UserProfileActivity extends Fragment {
         return bitmap;
     }
 
-    /**
-     * Helper for launching gallery and camera intents
-     */
-    // For gallery launching
+    private String saveAvatar(Bitmap bitmap, String filename) {
+        try {
+            FileOutputStream fos = requireContext().openFileOutput(filename, Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            return new File(requireContext().getFilesDir(), filename).getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
     private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     Uri selectedImageUri = result.getData().getData();
                     ImageView avatar = getView().findViewById(R.id.image_avatar);
-                    avatar.setImageURI(selectedImageUri);
+
+                    // Compress and save image
+                    String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), selectedImageUri);
+                    if (base64Image != null) {
+                        User currentUser = GlobalRepository.getLoggedInUser();
+                        currentUser.setBase64Image(base64Image);
+
+                        // Update ImageView
+                        Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+                        if (bitmap != null) {
+                            avatar.setImageBitmap(bitmap);
+                        }
+                    }
                 }
             }
     );
 
-    /**
-     * Helper for launching gallery and camera intents
-     */
-    // For camera launching
     private ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Bitmap photo = (Bitmap) result.getData().getExtras().get("Data");
-                    ImageView avatar = getView().findViewById(R.id.image_avatar);
-                    avatar.setImageBitmap(photo);
+                    Bundle extras = result.getData().getExtras();
+                    if (extras != null) {
+                        Bitmap photo = (Bitmap) extras.get("data");
+                        if (photo != null) {
+                            ImageView avatar = getView().findViewById(R.id.image_avatar);
+
+                            // Compress and save image
+                            String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
+                            if (base64Image != null) {
+                                User currentUser = GlobalRepository.getLoggedInUser();
+                                currentUser.setBase64Image(base64Image);
+
+                                // Update ImageView
+                                avatar.setImageBitmap(photo);
+                            }
+                        }
+                    }
                 }
             }
     );
+
+    private void loadUserProfileImage(ImageView avatar, String firstLetter) {
+        User currentUser = GlobalRepository.getLoggedInUser();
+        if (currentUser != null && currentUser.getBase64Image() != null) {
+            Bitmap bitmap = ImageUtils.decodeBase64Image(currentUser.getBase64Image());
+            if (bitmap != null) {
+                avatar.setImageBitmap(bitmap);
+            } else {
+                avatar.setImageBitmap(generateAvatar(firstLetter));
+            }
+        } else {
+            avatar.setImageBitmap(generateAvatar(firstLetter));
+        }
+    }
 
     /**
      * Helper for loading user data from Firestore

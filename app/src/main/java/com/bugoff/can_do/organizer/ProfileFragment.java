@@ -3,7 +3,6 @@ package com.bugoff.can_do.organizer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,10 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bugoff.can_do.HomeActivity;
+import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.MainActivity;
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,9 +55,6 @@ public class ProfileFragment extends Fragment {
 
         TextView userNameTextView = view.findViewById(R.id.first_name);
         String userName = userNameTextView.getText().toString();
-        String firstLetter = userName.isEmpty() ? "A" : userName.substring(0, 1).toUpperCase();
-        ImageView avatar = view.findViewById(R.id.image_avatar);
-        avatar.setImageBitmap(generateAvatar(firstLetter));
 
         @SuppressLint("HardwareIds") String androidID = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -96,8 +91,6 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-
-
         view.findViewById(R.id.image_avatar).setOnClickListener(v -> {
             new AlertDialog.Builder(getContext())
                     .setTitle("Change Profile Picture")
@@ -111,10 +104,17 @@ public class ProfileFragment extends Fragment {
                         cameraLauncher.launch(cameraIntent);
                     })
                     .setNeutralButton("Remove", (dialog, which) -> {
+                        user.setBase64Image(null);
+                        ImageView avatar = getView().findViewById(R.id.image_avatar);
+                        String firstLetter = user.getName() != null && !user.getName().isEmpty()
+                                ? user.getName().substring(0, 1).toUpperCase()
+                                : "A";
                         avatar.setImageBitmap(generateAvatar(firstLetter));
+                        user.setRemote(); // Save changes to Firestore
                     })
                     .show();
         });
+
 
         return view;
     }
@@ -145,27 +145,67 @@ public class ProfileFragment extends Fragment {
         return bitmap;
     }
 
+    /**
+     * Loads the user's profile image from base64 or sets a default avatar.
+     *
+     * @param avatar      The ImageView to display the avatar.
+     * @param firstLetter The first letter of the user's name for the default avatar.
+     */
+    private void loadUserProfileImage(ImageView avatar, String firstLetter) {
+        if (user != null && user.getBase64Image() != null) {
+            Bitmap bitmap = ImageUtils.decodeBase64Image(user.getBase64Image());
+            if (bitmap != null) {
+                avatar.setImageBitmap(bitmap);
+            } else {
+                avatar.setImageBitmap(generateAvatar(firstLetter));
+            }
+        } else {
+            avatar.setImageBitmap(generateAvatar(firstLetter));
+        }
+    }
+
     private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     Uri selectedImageUri = result.getData().getData();
                     ImageView avatar = getView().findViewById(R.id.image_avatar);
-                    avatar.setImageURI(selectedImageUri);
+
+                    // Compress and encode image to base64
+                    String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), selectedImageUri);
+                    if (base64Image != null) {
+                        user.setBase64Image(base64Image);
+                        avatar.setImageBitmap(ImageUtils.decodeBase64Image(base64Image));
+                        user.setRemote(); // Save changes to Firestore
+                    }
                 }
             }
     );
+
 
     private ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Bitmap photo = (Bitmap) result.getData().getExtras().get("Data");
-                    ImageView avatar = getView().findViewById(R.id.image_avatar);
-                    avatar.setImageBitmap(photo);
+                    Bundle extras = result.getData().getExtras();
+                    if (extras != null) {
+                        Bitmap photo = (Bitmap) extras.get("data"); // Corrected key to "data"
+                        if (photo != null) {
+                            ImageView avatar = getView().findViewById(R.id.image_avatar);
+
+                            // Compress and encode bitmap to base64
+                            String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
+                            if (base64Image != null) {
+                                user.setBase64Image(base64Image);
+                                avatar.setImageBitmap(photo);
+                                user.setRemote(); // Save changes to Firestore
+                            }
+                        }
+                    }
                 }
             }
     );
+
 
     private void loadUserData(FirebaseFirestore db, String androidID) {
         db.collection("users").document(androidID).get()
@@ -175,6 +215,7 @@ public class ProfileFragment extends Fragment {
                         String userName = user.getName();
                         TextView firstName = getView().findViewById(R.id.first_name);
                         TextView lastName = getView().findViewById(R.id.last_name);
+                        ImageView avatar = getView().findViewById(R.id.image_avatar); // Ensure avatar is defined here
 
                         if (userName != null && !userName.isEmpty()) {
                             String[] parts = userName.split(" ");
@@ -184,6 +225,10 @@ public class ProfileFragment extends Fragment {
                             if (parts.length > 1) {
                                 lastName.setText(parts[1]);
                             }
+
+                            // Load profile image using base64
+                            String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
+                            loadUserProfileImage(avatar, firstLetter);
                         }
                     } else {
                         user = new User(androidID);
@@ -191,6 +236,7 @@ public class ProfileFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure to load data", Toast.LENGTH_SHORT).show());
     }
+
 
     private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
         if (user == null) {

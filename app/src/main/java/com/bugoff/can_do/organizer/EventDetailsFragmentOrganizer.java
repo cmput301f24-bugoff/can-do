@@ -3,7 +3,6 @@ package com.bugoff.can_do.organizer;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,13 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventWaitlistFragment;
 import com.bugoff.can_do.notification.SendNotificationFragment;
-import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -191,12 +190,14 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                         }
 
                         // Handle image
-                        if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.equals("null")) {
-                            eventImageView.setVisibility(View.VISIBLE);
-                            Glide.with(this)
-                                    .load(imageUrl)
-                                    .error(R.drawable.ic_launcher_background)
-                                    .into(eventImageView);
+                        String base64Image = documentSnapshot.getString("base64Image");
+                        if (base64Image != null) {
+                            Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+                            if (bitmap != null) {
+                                eventImageView.setImageBitmap(bitmap);
+                            } else {
+                                eventImageView.setVisibility(View.GONE);
+                            }
                         } else {
                             eventImageView.setVisibility(View.GONE);
                         }
