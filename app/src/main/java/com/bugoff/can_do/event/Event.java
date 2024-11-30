@@ -51,7 +51,7 @@ public class Event implements DatabaseEntity {
     private FirebaseFirestore db;
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
-    private String imageUrl; // Added field for the image URL
+    private String base64Image;
 
     // Default constructor
     public Event(@NonNull Facility facility) {
@@ -72,7 +72,6 @@ public class Event implements DatabaseEntity {
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        this.imageUrl = "";
         // facility.addEvent(this); // Ensure bidirectional reference (edit: maybe not?)
     }
 
@@ -90,7 +89,7 @@ public class Event implements DatabaseEntity {
         this.maxNumberOfParticipants = doc.getLong("maxNumberOfParticipants") != null ? Objects.requireNonNull(doc.getLong("maxNumberOfParticipants")).intValue() : 0;
         this.geolocationRequired = doc.getBoolean("geolocationRequired") != null ? doc.getBoolean("geolocationRequired") : Boolean.FALSE;
 
-        this.imageUrl = doc.getString("imageUrl"); // Retrieve imageUrl from Firestore
+        this.base64Image = doc.getString("base64Image");
         // Initialize user lists as lists of user IDs
         this.waitingListEntrants = new ArrayList<>();
         this.entrantsLocations = new HashMap<>();
@@ -126,7 +125,7 @@ public class Event implements DatabaseEntity {
         map.put("selectedEntrants", selectedEntrants); // List of user IDs
         map.put("enrolledEntrants", enrolledEntrants); // List of user IDs
         map.put("cancelledEntrants", cancelledEntrants); // List of user IDs
-        map.put("imageUrl", imageUrl); // Include imageUrl in the map
+        map.put("base64Image", base64Image);
         return map;
     }
 
@@ -240,12 +239,12 @@ public class Event implements DatabaseEntity {
         return id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getBase64Image() {
+        return base64Image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
         setRemote();
     }
 
@@ -534,7 +533,7 @@ public class Event implements DatabaseEntity {
                         ? documentSnapshot.getLong("maxNumberOfParticipants").intValue()
                         : 0;
                 this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
-                this.imageUrl = documentSnapshot.getString("imageUrl");
+                this.base64Image = documentSnapshot.getString("base64Image");
 
                 // Deserialize complex fields
                 this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));

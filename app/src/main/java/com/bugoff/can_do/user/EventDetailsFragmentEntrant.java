@@ -3,6 +3,7 @@ package com.bugoff.can_do.user;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +21,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -109,7 +110,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
                             eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
                         });
                         Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
-                        String imageUrl = documentSnapshot.getString("imageUrl");
 
                         eventNameTextView.setText(eventName != null ? eventName : "N/A");
                         eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
@@ -123,8 +123,16 @@ public class EventDetailsFragmentEntrant extends Fragment {
                             eventDateTextView.setText("Date: N/A");
                         }
 
-                        if (imageUrl != null && !imageUrl.isEmpty()) {
-                            Glide.with(this).load(imageUrl).into(eventImageView);
+                        String base64Image = documentSnapshot.getString("base64Image");
+                        if (base64Image != null) {
+                            Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+                            if (bitmap != null) {
+                                eventImageView.setImageBitmap(bitmap);
+                            } else {
+                                eventImageView.setVisibility(View.GONE);
+                            }
+                        } else {
+                            eventImageView.setVisibility(View.GONE);
                         }
                     } else {
                         Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
