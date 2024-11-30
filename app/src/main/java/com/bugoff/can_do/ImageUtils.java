@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class ImageUtils {
     private static final String TAG = "ImageUtils";
-    private static final int MAX_DIMENSION = 400;
-    private static final int COMPRESSION_QUALITY = 50; // JPEG compression quality (0-100)
+    private static final int MAX_DIMENSION = 800;
+    private static final int COMPRESSION_QUALITY = 80; // JPEG compression quality (0-100)
 
     /**
      * Compresses and encodes an image URI to a Base64 string.
