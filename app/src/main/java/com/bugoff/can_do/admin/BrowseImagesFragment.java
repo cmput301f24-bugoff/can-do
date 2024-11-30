@@ -65,7 +65,7 @@ public class BrowseImagesFragment extends Fragment {
         emptyView.setVisibility(View.GONE);
 
         GlobalRepository.getEventsCollection()
-                .whereNotEqualTo("imageUrl", null)
+                .whereNotEqualTo("base64Image", null)  // Changed from imageUrl to base64Image
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     eventsWithImages.clear();
@@ -83,25 +83,22 @@ public class BrowseImagesFragment extends Fragment {
                             GlobalRepository.getFacility(facilityId)
                                     .addOnSuccessListener(facility -> {
                                         Event event = new Event(facility, document);
-                                        if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
+                                        if (event.getBase64Image() != null && !event.getBase64Image().isEmpty()) {
                                             eventsWithImages.add(event);
                                             adapter.updateEvents(eventsWithImages);
                                         }
 
-                                        // Check if all documents have been processed
                                         if (processedDocuments.incrementAndGet() == totalDocuments) {
                                             updateViewVisibility();
                                         }
                                     })
                                     .addOnFailureListener(e -> {
                                         Log.e("BrowseImagesFragment", "Error loading facility: " + e.getMessage());
-                                        // Still increment counter even on failure
                                         if (processedDocuments.incrementAndGet() == totalDocuments) {
                                             updateViewVisibility();
                                         }
                                     });
                         } else {
-                            // Handle case where facilityId is null
                             if (processedDocuments.incrementAndGet() == totalDocuments) {
                                 updateViewVisibility();
                             }

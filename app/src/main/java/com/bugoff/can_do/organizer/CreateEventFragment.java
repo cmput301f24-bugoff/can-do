@@ -24,14 +24,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.Contract;
 
@@ -40,10 +38,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
-
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 /**
  * Fragment for creating a new event with options for image upload, date and time selection,
@@ -128,6 +122,8 @@ public class CreateEventFragment extends Fragment {
         backButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
     }
 
+    private String imageBase64 = null; // temp storage
+
     /**
      * Sets up the image picker to allow users to upload an image for the event.
      */
@@ -135,11 +131,15 @@ public class CreateEventFragment extends Fragment {
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
-                            imageUri = data.getData();
-                            Toast.makeText(getContext(), "Image selected", Toast.LENGTH_SHORT).show();
+                            Uri selectedImageUri = data.getData();
+                            String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), selectedImageUri);
+                            if (base64Image != null) {
+                                imageBase64 = base64Image;
+                                Toast.makeText(getContext(), "Image selected", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }
@@ -148,49 +148,31 @@ public class CreateEventFragment extends Fragment {
         buttonUploadImage.setOnClickListener(v -> openImagePicker());
     }
 
-    /**
-     * Uploads the selected image to Firebase storage and saves the event with the image URL.
-     *
-     * @param imageUri URI of the selected image.
-     * @param event Event to be saved with the image URL.
-     */
-
-    private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child("event_images/" + event.getId() + ".jpg");
-
-        UploadTask uploadTask = imageRef.putFile(imageUri);
-
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                String imageUrl = uri.toString();
-                event.setImageUrl(imageUrl);
-                saveEventToDatabase(event);
-            }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
-            });
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
-        });
-    }
-
-    /**
-     * Saves the event data to the Firebase database.
-     *
-     * @param event Event to be saved to the database.
-     */
-
-    private void saveEventToDatabase(Event event) {
-        GlobalRepository.addEvent(event).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
-                navigateToOrganizerMain();
-            } else {
-                Toast.makeText(getContext(), "Failed to create event: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
-                Log.e("CreateEventFragment", "Error creating event", task.getException());
-            }
-        });
-    }
+//    /**
+//     * Uploads the selected image to Firebase storage and saves the event with the image URL.
+//     *
+//     * @param imageUri URI of the selected image.
+//     * @param event Event to be saved with the image URL.
+//     */
+//
+//    private void uploadImageToFirebaseStorage(Uri imageUri, Event event) {
+//        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+//        StorageReference imageRef = storageRef.child("event_images/" + event.getId() + ".jpg");
+//
+//        UploadTask uploadTask = imageRef.putFile(imageUri);
+//
+//        uploadTask.addOnSuccessListener(taskSnapshot -> {
+//            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+//                String imageUrl = uri.toString();
+//                event.setImageUrl(imageUrl);
+//                saveEventToDatabase(event);
+//            }).addOnFailureListener(e -> {
+//                Toast.makeText(getContext(), "Failed to get image URL", Toast.LENGTH_SHORT).show();
+//            });
+//        }).addOnFailureListener(e -> {
+//            Toast.makeText(getContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+//        });
+//    }
 
     /**
      * Initializes view elements for the fragment.
@@ -424,7 +406,9 @@ public class CreateEventFragment extends Fragment {
         newEvent.setMaxNumberOfParticipants(maxNumParticipants);
         newEvent.setGeolocationRequired(isGeolocationRequired);
         newEvent.setQrCodeHash("cando-" + newEvent.getId());
-        newEvent.setImageUrl(String.valueOf(imageUri));
+        if (imageBase64 != null) {
+            newEvent.setBase64Image(imageBase64);
+        }
 
         // Save the Event to Firestore using GlobalRepository
         GlobalRepository.addEvent(newEvent).addOnCompleteListener(task -> {

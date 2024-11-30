@@ -1,5 +1,6 @@
 package com.bugoff.can_do.admin;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.event.Event;
-import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -67,12 +68,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         }
 
         public void bind(Event event, OnDeleteClickListener listener) {
-            // Load image using Glide
-            if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
-                Glide.with(itemView.getContext())
-                        .load(event.getImageUrl())
-                        .centerCrop()
-                        .into(eventImage);
+            if (event.getBase64Image() != null) {
+                Bitmap bitmap = ImageUtils.decodeBase64Image(event.getBase64Image());
+                if (bitmap != null) {
+                    eventImage.setVisibility(View.VISIBLE);
+                    eventImage.setImageBitmap(bitmap);
+                } else {
+                    eventImage.setVisibility(View.GONE);
+                }
+            } else {
+                eventImage.setVisibility(View.GONE);
             }
 
             eventName.setText(event.getName());
