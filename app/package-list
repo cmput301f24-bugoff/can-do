@@ -93,6 +93,7 @@ $dokka.location:com.bugoff.can_do.event/Event/deserializeUserList/#java.lang.Obj
 $dokka.location:com.bugoff.can_do.event/Event/deserializeUserList/#java.lang.Object/PointingToDeclaration/app/com.bugoff.can_do.event/-event/deserialize-user-list.html
 $dokka.location:com.bugoff.can_do.event/Event/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/detach-listener.html
 $dokka.location:com.bugoff.can_do.event/Event/enrollEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/enroll-entrant.html
+$dokka.location:com.bugoff.can_do.event/Event/getBase64Image/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-base64-image.html
 $dokka.location:com.bugoff.can_do.event/Event/getCancelledEntrants/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-cancelled-entrants.html
 $dokka.location:com.bugoff.can_do.event/Event/getDescription/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-description.html
 $dokka.location:com.bugoff.can_do.event/Event/getEnrolledEntrants/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-enrolled-entrants.html
@@ -103,7 +104,6 @@ $dokka.location:com.bugoff.can_do.event/Event/getEventStartDate/#/PointingToDecl
 $dokka.location:com.bugoff.can_do.event/Event/getFacility/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-facility.html
 $dokka.location:com.bugoff.can_do.event/Event/getGeolocationRequired/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-geolocation-required.html
 $dokka.location:com.bugoff.can_do.event/Event/getId/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-id.html
-$dokka.location:com.bugoff.can_do.event/Event/getImageUrl/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-image-url.html
 $dokka.location:com.bugoff.can_do.event/Event/getMaxNumberOfParticipants/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-max-number-of-participants.html
 $dokka.location:com.bugoff.can_do.event/Event/getName/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-name.html
 $dokka.location:com.bugoff.can_do.event/Event/getQrCodeHash/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/get-qr-code-hash.html
@@ -114,6 +114,7 @@ $dokka.location:com.bugoff.can_do.event/Event/getWaitingListEntrants/#/PointingT
 $dokka.location:com.bugoff.can_do.event/Event/onUpdate/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event/on-update.html
 $dokka.location:com.bugoff.can_do.event/Event/removeSelectedEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/remove-selected-entrant.html
 $dokka.location:com.bugoff.can_do.event/Event/removeWaitingListEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/remove-waiting-list-entrant.html
+$dokka.location:com.bugoff.can_do.event/Event/setBase64Image/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-base64-image.html
 $dokka.location:com.bugoff.can_do.event/Event/setDescription/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-description.html
 $dokka.location:com.bugoff.can_do.event/Event/setEnrolledEntrants/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-enrolled-entrants.html
 $dokka.location:com.bugoff.can_do.event/Event/setEntrantStatuses/#java.util.Map<java.lang.String,com.bugoff.can_do.EntrantStatus>/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-entrant-statuses.html
@@ -122,7 +123,6 @@ $dokka.location:com.bugoff.can_do.event/Event/setEventEndDate/#java.util.Date/Po
 $dokka.location:com.bugoff.can_do.event/Event/setEventStartDate/#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-event-start-date.html
 $dokka.location:com.bugoff.can_do.event/Event/setFacility/#com.bugoff.can_do.facility.Facility/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-facility.html
 $dokka.location:com.bugoff.can_do.event/Event/setGeolocationRequired/#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-geolocation-required.html
-$dokka.location:com.bugoff.can_do.event/Event/setImageUrl/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-image-url.html
 $dokka.location:com.bugoff.can_do.event/Event/setMaxNumberOfParticipants/#java.lang.Integer/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-max-number-of-participants.html
 $dokka.location:com.bugoff.can_do.event/Event/setName/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-name.html
 $dokka.location:com.bugoff.can_do.event/Event/setOnUpdateListener/#java.lang.Runnable/PointingToDeclaration/app/com.bugoff.can_do.event/-event/set-on-update-listener.html
@@ -313,7 +313,6 @@ $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/newInstance/#/Po
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/openImagePicker/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/open-image-picker.html
-$dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/saveEventToDatabase/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/save-event-to-database.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setDate/#java.util.Date#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/set-date.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setTime/#java.util.Date#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/set-time.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupBackButton/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/setup-back-button.html
@@ -323,7 +322,6 @@ $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/setupImagePicker
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/showDatePickerDialog/#com.bugoff.can_do.organizer.CreateEventFragment.DateSelectedListener/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/show-date-picker-dialog.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/showTimePickerDialog/#com.bugoff.can_do.organizer.CreateEventFragment.TimeSelectedListener/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/show-time-picker-dialog.html
 $dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/updateButtonText/#Button#java.util.Date/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/update-button-text.html
-$dokka.location:com.bugoff.can_do.organizer/CreateEventFragment/uploadImageToFirebaseStorage/#Uri#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do.organizer/-create-event-fragment/upload-image-to-firebase-storage.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsFragmentOrganizer///PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-fragment-organizer/index.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsFragmentOrganizer/EventDetailsFragmentOrganizer/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-fragment-organizer/-event-details-fragment-organizer.html
 $dokka.location:com.bugoff.can_do.organizer/EventDetailsFragmentOrganizer/confirmAndDeleteFacilityEvents/#/PointingToDeclaration/app/com.bugoff.can_do.organizer/-event-details-fragment-organizer/confirm-and-delete-facility-events.html
@@ -366,6 +364,7 @@ $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/editEmailDialog/#/Po
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/editNameDialog/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/edit-name-dialog.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/generateAvatar/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/generate-avatar.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/loadUserData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/load-user-data.html
+$dokka.location:com.bugoff.can_do.organizer/ProfileFragment/loadUserProfileImage/#ImageView#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/load-user-profile-image.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.organizer/ProfileFragment/saveUserData/#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do.organizer/-profile-fragment/save-user-data.html
 $dokka.location:com.bugoff.can_do.organizer/WaitingListMapActivity///PointingToDeclaration/app/com.bugoff.can_do.organizer/-waiting-list-map-activity/index.html
@@ -430,6 +429,7 @@ $dokka.location:com.bugoff.can_do.user/User/addEventJoined/#java.lang.String/Poi
 $dokka.location:com.bugoff.can_do.user/User/addNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.user/-user/add-notification.html
 $dokka.location:com.bugoff.can_do.user/User/attachListener/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/attach-listener.html
 $dokka.location:com.bugoff.can_do.user/User/detachListener/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/detach-listener.html
+$dokka.location:com.bugoff.can_do.user/User/getBase64Image/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-base64-image.html
 $dokka.location:com.bugoff.can_do.user/User/getEmail/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-email.html
 $dokka.location:com.bugoff.can_do.user/User/getEventsEnrolled/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-events-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/getEventsJoined/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/get-events-joined.html
@@ -446,6 +446,7 @@ $dokka.location:com.bugoff.can_do.user/User/onUpdate/#/PointingToDeclaration/ap
 $dokka.location:com.bugoff.can_do.user/User/removeEventEnrolled/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-event-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/removeEventJoined/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-event-joined.html
 $dokka.location:com.bugoff.can_do.user/User/removeNotification/#com.bugoff.can_do.notification.Notification/PointingToDeclaration/app/com.bugoff.can_do.user/-user/remove-notification.html
+$dokka.location:com.bugoff.can_do.user/User/setBase64Image/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-base64-image.html
 $dokka.location:com.bugoff.can_do.user/User/setEmail/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-email.html
 $dokka.location:com.bugoff.can_do.user/User/setEventsEnrolled/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-events-enrolled.html
 $dokka.location:com.bugoff.can_do.user/User/setEventsJoined/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-events-joined.html
@@ -505,6 +506,12 @@ $dokka.location:com.bugoff.can_do/HomeActivity/handleEventClick/#com.bugoff.can_
 $dokka.location:com.bugoff.can_do/HomeActivity/navigateToAcceptDecline/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/navigate-to-accept-decline.html
 $dokka.location:com.bugoff.can_do/HomeActivity/navigateToEventDetails/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/navigate-to-event-details.html
 $dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/on-create-view.html
+$dokka.location:com.bugoff.can_do/ImageUtils///PointingToDeclaration/app/com.bugoff.can_do/-image-utils/index.html
+$dokka.location:com.bugoff.can_do/ImageUtils/ImageUtils/#/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/-image-utils.html
+$dokka.location:com.bugoff.can_do/ImageUtils/compressAndEncodeBitmap/#Bitmap/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/compress-and-encode-bitmap.html
+$dokka.location:com.bugoff.can_do/ImageUtils/compressAndEncodeImage/#Context#Uri/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/compress-and-encode-image.html
+$dokka.location:com.bugoff.can_do/ImageUtils/decodeBase64Image/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/decode-base64-image.html
+$dokka.location:com.bugoff.can_do/ImageUtils/getBase64ImageSize/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/get-base64-image-size.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
 $dokka.location:com.bugoff.can_do/MainActivity/checkLocationPermissionAndFetchLocation/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/check-location-permission-and-fetch-location.html
@@ -525,6 +532,7 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/editNameDialog/#TextView#T
 $dokka.location:com.bugoff.can_do/UserProfileActivity/editPNumberDialog/#/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/edit-p-number-dialog.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/generateAvatar/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/generate-avatar.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/loadUserData/#FirebaseFirestore#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/load-user-data.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/loadUserProfileImage/#ImageView#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/load-user-profile-image.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/on-create-view.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveAvatar/#Bitmap#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-avatar.html
