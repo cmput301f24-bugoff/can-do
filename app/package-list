@@ -388,9 +388,11 @@ $dokka.location:com.bugoff.can_do.user/AcceptDeclineFragment/rejectInvitation/#c
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment///PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/BrowseProfilesFragment/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/-browse-profiles-fragment.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/onDeleteClick/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/on-delete-click.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel///PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/index.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel/BrowseProfilesViewModel/#boolean/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/-browse-profiles-view-model.html
+$dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel/deleteUser/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/delete-user.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel/fetchProfiles/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/fetch-profiles.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel/getErrorMessage/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/get-error-message.html
 $dokka.location:com.bugoff.can_do.user/BrowseProfilesViewModel/getProfilesList/#/PointingToDeclaration/app/com.bugoff.can_do.user/-browse-profiles-view-model/get-profiles-list.html
@@ -459,11 +461,14 @@ $dokka.location:com.bugoff.can_do.user/User/setOnUpdateListener/#java.lang.Runna
 $dokka.location:com.bugoff.can_do.user/User/setPhoneNumber/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-phone-number.html
 $dokka.location:com.bugoff.can_do.user/User/setRemote/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/set-remote.html
 $dokka.location:com.bugoff.can_do.user/User/toMap/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user/to-map.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter.OnDeleteClickListener///PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-on-delete-click-listener/index.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter.OnDeleteClickListener/onDeleteClick/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-on-delete-click-listener/on-delete-click.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder///PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/index.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/UserAdapter.UserViewHolder/#View/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/-user-adapter.-user-view-holder.html
-$dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/bind/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/bind.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/bind/#com.bugoff.can_do.user.User#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/bind.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/setDefaultAvatar/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/set-default-avatar.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter///PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/index.html
-$dokka.location:com.bugoff.can_do.user/UserAdapter/UserAdapter/#java.util.List<com.bugoff.can_do.user.User>/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-adapter.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter/UserAdapter/#java.util.List<com.bugoff.can_do.user.User>#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-adapter.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/getItemCount/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/get-item-count.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/onBindViewHolder/#com.bugoff.can_do.user.UserAdapter.UserViewHolder#int/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/on-bind-view-holder.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/onCreateViewHolder/#ViewGroup#int/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/on-create-view-holder.html
@@ -511,6 +516,7 @@ $dokka.location:com.bugoff.can_do/ImageUtils/ImageUtils/#/PointingToDeclaration/
 $dokka.location:com.bugoff.can_do/ImageUtils/compressAndEncodeBitmap/#Bitmap/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/compress-and-encode-bitmap.html
 $dokka.location:com.bugoff.can_do/ImageUtils/compressAndEncodeImage/#Context#Uri/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/compress-and-encode-image.html
 $dokka.location:com.bugoff.can_do/ImageUtils/decodeBase64Image/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/decode-base64-image.html
+$dokka.location:com.bugoff.can_do/ImageUtils/generateDefaultAvatar/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/generate-default-avatar.html
 $dokka.location:com.bugoff.can_do/ImageUtils/getBase64ImageSize/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/get-base64-image-size.html
 $dokka.location:com.bugoff.can_do/MainActivity///PointingToDeclaration/app/com.bugoff.can_do/-main-activity/index.html
 $dokka.location:com.bugoff.can_do/MainActivity/MainActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-main-activity/-main-activity.html
