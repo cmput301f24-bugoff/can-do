@@ -131,7 +131,7 @@ public class BrowseImagesFragment extends Fragment {
 
         // Update the event in Firestore to remove the image URL
         GlobalRepository.getEventsCollection().document(event.getId())
-                .update("imageUrl", null)
+                .update("base64Image", null)
                 .addOnSuccessListener(aVoid -> {
                     // Remove from local list and update adapter
                     eventsWithImages.remove(event);

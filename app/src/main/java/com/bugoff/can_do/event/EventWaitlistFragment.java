@@ -167,7 +167,7 @@ public class EventWaitlistFragment extends Fragment {
 
         // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(userList);
+        userAdapter = new UserAdapter(userList, null);
         recyclerView.setAdapter(userAdapter);
 
         // Initialize ViewModel using a factory with the event ID

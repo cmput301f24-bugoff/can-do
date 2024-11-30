@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,21 +20,11 @@ import com.bugoff.can_do.R;
 
 import java.util.ArrayList;
 
-/**
- * Fragment for browsing user profiles. This fragment displays a list of user profiles in a RecyclerView.
- * The profiles are fetched from a ViewModel that retrieves the data from a data source.
- */
-public class BrowseProfilesFragment extends Fragment {
-    /** RecyclerView for displaying user profiles */
+public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDeleteClickListener {
     private RecyclerView recyclerViewProfiles;
-    /** Adapter for the RecyclerView */
     private UserAdapter userAdapter;
-    /** ProgressBar for indicating loading state */
     private ProgressBar progressBar;
-    /** TextView for displaying an empty state message */
     private TextView emptyTextView;
-
-    /** ViewModel for fetching user profiles */
     private BrowseProfilesViewModel browseProfilesViewModel;
 
     public BrowseProfilesFragment() {
@@ -51,7 +43,7 @@ public class BrowseProfilesFragment extends Fragment {
 
         // Set up RecyclerView
         recyclerViewProfiles.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(new ArrayList<>());
+        userAdapter = new UserAdapter(new ArrayList<>(), this);
         recyclerViewProfiles.setAdapter(userAdapter);
 
         return view;
@@ -60,6 +52,7 @@ public class BrowseProfilesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         // Initialize ViewModel
         browseProfilesViewModel = new ViewModelProvider(this, new BrowseProfilesViewModelFactory(true))
                 .get(BrowseProfilesViewModel.class);
@@ -73,6 +66,7 @@ public class BrowseProfilesFragment extends Fragment {
             } else {
                 recyclerViewProfiles.setVisibility(View.GONE);
                 emptyTextView.setVisibility(View.VISIBLE);
+                emptyTextView.setText("No profiles found");
             }
             progressBar.setVisibility(View.GONE);
         });
@@ -80,10 +74,24 @@ public class BrowseProfilesFragment extends Fragment {
         // Observe LiveData for error messages
         browseProfilesViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null && !errorMsg.isEmpty()) {
+                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 emptyTextView.setVisibility(View.VISIBLE);
                 emptyTextView.setText(errorMsg);
             }
         });
+    }
+
+    @Override
+    public void onDeleteClick(User user) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete User")
+                .setMessage("Are you sure you want to delete " + user.getName() + "?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    progressBar.setVisibility(View.VISIBLE);
+                    browseProfilesViewModel.deleteUser(user);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }

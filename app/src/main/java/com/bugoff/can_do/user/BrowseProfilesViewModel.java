@@ -116,4 +116,28 @@ public class BrowseProfilesViewModel extends ViewModel {
             listenerRegistration.remove();
         }
     }
+
+    /**
+     * Deletes a user from the database.
+     *
+     * @param user The user to delete
+     */
+    public void deleteUser(User user) {
+        if (!isAdmin) {
+            errorMessage.setValue("Only administrators can delete users");
+            return;
+        }
+
+        GlobalRepository.getUsersCollection()
+                .document(user.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // No need to manually update the list as the snapshot listener will handle it
+                    errorMessage.setValue("User deleted successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting user", e);
+                    errorMessage.setValue("Failed to delete user: " + e.getMessage());
+                });
+    }
 }

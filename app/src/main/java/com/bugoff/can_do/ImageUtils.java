@@ -3,7 +3,10 @@ package com.bugoff.can_do;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -106,5 +109,39 @@ public class ImageUtils {
     public static int getBase64ImageSize(String base64Image) {
         if (base64Image == null) return 0;
         return base64Image.length() * 3/4;
+    }
+
+    /**
+     * Generates a default avatar bitmap with the first letter of the user's name
+     *
+     * @param letter The letter to display in the avatar
+     * @return Bitmap containing the generated avatar
+     */
+    public static Bitmap generateDefaultAvatar(String letter) {
+        int size = 96; // Size for the bitmap (48dp * 2 for better resolution)
+        int bgColor = Color.LTGRAY;
+        int txtColor = Color.WHITE;
+
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Draw background
+        Paint bgPaint = new Paint();
+        bgPaint.setColor(bgColor);
+        bgPaint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(0, 0, size, size, bgPaint);
+
+        // Draw text
+        Paint txtPaint = new Paint();
+        txtPaint.setColor(txtColor);
+        txtPaint.setTextSize(size / 2f);
+        txtPaint.setTextAlign(Paint.Align.CENTER);
+        txtPaint.setAntiAlias(true);
+
+        float x = size / 2f;
+        float y = (size / 2f) - ((txtPaint.descent() + txtPaint.ascent()) / 2);
+        canvas.drawText(letter, x, y, txtPaint);
+
+        return bitmap;
     }
 }
