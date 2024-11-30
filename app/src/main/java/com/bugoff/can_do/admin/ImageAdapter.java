@@ -14,20 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.event.Event;
+import com.bugoff.can_do.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
-
-    private List<Event> eventsWithImages;
+    private List<Object> items; // Can contain both Event and User objects
     private OnDeleteClickListener deleteClickListener;
 
     public interface OnDeleteClickListener {
-        void onDeleteClick(Event event);
+        void onDeleteClick(Object item, boolean isEvent);
     }
 
-    public ImageAdapter(List<Event> eventsWithImages, OnDeleteClickListener listener) {
-        this.eventsWithImages = eventsWithImages;
+    public ImageAdapter(OnDeleteClickListener listener) {
+        this.items = new ArrayList<>();
         this.deleteClickListener = listener;
     }
 
@@ -41,50 +42,75 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        Event event = eventsWithImages.get(position);
-        holder.bind(event, deleteClickListener);
+        Object item = items.get(position);
+        holder.bind(item, deleteClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return eventsWithImages != null ? eventsWithImages.size() : 0;
+        return items.size();
     }
 
-    public void updateEvents(List<Event> events) {
-        this.eventsWithImages = events;
+    public void updateItems(List<Object> newItems) {
+        this.items = newItems;
+        notifyDataSetChanged();
+    }
+
+    public void addItems(List<?> newItems) {
+        this.items.addAll(newItems);
         notifyDataSetChanged();
     }
 
     static class ImageViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView eventImage;
+        private final ImageView imageView;
         private final ImageButton deleteButton;
-        private final TextView eventName;
+        private final TextView nameText;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-            eventImage = itemView.findViewById(R.id.event_image);
+            imageView = itemView.findViewById(R.id.event_image);
             deleteButton = itemView.findViewById(R.id.button_delete_image);
-            eventName = itemView.findViewById(R.id.text_event_name);
+            nameText = itemView.findViewById(R.id.text_event_name);
         }
 
-        public void bind(Event event, OnDeleteClickListener listener) {
-            if (event.getBase64Image() != null) {
-                Bitmap bitmap = ImageUtils.decodeBase64Image(event.getBase64Image());
-                if (bitmap != null) {
-                    eventImage.setVisibility(View.VISIBLE);
-                    eventImage.setImageBitmap(bitmap);
-                } else {
-                    eventImage.setVisibility(View.GONE);
-                }
+        public void bind(Object item, OnDeleteClickListener listener) {
+            String base64Image;
+            String name;
+            boolean isEvent;
+
+            if (item instanceof Event) {
+                Event event = (Event) item;
+                base64Image = event.getBase64Image();
+                name = event.getName();
+                isEvent = true;
+                name = "Event: " + name;
+            } else if (item instanceof User) {
+                User user = (User) item;
+                base64Image = user.getBase64Image();
+                name = user.getName();
+                isEvent = false;
+                name = "User: " + name;
             } else {
-                eventImage.setVisibility(View.GONE);
+                return;
             }
 
-            eventName.setText(event.getName());
+            if (base64Image != null) {
+                Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+                if (bitmap != null) {
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    imageView.setVisibility(View.GONE);
+                }
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
+
+            nameText.setText(name);
 
             deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onDeleteClick(event);
+                    listener.onDeleteClick(item, isEvent);
                 }
             });
         }
