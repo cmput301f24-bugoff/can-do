@@ -124,8 +124,9 @@ public class HomeActivity extends Fragment {
             Toast.makeText(getContext(), "Navigating to event details (enrolled)...", Toast.LENGTH_SHORT).show();
             navigateToEventDetails(event);
         } else {
-            // Default fallback
+            // Default fallback for just viewing
             Toast.makeText(getContext(), "Unknown status for event.", Toast.LENGTH_SHORT).show();
+            navigateToEventDetails(event);
         }
     }
 

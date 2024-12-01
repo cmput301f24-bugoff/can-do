@@ -329,6 +329,77 @@ public class EventViewModel extends ViewModel {
                 });
     }
 
+    public void removeUserFromWaitingList(String userId) {
+        if (event == null) return;
+
+        // Remove from waiting list array in Firestore
+        GlobalRepository.getEventsCollection()
+                .document(event.getId())
+                .update("waitingListEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User successfully removed from waiting list: " + userId);
+
+                    // Update local LiveData
+                    List<String> currentWaitingList = waitingListEntrants.getValue();
+                    if (currentWaitingList != null) {
+                        List<String> updatedList = new ArrayList<>(currentWaitingList);
+                        updatedList.remove(userId);
+                        waitingListEntrants.postValue(updatedList);
+
+                        // Update users map
+                        Map<String, User> currentUsers = waitingListUsers.getValue();
+                        if (currentUsers != null) {
+                            Map<String, User> updatedUsers = new HashMap<>(currentUsers);
+                            updatedUsers.remove(userId);
+                            waitingListUsers.postValue(updatedUsers);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error removing user from waiting list", e);
+                    errorMessage.postValue("Failed to remove user from waiting list");
+                });
+    }
+
+    public void removeUserFromSelectedList(String userId) {
+        if (event == null) return;
+
+        // Remove from selected entrants array in Firestore
+        GlobalRepository.getEventsCollection()
+                .document(event.getId())
+                .update("selectedEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User successfully removed from selected list: " + userId);
+
+                    // Update local LiveData
+                    List<String> currentSelectedList = selectedEntrants.getValue();
+                    if (currentSelectedList != null) {
+                        List<String> updatedList = new ArrayList<>(currentSelectedList);
+                        updatedList.remove(userId);
+                        selectedEntrants.postValue(updatedList);
+
+                        // Update users map
+                        Map<String, User> currentUsers = selectedEntrantsUsers.getValue();
+                        if (currentUsers != null) {
+                            Map<String, User> updatedUsers = new HashMap<>(currentUsers);
+                            updatedUsers.remove(userId);
+                            selectedEntrantsUsers.postValue(updatedUsers);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error removing user from selected list", e);
+                    errorMessage.postValue("Failed to remove user from selected list");
+                });
+    }
+
+    public boolean isCurrentUserOrganizer() {
+        if (event == null || event.getFacility() == null) return false;
+        User currentUser = GlobalRepository.getLoggedInUser();
+        if (currentUser == null || currentUser.getFacility() == null) return false;
+        return currentUser.getFacility().getId().equals(event.getFacility().getId());
+    }
+
     /**
      * Called when the ViewModel is cleared, typically used to clean up resources or listeners.
      */

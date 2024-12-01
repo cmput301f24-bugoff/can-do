@@ -43,7 +43,7 @@ public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDe
 
         // Set up RecyclerView
         recyclerViewProfiles.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(new ArrayList<>(), this);
+        userAdapter = new UserAdapter(new ArrayList<>(), this, true, true);
         recyclerViewProfiles.setAdapter(userAdapter);
 
         return view;

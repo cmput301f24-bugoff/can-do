@@ -1,5 +1,6 @@
 package com.bugoff.can_do.event;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
-import com.bugoff.can_do.event.EventViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,65 +98,55 @@ public class EventSelectedFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar_selected);
         emptyTextView = view.findViewById(R.id.text_view_empty_selected);
 
-        // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
+        // Initialize RecyclerView with a LinearLayoutManager
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize ViewModel using a factory with the event ID
+        // Initialize ViewModel using factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
-
-        // Initialize the UserAdapter with the delete click listener
-        userAdapter = new UserAdapter(userList, user -> {
-
-
-            // Call the ViewModel method to update the Firestore database
-            viewModel.removeUserFromSelectedEntrants(eventId, user.getId());
-            // Remove the user from the local list
-            userList.remove(user);
-
-            // Update the adapter
-            userAdapter.setUsers(userList);
-
-            // Update the UI for empty state
-            if (userList.isEmpty()) {
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText("No users in the selected list.");
-            } else {
-                emptyTextView.setVisibility(View.GONE);
-            }
-        });
-
+        // Initialize adapter with default settings first
+        userAdapter = new UserAdapter(userList, null, false, false);
         recyclerView.setAdapter(userAdapter);
 
-        // Observe LiveData for selected list users
+        // Observe selected users
         viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
-            Log.d(TAG, "Observer: Received selected users map with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
+            Log.d(TAG, "Observer: Received selected users map with size: " +
+                    (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
             if (selectedUsersMap != null) {
                 this.selectedUsersMap = selectedUsersMap;
+
+                // Only now that we have data, reinitialize the adapter with proper settings
+                userAdapter = new UserAdapter(
+                        userList,
+                        this::showRemoveConfirmationDialog,
+                        false,
+                        viewModel.isCurrentUserOrganizer()
+                );
+                recyclerView.setAdapter(userAdapter);
+
                 updateUserList();
             }
         });
 
-        // Observe LiveData for enrolled list users
-        viewModel.getEnrolledEntrantsUsers().observe(getViewLifecycleOwner(), enrolledUsersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (enrolledUsersMap != null ? enrolledUsersMap.size() : "null"));
-            if (enrolledUsersMap != null) {
-                this.enrolledUsersMap = enrolledUsersMap;
-                updateUserList();
-            }
-        });
-
-        // Observe error messages from ViewModel
+        // Observe error messages
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
-                progressBar.setVisibility(View.GONE);
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText(error);
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void showRemoveConfirmationDialog(User user) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Remove from Selected List")
+                .setMessage("Are you sure you want to remove " + user.getName() + " from the selected list?")
+                .setPositiveButton("Remove", (dialog, which) -> {
+                    viewModel.removeUserFromSelectedList(user.getId());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 
     private void updateUserList() {
         userList.clear();
