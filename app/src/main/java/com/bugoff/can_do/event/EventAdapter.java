@@ -171,11 +171,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             textViewDates.setText(dates);
 
             // Display the current number of participants out of the max allowed
-            String participants = "Registered Participants: " + event.getEnrolledEntrants().size();
+            String participants = "Registered Participants: " + event.getEnrolledEntrants().size()+ " / " + event.getMaxNumberOfParticipants();
             textViewParticipants.setText(participants);
 
             // Display the number of entrants on the waiting list
-            String waitingList = "Waiting List: " + event.getWaitingListEntrants().size() + " / " + event.getMaxNumberOfParticipants();
+            String waitingList = "Waiting List: " + event.getWaitingListEntrants().size();
             textViewWaitingList.setText(waitingList);
 
             // Set delete button visibility - only show if both isAdmin and isFromAdmin are true
@@ -196,6 +196,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     textViewStatus.setText("Enrolled");
                     textViewStatus.setTextColor(Color.parseColor("#008000"));
                     textViewStatus.setVisibility(View.VISIBLE);
+                } else if (event.getCancelledEntrants().contains(GlobalRepository.getLoggedInUser().getId())) {
+                    textViewStatus.setText("Event Declined");
+                    textViewStatus.setTextColor(Color.parseColor("#FF0000"));
+                    textViewStatus.setVisibility(View.VISIBLE);
+
                 } else {
                     textViewStatus.setVisibility(View.GONE);
                 }
