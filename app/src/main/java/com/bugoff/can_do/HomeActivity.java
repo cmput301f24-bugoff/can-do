@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Fragment for the Home screen.
@@ -156,33 +156,49 @@ public class HomeActivity extends Fragment {
                 .commit();
     }
 
-
     private void fetchEventDetails(List<String> eventIds) {
+        if (eventIds == null || eventIds.isEmpty()) {
+            eventsAdapter.setEventList(new ArrayList<>());
+            return;
+        }
+
         List<Event> events = new ArrayList<>();
+        final int totalEvents = eventIds.size();
+        final AtomicInteger processedEvents = new AtomicInteger(0);
 
         for (String eventId : eventIds) {
-            GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Event fetchedEvent = task.getResult(); // Rename the variable here
-                    if (fetchedEvent != null) {
-                        events.add(fetchedEvent);
-                    }
-
-                    // Check if all events are loaded
-                    if (events.size() == eventIds.size()) {
-                        eventsAdapter.setEventList(events);
-                    }
-                } else {
-                    // Handle the error
-                    Log.e("RepositoryError", "Error getting event: " + task.getException());
-                }
-            });
+            GlobalRepository.getEvent(eventId)
+                    .addOnSuccessListener(event -> {
+                        if (event != null) {
+                            events.add(event);
+                        } else {
+                            Log.w(TAG, "Event was null for ID: " + eventId);
+                        }
+                        updateAdapterIfComplete(events, totalEvents, processedEvents.incrementAndGet());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to fetch event with ID: " + eventId, e);
+                        updateAdapterIfComplete(events, totalEvents, processedEvents.incrementAndGet());
+                    });
         }
     }
 
+    private void updateAdapterIfComplete(List<Event> events, int totalEvents, int processedEvents) {
+        if (processedEvents == totalEvents) {
+            if (events.isEmpty()) {
+                // All events failed to load or were null
+                defaultSubtitle.setVisibility(View.VISIBLE);
+                getStartedText.setVisibility(View.VISIBLE);
+                arrowDown.setVisibility(View.VISIBLE);
+                eventsListView.setVisibility(View.GONE);
+            } else {
+                // Sort events by date if needed
+                defaultSubtitle.setVisibility(View.GONE);
+                getStartedText.setVisibility(View.GONE);
+                arrowDown.setVisibility(View.GONE);
+                eventsListView.setVisibility(View.VISIBLE);
+                eventsAdapter.setEventList(events);
+            }
+        }
     }
-
-
-
-
-
+}
