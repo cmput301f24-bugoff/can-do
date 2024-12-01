@@ -21,7 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
-import com.bugoff.can_do.notification.SendNotificationFragment;
+import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.notification.Notification;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Fragment for displaying and managing the waitlist of users for a specific event.
@@ -126,7 +128,7 @@ public class EventWaitlistFragment extends Fragment {
 
                     // Gather selected user IDs and remove from waiting list
                     for (User selectedUser : selectedUsers) {
-                        String userId = selectedUser.getId(); // Assuming User class has getId() method
+                        String userId = selectedUser.getId();
                         selectedUserIds.add(userId);
                         waitingListEntrants.remove(userId);
                     }
@@ -137,8 +139,20 @@ public class EventWaitlistFragment extends Fragment {
                     docRef.update("waitingListEntrants", waitingListEntrants, "selectedEntrants", selectedEntrants)
                             .addOnSuccessListener(aVoid -> {
                                 Log.d(TAG, "Drawing completed and lists updated");
-                                // Send notifications after successfully updating Firestore
-                                SendNotificationFragment.sendtoSelectedEntrants(getContext(), "You have been chosen", eventId);
+
+                                // Create and send notification to newly selected users
+                                if (!selectedUserIds.isEmpty()) {
+                                    String uniqueId = UUID.randomUUID().toString();
+                                    Notification notification = new Notification(
+                                            uniqueId,
+                                            "Selection Update",
+                                            "You have been selected to participate!",
+                                            documentSnapshot.getString("facilityId"),
+                                            new ArrayList<>(selectedUserIds),
+                                            eventId
+                                    );
+                                    GlobalRepository.addNotification(notification);
+                                }
                             })
                             .addOnFailureListener(e -> Log.e(TAG, "Error updating Firestore lists", e));
                 }
