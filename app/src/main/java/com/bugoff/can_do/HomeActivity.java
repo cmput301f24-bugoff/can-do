@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +30,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Fragment for the Home screen.
@@ -156,33 +157,89 @@ public class HomeActivity extends Fragment {
                 .commit();
     }
 
-
     private void fetchEventDetails(List<String> eventIds) {
-        List<Event> events = new ArrayList<>();
+        if (eventIds == null || eventIds.isEmpty()) {
+            Log.d(TAG, "No event IDs to fetch");
+            showEmptyState();
+            return;
+        }
+
+        Log.d(TAG, "Starting to fetch " + eventIds.size() + " events");
+        List<Event> validEvents = Collections.synchronizedList(new ArrayList<>());
+        AtomicInteger processedCount = new AtomicInteger(0);
 
         for (String eventId : eventIds) {
-            GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Event fetchedEvent = task.getResult(); // Rename the variable here
-                    if (fetchedEvent != null) {
-                        events.add(fetchedEvent);
-                    }
-
-                    // Check if all events are loaded
-                    if (events.size() == eventIds.size()) {
-                        eventsAdapter.setEventList(events);
-                    }
-                } else {
-                    // Handle the error
-                    Log.e("RepositoryError", "Error getting event: " + task.getException());
+            if (eventId == null || eventId.trim().isEmpty()) {
+                Log.w(TAG, "Skipping null or empty event ID");
+                if (processedCount.incrementAndGet() == eventIds.size()) {
+                    updateUI(validEvents);
                 }
-            });
+                continue;
+            }
+
+            Log.d(TAG, "Fetching event: " + eventId);
+            GlobalRepository.getEvent(eventId)
+                    .addOnSuccessListener(event -> {
+                        if (event != null) {
+                            Log.d(TAG, "Successfully fetched event: " + eventId);
+                            validEvents.add(event);
+                            updateUI(validEvents);
+                        } else {
+                            Log.w(TAG, "Event was null for ID: " + eventId);
+                        }
+
+                        if (processedCount.incrementAndGet() == eventIds.size()) {
+                            Log.d(TAG, "All events processed. Valid events: " + validEvents.size());
+                            updateUI(validEvents);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to fetch event: " + eventId, e);
+                        if (processedCount.incrementAndGet() == eventIds.size()) {
+                            Log.d(TAG, "All events processed after failure. Valid events: " + validEvents.size());
+                            updateUI(validEvents);
+                        }
+                    });
         }
     }
 
+    private void updateUI(List<Event> events) {
+        if (getActivity() == null || !isAdded()) {
+            Log.w(TAG, "Fragment not attached, skipping UI update");
+            return;
+        }
+
+        getActivity().runOnUiThread(() -> {
+            if (events.isEmpty()) {
+                Log.d(TAG, "No valid events to display, showing empty state");
+                showEmptyState();
+            } else {
+                Log.d(TAG, "Displaying " + events.size() + " events");
+                hideEmptyState();
+                eventsAdapter.setEventList(new ArrayList<>(events));
+            }
+        });
     }
 
+    private void showEmptyState() {
+        if (getActivity() == null || !isAdded()) return;
 
+        getActivity().runOnUiThread(() -> {
+            defaultSubtitle.setVisibility(View.VISIBLE);
+            getStartedText.setVisibility(View.VISIBLE);
+            arrowDown.setVisibility(View.VISIBLE);
+            eventsListView.setVisibility(View.GONE);
+        });
+    }
 
+    private void hideEmptyState() {
+        if (getActivity() == null || !isAdded()) return;
 
-
+        getActivity().runOnUiThread(() -> {
+            defaultSubtitle.setVisibility(View.GONE);
+            getStartedText.setVisibility(View.GONE);
+            arrowDown.setVisibility(View.GONE);
+            eventsListView.setVisibility(View.VISIBLE);
+        });
+    }
+}
