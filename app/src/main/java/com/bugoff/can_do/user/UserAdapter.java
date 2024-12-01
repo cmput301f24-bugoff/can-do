@@ -32,10 +32,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
      * @param listener Listener for delete actions
      */
     public UserAdapter(List<User> users, OnDeleteClickListener listener) {
-        this.users = users;
-        this.deleteClickListener = listener;
-        this.isAdminDeletion = true;
-        this.showDeleteButton = true;
+        this(users, listener, false, false); // Default to no deletion functionality
     }
 
     /**
@@ -101,12 +98,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             deleteButton.setVisibility(showDeleteButton ? View.VISIBLE : View.GONE);
 
             // Set up delete button
-            if (showDeleteButton) {
-                deleteButton.setOnClickListener(v -> {
-                    if (listener != null) {
-                        listener.onDeleteClick(user);
-                    }
-                });
+            if (showDeleteButton && listener != null) {
+                deleteButton.setOnClickListener(v -> listener.onDeleteClick(user));
+            } else {
+                deleteButton.setOnClickListener(null);
             }
 
             // Load and set user avatar
