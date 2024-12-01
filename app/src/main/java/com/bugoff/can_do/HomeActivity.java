@@ -30,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -158,29 +159,88 @@ public class HomeActivity extends Fragment {
 
     private void fetchEventDetails(List<String> eventIds) {
         if (eventIds == null || eventIds.isEmpty()) {
-            eventsAdapter.setEventList(new ArrayList<>());
+            Log.d(TAG, "No event IDs to fetch");
+            showEmptyState();
             return;
         }
 
-        List<Event> events = new ArrayList<>();
-        final int totalEvents = eventIds.size();
-        final AtomicInteger processedEvents = new AtomicInteger(0);
+        Log.d(TAG, "Starting to fetch " + eventIds.size() + " events");
+        List<Event> validEvents = Collections.synchronizedList(new ArrayList<>());
+        AtomicInteger processedCount = new AtomicInteger(0);
 
         for (String eventId : eventIds) {
+            if (eventId == null || eventId.trim().isEmpty()) {
+                Log.w(TAG, "Skipping null or empty event ID");
+                if (processedCount.incrementAndGet() == eventIds.size()) {
+                    updateUI(validEvents);
+                }
+                continue;
+            }
+
+            Log.d(TAG, "Fetching event: " + eventId);
             GlobalRepository.getEvent(eventId)
                     .addOnSuccessListener(event -> {
                         if (event != null) {
-                            events.add(event);
+                            Log.d(TAG, "Successfully fetched event: " + eventId);
+                            validEvents.add(event);
+                            updateUI(validEvents);
                         } else {
                             Log.w(TAG, "Event was null for ID: " + eventId);
                         }
-                        updateAdapterIfComplete(events, totalEvents, processedEvents.incrementAndGet());
+
+                        if (processedCount.incrementAndGet() == eventIds.size()) {
+                            Log.d(TAG, "All events processed. Valid events: " + validEvents.size());
+                            updateUI(validEvents);
+                        }
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to fetch event with ID: " + eventId, e);
-                        updateAdapterIfComplete(events, totalEvents, processedEvents.incrementAndGet());
+                        Log.e(TAG, "Failed to fetch event: " + eventId, e);
+                        if (processedCount.incrementAndGet() == eventIds.size()) {
+                            Log.d(TAG, "All events processed after failure. Valid events: " + validEvents.size());
+                            updateUI(validEvents);
+                        }
                     });
         }
+    }
+
+    private void updateUI(List<Event> events) {
+        if (getActivity() == null || !isAdded()) {
+            Log.w(TAG, "Fragment not attached, skipping UI update");
+            return;
+        }
+
+        getActivity().runOnUiThread(() -> {
+            if (events.isEmpty()) {
+                Log.d(TAG, "No valid events to display, showing empty state");
+                showEmptyState();
+            } else {
+                Log.d(TAG, "Displaying " + events.size() + " events");
+                hideEmptyState();
+                eventsAdapter.setEventList(new ArrayList<>(events));
+            }
+        });
+    }
+
+    private void showEmptyState() {
+        if (getActivity() == null || !isAdded()) return;
+
+        getActivity().runOnUiThread(() -> {
+            defaultSubtitle.setVisibility(View.VISIBLE);
+            getStartedText.setVisibility(View.VISIBLE);
+            arrowDown.setVisibility(View.VISIBLE);
+            eventsListView.setVisibility(View.GONE);
+        });
+    }
+
+    private void hideEmptyState() {
+        if (getActivity() == null || !isAdded()) return;
+
+        getActivity().runOnUiThread(() -> {
+            defaultSubtitle.setVisibility(View.GONE);
+            getStartedText.setVisibility(View.GONE);
+            arrowDown.setVisibility(View.GONE);
+            eventsListView.setVisibility(View.VISIBLE);
+        });
     }
 
     private void updateAdapterIfComplete(List<Event> events, int totalEvents, int processedEvents) {
