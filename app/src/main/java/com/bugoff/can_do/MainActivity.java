@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.user.QrCodeScannerFragment;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
@@ -145,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendLocalNotification(String title, String message) {
+        // Check if notifications are enabled
+        if (!NotificationSettingsActivity.areOrganizerNotificationsEnabled(this)) {
+            return;
+        }
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             NotificationChannel channel = new NotificationChannel(
                     "default",
                     "Default",
-                    NotificationManager.IMPORTANCE_HIGH  // Changed to HIGH
+                    NotificationManager.IMPORTANCE_HIGH
             );
             channel.setDescription("Channel for app notifications");
             channel.enableLights(true);
@@ -166,11 +172,11 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.notifications_24px)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)  // Set to HIGH priority
-                .setDefaults(NotificationCompat.DEFAULT_ALL)    // Enable sound, vibration, lights
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setAutoCancel(true)
-                .setVibrate(new long[]{0, 250, 250, 250})      // Vibration pattern
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE); // Set category
+                .setVibrate(new long[]{0, 250, 250, 250})
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
         notificationManager.notify(new Random().nextInt(), builder.build());
     }

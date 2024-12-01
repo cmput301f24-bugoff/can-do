@@ -27,6 +27,12 @@ public class NotificationsViewModel extends ViewModel {
     }
 
     private void setupNotificationListener(String userId) {
+        // Check if notifications are enabled before setting up the listener
+        if (!NotificationSettingsActivity.areOrganizerNotificationsEnabled(FirebaseFirestore.getInstance().getApp().getApplicationContext())) {
+            notifications.setValue(new ArrayList<>());
+            return;
+        }
+
         // Query for notifications where the user is in pendingRecipients
         Query query = db.collection("notifications")
                 .whereArrayContains("pendingRecipients", userId)

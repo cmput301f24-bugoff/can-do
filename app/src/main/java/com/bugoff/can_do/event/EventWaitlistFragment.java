@@ -1,10 +1,13 @@
 package com.bugoff.can_do.event;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -227,6 +230,41 @@ public class EventWaitlistFragment extends Fragment {
                 Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
             }
             progressBar.setVisibility(View.GONE);
+        });
+
+        // Set up "Draw" button click listener
+        Button drawButton = view.findViewById(R.id.draw);
+        drawButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Enter number of users to draw");
+
+            final EditText input = new EditText(getContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            builder.setView(input);
+
+            builder.setPositiveButton("Draw", (dialog, which) -> {
+                String inputText = input.getText().toString().trim();
+                if (!inputText.isEmpty()) {
+                    try {
+                        int numberToDraw = Integer.parseInt(inputText);
+                        if (numberToDraw <= 0) {
+                            Toast.makeText(getContext(), "Please enter a positive number.", Toast.LENGTH_SHORT).show();
+                        } else if (numberToDraw > userList.size()) {
+                            Toast.makeText(getContext(), "Number exceeds the waitlist size.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            performDrawing(numberToDraw);
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Invalid number.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Please enter a number.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            builder.show();
         });
 
         // Observe error messages
