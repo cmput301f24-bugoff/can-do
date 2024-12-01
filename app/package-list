@@ -195,6 +195,7 @@ $dokka.location:com.bugoff.can_do.event/EventViewModel/getWaitingListEntrants/#/
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getWaitingListUsers/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-waiting-list-users.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/on-cleared.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/removeSelectedEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-selected-entrant.html
+$dokka.location:com.bugoff.can_do.event/EventViewModel/removeUserFromSelectedEntrants/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-user-from-selected-entrants.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/removeWaitingListEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-waiting-list-entrant.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/updateEntrantStatus/#java.lang.String#com.bugoff.can_do.EntrantStatus/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/update-entrant-status.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/updateLiveData/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/update-live-data.html
