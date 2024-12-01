@@ -2,7 +2,9 @@ package com.bugoff.can_do.database;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.notification.Notification;
@@ -82,7 +84,7 @@ public class GlobalRepository {
         notificationMap.put("type", notification.getType());
         notificationMap.put("message", notification.getContent());
         notificationMap.put("from", notification.getFrom());
-        notificationMap.put("to", notification.getTo());
+        notificationMap.put("pendingRecipients", notification.getPendingRecipients());
         notificationMap.put("event", notification.getEvent());
 
         FirestoreHelper.getInstance().getDb().collection("notifications")
