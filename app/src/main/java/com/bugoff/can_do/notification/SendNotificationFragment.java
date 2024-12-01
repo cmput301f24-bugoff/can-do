@@ -5,7 +5,6 @@ import static android.content.ContentValues.TAG;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +26,8 @@ import androidx.fragment.app.Fragment;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.Event;
-import com.google.type.TimeOfDayOrBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -72,7 +71,7 @@ public class SendNotificationFragment extends Fragment {
                 messageEditText.setText("");
             } else if ("Selected Entrants".equals(selectedGroup)) {
                 Toast.makeText(getContext(), "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
-                sendtoSelectedEntrants(getContext(), message, eventId);
+                sendtoSelectedEntrants(message, eventId);
                 messageEditText.setText("");
             } else if ("Cancelled Entrants".equals(selectedGroup)) {
                 Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
@@ -89,29 +88,81 @@ public class SendNotificationFragment extends Fragment {
         return view;
     }
 
-    public static void sendtoSelectedEntrants(Context context, String message, String eventId) {
+    private void sendtoWaitingList(String message, String eventId) {
+        Log.d(TAG, "sendtoWaitingList: starting");
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Event event = task.getResult();
-
                 if (event != null) {
-                    List<String> selectedEntrants = event.getSelectedEntrants();
-                    Log.d(TAG, "sendtoSelectedEntrants: " + selectedEntrants.size() + " selected extrants");
-
-                    for (String entrant : selectedEntrants) {
-                        String uniqueID = UUID.randomUUID().toString();
-                        Notification notification = new Notification(uniqueID, "Event Update", message, event.getFacility().getId(), entrant, eventId);
+                    List<String> waitingListEntrants = event.getWaitingListEntrants();
+                    if (!waitingListEntrants.isEmpty()) {
+                        // Create single notification for all recipients
+                        String uniqueId = UUID.randomUUID().toString();
+                        Notification notification = new Notification(
+                                uniqueId,
+                                "Event Update",
+                                message,
+                                event.getFacility().getId(),
+                                new ArrayList<>(waitingListEntrants), // Create new list to avoid modifications
+                                eventId
+                        );
                         GlobalRepository.addNotification(notification);
 
-                        // Trigger on-device notification
+                        // Send local notification
                         String eventTitle = event.getName();
-                        sendLocalNotification(context, eventTitle, message);
+                        sendLocalNotification(getContext(), eventTitle, message);
+
+                        Toast.makeText(getContext(),
+                                "Notification sent to " + waitingListEntrants.size() + " waiting list entrants",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "No users in waiting list", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Log.w(TAG, "Event not found");
+                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e(TAG, "Error retrieving event", task.getException());
+                Toast.makeText(getContext(), "Error retrieving event", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-                    Toast.makeText(context, "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
+    private void sendtoSelectedEntrants(String message, String eventId) {
+        GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Event event = task.getResult();
+                if (event != null) {
+                    List<String> selectedEntrants = event.getSelectedEntrants();
+                    if (!selectedEntrants.isEmpty()) {
+                        String uniqueId = UUID.randomUUID().toString();
+                        Notification notification = new Notification(
+                                uniqueId,
+                                "Event Update",
+                                message,
+                                event.getFacility().getId(),
+                                new ArrayList<>(selectedEntrants),
+                                eventId
+                        );
+                        GlobalRepository.addNotification(notification);
 
-                } else { Log.w("Event", "Event not found"); }
-            } else { Log.e("Event", "Error retrieving event", task.getException()); }
+                        // Send local notification
+                        String eventTitle = event.getName();
+                        sendLocalNotification(getContext(), eventTitle, message);
+
+                        Toast.makeText(getContext(),
+                                "Notification sent to " + selectedEntrants.size() + " selected entrants",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "No selected entrants", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Error retrieving event", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -119,54 +170,36 @@ public class SendNotificationFragment extends Fragment {
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Event event = task.getResult();
-
                 if (event != null) {
                     List<String> cancelledEntrants = event.getCancelledEntrants();
-                    Log.d(TAG, "sendtoCancelledEntrants: " + cancelledEntrants.size() + " cancelled entrants");
-
-                    for (String entrant : cancelledEntrants) {
-                        String uniqueID = UUID.randomUUID().toString();
-                        Notification notification = new Notification(uniqueID, "Event Update", message, event.getFacility().getId(), entrant, eventId);
-                        GlobalRepository.addNotification(notification);
-
-                        // Trigger on-device notification
-                        String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
-                    }
-
-                    Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
-
-                } else { Log.w("Event", "Event not found"); }
-            } else { Log.e("Event", "Error retrieving event", task.getException()); }
-        });
-    }
-
-    private void sendtoWaitingList(String message, String eventId) {
-        Log.d(TAG, "sendtoWaitingList: made it here");
-        GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Event event = task.getResult();
-                if (event != null) {
-                    Log.d("Event", "Event retrieved: " + event.getName());
-                    List<String> waitingListEntrants = event.getWaitingListEntrants();
-                    Log.d(TAG, "sendtoWaitingList: " + waitingListEntrants.size() + " waiting list entrants");
-
-                    // Send notifications to each waiting list entrant
-                    for (String entrant : waitingListEntrants) {
-                        // Create and add notification to GlobalRepository (as in your code)
+                    if (!cancelledEntrants.isEmpty()) {
                         String uniqueId = UUID.randomUUID().toString();
-                        Notification notification = new Notification(uniqueId, "Event Update", message, event.getFacility().getId(), entrant, eventId);
+                        Notification notification = new Notification(
+                                uniqueId,
+                                "Event Update",
+                                message,
+                                event.getFacility().getId(),
+                                new ArrayList<>(cancelledEntrants),
+                                eventId
+                        );
                         GlobalRepository.addNotification(notification);
 
-                        // Trigger on-device notification
+                        // Send local notification
                         String eventTitle = event.getName();
                         sendLocalNotification(getContext(), eventTitle, message);
+
+                        Toast.makeText(getContext(),
+                                "Notification sent to " + cancelledEntrants.size() + " cancelled entrants",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "No cancelled entrants", Toast.LENGTH_SHORT).show();
                     }
-
-                    Toast.makeText(getContext(), "Notification sent to Waiting List Entrants", Toast.LENGTH_SHORT).show();
-
-                } else { Log.w("Event", "Event not found"); }
-            } else { Log.e("Event", "Error retrieving event", task.getException()); }
+                } else {
+                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Error retrieving event", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
