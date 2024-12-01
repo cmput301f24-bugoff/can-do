@@ -156,6 +156,7 @@ $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/EventSelectedFragm
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-view-created.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/updateUserList/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/update-user-list.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel///PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/index.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/EventViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/-event-view-model.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/addSelectedEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/add-selected-entrant.html
