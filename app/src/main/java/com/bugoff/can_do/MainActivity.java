@@ -2,6 +2,7 @@ package com.bugoff.can_do;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -152,8 +153,12 @@ public class MainActivity extends AppCompatActivity {
             NotificationChannel channel = new NotificationChannel(
                     "default",
                     "Default",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH  // Changed to HIGH
             );
+            channel.setDescription("Channel for app notifications");
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             notificationManager.createNotificationChannel(channel);
         }
 
@@ -161,8 +166,11 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.notifications_24px)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+                .setPriority(NotificationCompat.PRIORITY_HIGH)  // Set to HIGH priority
+                .setDefaults(NotificationCompat.DEFAULT_ALL)    // Enable sound, vibration, lights
+                .setAutoCancel(true)
+                .setVibrate(new long[]{0, 250, 250, 250})      // Vibration pattern
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE); // Set category
 
         notificationManager.notify(new Random().nextInt(), builder.build());
     }
