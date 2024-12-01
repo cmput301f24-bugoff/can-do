@@ -284,6 +284,51 @@ public class EventViewModel extends ViewModel {
         event.enrollEntrant(userId);
         fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
     }
+
+    /**
+     * Removes a user from the selected entrants list in Firestore and updates LiveData.
+     *
+     * @param eventId The ID of the event to update.
+     * @param userId  The ID of the user to remove.
+     */
+    public void removeUserFromSelectedEntrants(String eventId, String userId) {
+        if (eventId == null || userId == null) {
+            Log.e(TAG, "Event ID or User ID is null.");
+            return;
+        }
+
+        // Remove user from Firestore `selectedEntrants` array
+        GlobalRepository.getEventsCollection()
+                .document(eventId)
+                .update("selectedEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User successfully removed from selectedEntrants: " + userId);
+
+                    // Update the local `selectedEntrants` LiveData
+                    List<String> currentSelectedEntrants = selectedEntrants.getValue();
+                    if (currentSelectedEntrants == null) {
+                        currentSelectedEntrants = new ArrayList<>();
+                    } else {
+                        currentSelectedEntrants = new ArrayList<>(currentSelectedEntrants); // Defensive copy
+                    }
+                    currentSelectedEntrants.remove(userId);
+                    selectedEntrants.postValue(currentSelectedEntrants);
+
+                    // Update the `selectedEntrantsUsers` LiveData
+                    Map<String, User> currentSelectedUsers = selectedEntrantsUsers.getValue();
+                    if (currentSelectedUsers == null) {
+                        currentSelectedUsers = new HashMap<>();
+                    } else {
+                        currentSelectedUsers = new HashMap<>(currentSelectedUsers); // Defensive copy
+                    }
+                    currentSelectedUsers.remove(userId);
+                    selectedEntrantsUsers.postValue(currentSelectedUsers);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to remove user from selectedEntrants", e);
+                });
+    }
+
     /**
      * Called when the ViewModel is cleared, typically used to clean up resources or listeners.
      */
@@ -295,3 +340,4 @@ public class EventViewModel extends ViewModel {
         }
     }
 }
+
