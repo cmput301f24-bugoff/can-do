@@ -19,14 +19,37 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> users;
     private final OnDeleteClickListener deleteClickListener;
+    private final boolean isAdminDeletion;
+    private final boolean showDeleteButton;
 
     public interface OnDeleteClickListener {
         void onDeleteClick(User user);
     }
 
+    /**
+     * Constructor for admin user deletion functionality
+     * @param users List of users to display
+     * @param listener Listener for delete actions
+     */
     public UserAdapter(List<User> users, OnDeleteClickListener listener) {
         this.users = users;
         this.deleteClickListener = listener;
+        this.isAdminDeletion = true;
+        this.showDeleteButton = true;
+    }
+
+    /**
+     * Constructor for organizer list removal functionality
+     * @param users List of users to display
+     * @param listener Listener for delete actions
+     * @param isAdminDeletion Whether this adapter is being used for admin deletion
+     * @param showDeleteButton Whether to show the delete button
+     */
+    public UserAdapter(List<User> users, OnDeleteClickListener listener, boolean isAdminDeletion, boolean showDeleteButton) {
+        this.users = users;
+        this.deleteClickListener = listener;
+        this.isAdminDeletion = isAdminDeletion;
+        this.showDeleteButton = showDeleteButton;
     }
 
     @NonNull
@@ -40,7 +63,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = users.get(position);
-        holder.bind(user, deleteClickListener);
+        holder.bind(user, deleteClickListener, showDeleteButton);
     }
 
     @Override
@@ -69,17 +92,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             deleteButton = itemView.findViewById(R.id.button_delete_user);
         }
 
-        public void bind(User user, OnDeleteClickListener listener) {
+        public void bind(User user, OnDeleteClickListener listener, boolean showDeleteButton) {
             userName.setText(user.getName());
             userEmail.setText(user.getEmail());
             userPhone.setText(user.getPhoneNumber());
 
+            // Set delete button visibility
+            deleteButton.setVisibility(showDeleteButton ? View.VISIBLE : View.GONE);
+
             // Set up delete button
-            deleteButton.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onDeleteClick(user);
-                }
-            });
+            if (showDeleteButton) {
+                deleteButton.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onDeleteClick(user);
+                    }
+                });
+            }
 
             // Load and set user avatar
             String base64Image = user.getBase64Image();

@@ -198,6 +198,15 @@ public class EventWaitlistFragment extends Fragment {
         userAdapter = new UserAdapter(userList, null);
         recyclerView.setAdapter(userAdapter);
 
+        // Initialize RecyclerView with delete functionality for organizers
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        userAdapter = new UserAdapter(userList,
+                user -> showRemoveConfirmationDialog(user), // Delete click listener
+                false, // Not admin deletion
+                viewModel.isCurrentUserOrganizer() // Show delete button only for organizers
+        );
+        recyclerView.setAdapter(userAdapter);
+
         // Initialize ViewModel using a factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
@@ -256,14 +265,44 @@ public class EventWaitlistFragment extends Fragment {
             builder.show();
         });
 
+        viewModel.getWaitingListUsers().observe(getViewLifecycleOwner(), usersMap -> {
+            Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
+            if (usersMap != null && !usersMap.isEmpty()) {
+                userList.clear();
+                userList.addAll(usersMap.values());
+                userAdapter.notifyDataSetChanged();
+                emptyTextView.setVisibility(View.GONE);
+                Log.d(TAG, "Observer: Updated userList and notified adapter");
+            } else {
+                userList.clear();
+                userAdapter.notifyDataSetChanged();
+                emptyTextView.setVisibility(View.VISIBLE);
+                emptyTextView.setText("No users in the waiting list.");
+                Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
+            }
+            progressBar.setVisibility(View.GONE);
+        });
+
         // Observe error messages from ViewModel
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 emptyTextView.setVisibility(View.VISIBLE);
                 emptyTextView.setText(error);
             }
         });
+    }
+
+    private void showRemoveConfirmationDialog(User user) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Remove from Waiting List")
+                .setMessage("Are you sure you want to remove " + user.getName() + " from the waiting list?")
+                .setPositiveButton("Remove", (dialog, which) -> {
+                    viewModel.removeUserFromWaitingList(user.getId());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
 

@@ -1,5 +1,6 @@
 package com.bugoff.can_do.event;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
-import com.bugoff.can_do.event.EventViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,14 @@ public class EventSelectedFragment extends Fragment {
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
+        // Initialize RecyclerView with delete functionality for organizers
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        userAdapter = new UserAdapter(userList,
+                user -> showRemoveConfirmationDialog(user), // Delete click listener
+                false, // Not admin deletion
+                viewModel.isCurrentUserOrganizer() // Show delete button only for organizers
+        );
+        recyclerView.setAdapter(userAdapter);
 
         // Initialize the UserAdapter with the delete click listener
         userAdapter = new UserAdapter(userList, user -> {
@@ -130,7 +139,8 @@ public class EventSelectedFragment extends Fragment {
 
         // Observe LiveData for selected list users
         viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
-            Log.d(TAG, "Observer: Received selected users map with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
+            Log.d(TAG, "Observer: Received selected users map with size: " +
+                    (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
             if (selectedUsersMap != null) {
                 this.selectedUsersMap = selectedUsersMap;
                 updateUserList();
@@ -149,6 +159,7 @@ public class EventSelectedFragment extends Fragment {
         // Observe error messages from ViewModel
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
                 emptyTextView.setVisibility(View.VISIBLE);
                 emptyTextView.setText(error);
@@ -156,6 +167,16 @@ public class EventSelectedFragment extends Fragment {
         });
     }
 
+    private void showRemoveConfirmationDialog(User user) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Remove from Selected List")
+                .setMessage("Are you sure you want to remove " + user.getName() + " from the selected list?")
+                .setPositiveButton("Remove", (dialog, which) -> {
+                    viewModel.removeUserFromSelectedList(user.getId());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
 
     private void updateUserList() {
         userList.clear();
