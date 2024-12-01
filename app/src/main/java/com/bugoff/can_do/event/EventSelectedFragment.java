@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
+import com.bugoff.can_do.event.EventViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,16 +99,38 @@ public class EventSelectedFragment extends Fragment {
 
         // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(userList, null);
-        recyclerView.setAdapter(userAdapter);
 
         // Initialize ViewModel using a factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
+
+        // Initialize the UserAdapter with the delete click listener
+        userAdapter = new UserAdapter(userList, user -> {
+
+
+            // Call the ViewModel method to update the Firestore database
+            viewModel.removeUserFromSelectedEntrants(eventId, user.getId());
+            // Remove the user from the local list
+            userList.remove(user);
+
+            // Update the adapter
+            userAdapter.setUsers(userList);
+
+            // Update the UI for empty state
+            if (userList.isEmpty()) {
+                emptyTextView.setVisibility(View.VISIBLE);
+                emptyTextView.setText("No users in the selected list.");
+            } else {
+                emptyTextView.setVisibility(View.GONE);
+            }
+        });
+
+        recyclerView.setAdapter(userAdapter);
+
         // Observe LiveData for selected list users
         viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
+            Log.d(TAG, "Observer: Received selected users map with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
             if (selectedUsersMap != null) {
                 this.selectedUsersMap = selectedUsersMap;
                 updateUserList();
@@ -132,6 +155,7 @@ public class EventSelectedFragment extends Fragment {
             }
         });
     }
+
 
     private void updateUserList() {
         userList.clear();
