@@ -51,14 +51,16 @@
             android:checked="true"
             android:text="Admin notifications"
             android:textSize="16sp"
-            app:useMaterialThemeColors="true" />
+            app:useMaterialThemeColors="true"
+            android:visibility="gone" />
 
+        <!-- Maybe needs refactor or changes, currently stands for all notifications -->
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switch_organizer_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Organizer notifications"
+            android:text="Notifications"
             android:textSize="16sp"
             app:useMaterialThemeColors="false" />
 
@@ -69,7 +71,8 @@
             android:checked="true"
             android:text="Push notifications"
             android:textSize="16sp"
-            app:useMaterialThemeColors="true" />
+            app:useMaterialThemeColors="true"
+            android:visibility="gone" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
