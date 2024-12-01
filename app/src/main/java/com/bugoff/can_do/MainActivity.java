@@ -1,11 +1,10 @@
 package com.bugoff.can_do;
 
-import static java.security.AccessController.getContext;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -14,12 +13,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,8 +29,17 @@ import com.bugoff.can_do.user.QrCodeScannerFragment;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+
+import java.util.Random;
 
 /**
  * Main activity for the app. Handles navigation between different fragments using a BottomNavigationView.
@@ -41,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private GlobalRepository repository;
     private static final int PERMISSIONS_REQUEST_LOCATION = 1002;
+    private ListenerRegistration notificationListener;
 
     /**
      * Initializes the activity and sets up the BottomNavigationView for navigation between different fragments.
@@ -82,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
 
                         GlobalRepository.setLoggedInUser(user);
+                        setupNotificationListener(user.getId());
 
                         if (savedInstanceState == null) {
                             getSupportFragmentManager().beginTransaction()
@@ -93,6 +103,68 @@ public class MainActivity extends AppCompatActivity {
                         checkLocationPermissionAndFetchLocation(user);
                     }
                 });
+    }
+
+    private void setupNotificationListener(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Query for notifications where the user is in pendingRecipients
+        Query query = db.collection("notifications")
+                .whereArrayContains("pendingRecipients", userId);
+
+        notificationListener = query.addSnapshotListener((snapshots, error) -> {
+            if (error != null) {
+                Log.e(TAG, "Listen failed.", error);
+                return;
+            }
+
+            if (snapshots != null && !snapshots.isEmpty()) {
+                for (DocumentSnapshot doc : snapshots) {
+                    String message = doc.getString("message");
+                    String eventId = doc.getString("event");
+
+                    // Fetch event name for the notification
+                    if (eventId != null) {
+                        GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
+                            if (event != null) {
+                                String title = event.getName();
+                                sendLocalNotification(title, message);
+                            }
+                        });
+                    }
+
+                    // Atomically remove this user from pendingRecipients
+                    doc.getReference().update(
+                            "pendingRecipients",
+                            FieldValue.arrayRemove(userId)
+                    );
+                }
+            }
+        });
+    }
+
+    private void sendLocalNotification(String title, String message) {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Create notification channel for Android O and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "default",
+                    "Default",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default")
+                .setSmallIcon(R.drawable.notifications_24px)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        notificationManager.notify(new Random().nextInt(), builder.build());
     }
 
     private void checkLocationPermissionAndFetchLocation(User user) {
@@ -234,5 +306,13 @@ public class MainActivity extends AppCompatActivity {
     @VisibleForTesting
     public GlobalRepository getRepository() {
         return repository;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (notificationListener != null) {
+            notificationListener.remove();
+        }
     }
 }
