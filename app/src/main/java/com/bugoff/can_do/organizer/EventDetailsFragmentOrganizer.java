@@ -31,6 +31,7 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventCancelledFragment;
+import com.bugoff.can_do.event.EventEnrolledFragment;
 import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventWaitlistFragment;
 import com.bugoff.can_do.notification.SendNotificationFragment;
@@ -139,6 +140,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         Button viewSelectedButton = view.findViewById(R.id.view_selected_list);
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
         Button viewCancelled = view.findViewById(R.id.view_cancelled_list);
+        Button viewEnrolledButton = view.findViewById(R.id.view_enrolled_list);
 
         // Check if we're in admin view
         boolean isFromAdmin = getActivity() instanceof AdminActivity;
@@ -175,6 +177,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
         viewCancelled.setOnClickListener(v -> showFragment(new EventCancelledFragment(), "View Cancelled List clicked"));
+        viewEnrolledButton.setOnClickListener(v -> showFragment(new EventEnrolledFragment(), "View Enrolled clicked"));
 
         sendNotificationButton.setOnClickListener(v -> {
             SendNotificationFragment fragment = new SendNotificationFragment();
