@@ -21,6 +21,7 @@ import com.bugoff.can_do.user.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fragment to display details of a selected event, including a list of users associated with the event.
@@ -40,6 +41,9 @@ public class EventSelectedFragment extends Fragment {
     private String eventId; // ID of the selected event, used to fetch relevant data
 
     private EventViewModel viewModel; // ViewModel to manage event data
+
+    private Map<String, User> selectedUsersMap;
+    private Map<String, User> enrolledUsersMap;
 
     /**
      * Default constructor required for fragment instantiation.
@@ -102,22 +106,21 @@ public class EventSelectedFragment extends Fragment {
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
         // Observe LiveData for selected list users
-        viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), usersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
-            if (usersMap != null && !usersMap.isEmpty()) {
-                userList.clear();
-                userList.addAll(usersMap.values());
-                userAdapter.notifyDataSetChanged();
-                emptyTextView.setVisibility(View.GONE);
-                Log.d(TAG, "Observer: Updated userList and notified adapter");
-            } else {
-                userList.clear();
-                userAdapter.notifyDataSetChanged();
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText("No users in the selected list.");
-                Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
+        viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
+            Log.d(TAG, "Observer: Received usersMap with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
+            if (selectedUsersMap != null) {
+                this.selectedUsersMap = selectedUsersMap;
+                updateUserList();
             }
-            progressBar.setVisibility(View.GONE);
+        });
+
+        // Observe LiveData for enrolled list users
+        viewModel.getEnrolledEntrantsUsers().observe(getViewLifecycleOwner(), enrolledUsersMap -> {
+            Log.d(TAG, "Observer: Received usersMap with size: " + (enrolledUsersMap != null ? enrolledUsersMap.size() : "null"));
+            if (enrolledUsersMap != null) {
+                this.enrolledUsersMap = enrolledUsersMap;
+                updateUserList();
+            }
         });
 
         // Observe error messages from ViewModel
@@ -128,5 +131,32 @@ public class EventSelectedFragment extends Fragment {
                 emptyTextView.setText(error);
             }
         });
+    }
+
+    private void updateUserList() {
+        userList.clear();
+
+        if (selectedUsersMap != null && !selectedUsersMap.isEmpty()) {
+            userList.addAll(selectedUsersMap.values());
+        }
+
+        if (enrolledUsersMap != null && !enrolledUsersMap.isEmpty()) {
+            for (User enrolledUser : enrolledUsersMap.values()) {
+                if (!userList.contains(enrolledUser)) {
+                    userList.add(enrolledUser);
+                }
+            }
+        }
+
+        userAdapter.notifyDataSetChanged();
+
+        if (userList.isEmpty()) {
+            emptyTextView.setVisibility(View.VISIBLE);
+            emptyTextView.setText("No users in the selected list.");
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+        }
+
+        progressBar.setVisibility(View.GONE);
     }
 }
