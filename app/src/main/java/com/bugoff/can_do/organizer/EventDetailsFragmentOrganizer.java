@@ -30,6 +30,7 @@ import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.event.EventCancelledFragment;
 import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventWaitlistFragment;
 import com.bugoff.can_do.notification.SendNotificationFragment;
@@ -137,6 +138,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         Button viewWatchListButton = view.findViewById(R.id.view_watch_list);
         Button viewSelectedButton = view.findViewById(R.id.view_selected_list);
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
+        Button viewCancelled = view.findViewById(R.id.view_cancelled_list);
 
         // Check if we're in admin view
         boolean isFromAdmin = getActivity() instanceof AdminActivity;
@@ -151,6 +153,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             viewWatchListButton.setVisibility(View.GONE);
             viewSelectedButton.setVisibility(View.GONE);
             sendNotificationButton.setVisibility(View.GONE);
+            viewCancelled.setVisibility(View.GONE);
         } else {
             // Hide admin-only delete buttons
             deleteQrCodeButton.setVisibility(View.GONE);
@@ -160,6 +163,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             viewWatchListButton.setVisibility(View.VISIBLE);
             viewSelectedButton.setVisibility(View.VISIBLE);
             sendNotificationButton.setVisibility(View.VISIBLE);
+            viewCancelled.setVisibility(View.VISIBLE);
         }
 
         // Setup click listeners
@@ -170,6 +174,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
         viewWatchListButton.setOnClickListener(v -> showFragment(new EventWaitlistFragment(), "View Watch List clicked"));
         viewSelectedButton.setOnClickListener(v -> showFragment(new EventSelectedFragment(), "View Selected clicked"));
+        viewCancelled.setOnClickListener(v -> showFragment(new EventCancelledFragment(), "View Cancelled List clicked"));
 
         sendNotificationButton.setOnClickListener(v -> {
             SendNotificationFragment fragment = new SendNotificationFragment();
