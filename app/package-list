@@ -166,6 +166,7 @@ $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/EventSelectedFragm
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-view-created.html
+$dokka.location:com.bugoff.can_do.event/EventSelectedFragment/showRemoveConfirmationDialog/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/show-remove-confirmation-dialog.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/updateUserList/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/update-user-list.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel///PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/index.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/EventViewModel/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/-event-view-model.html
@@ -193,9 +194,12 @@ $dokka.location:com.bugoff.can_do.event/EventViewModel/getSelectedEntrants/#/Poi
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getSelectedEntrantsUsers/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-selected-entrants-users.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getWaitingListEntrants/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-waiting-list-entrants.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getWaitingListUsers/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-waiting-list-users.html
+$dokka.location:com.bugoff.can_do.event/EventViewModel/isCurrentUserOrganizer/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/is-current-user-organizer.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/onCleared/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/on-cleared.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/removeSelectedEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-selected-entrant.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/removeUserFromSelectedEntrants/#java.lang.String#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-user-from-selected-entrants.html
+$dokka.location:com.bugoff.can_do.event/EventViewModel/removeUserFromSelectedList/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-user-from-selected-list.html
+$dokka.location:com.bugoff.can_do.event/EventViewModel/removeUserFromWaitingList/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-user-from-waiting-list.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/removeWaitingListEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/remove-waiting-list-entrant.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/updateEntrantStatus/#java.lang.String#com.bugoff.can_do.EntrantStatus/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/update-entrant-status.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/updateLiveData/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/update-live-data.html
@@ -208,6 +212,7 @@ $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onCreate/#Bundle/P
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/performDrawing/#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/perform-drawing.html
+$dokka.location:com.bugoff.can_do.event/EventWaitlistFragment/showRemoveConfirmationDialog/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.event/-event-waitlist-fragment/show-remove-confirmation-dialog.html
 $dokka.location:com.bugoff.can_do.event/EventsFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-events-fragment/index.html
 $dokka.location:com.bugoff.can_do.event/EventsFragment/EventsFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-events-fragment/-events-fragment.html
 $dokka.location:com.bugoff.can_do.event/EventsFragment/newInstance/#boolean/PointingToDeclaration/app/com.bugoff.can_do.event/-events-fragment/new-instance.html
@@ -304,6 +309,7 @@ $dokka.location:com.bugoff.can_do.notification/NotificationAdapter/NotificationA
 $dokka.location:com.bugoff.can_do.notification/NotificationAdapter/getView/#int#View#ViewGroup/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-adapter/get-view.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity///PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/index.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity/NotificationSettingsActivity/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/-notification-settings-activity.html
+$dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity/areOrganizerNotificationsEnabled/#android.content.Context/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/are-organizer-notifications-enabled.html
 $dokka.location:com.bugoff.can_do.notification/NotificationSettingsActivity/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.notification/-notification-settings-activity/on-create.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsFragment///PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-fragment/index.html
 $dokka.location:com.bugoff.can_do.notification/NotificationsFragment/NotificationsFragment/#/PointingToDeclaration/app/com.bugoff.can_do.notification/-notifications-fragment/-notifications-fragment.html
@@ -496,9 +502,10 @@ $dokka.location:com.bugoff.can_do.user/UserAdapter.OnDeleteClickListener///Point
 $dokka.location:com.bugoff.can_do.user/UserAdapter.OnDeleteClickListener/onDeleteClick/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-on-delete-click-listener/on-delete-click.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder///PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/index.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/UserAdapter.UserViewHolder/#View/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/-user-adapter.-user-view-holder.html
-$dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/bind/#com.bugoff.can_do.user.User#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/bind.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/bind/#com.bugoff.can_do.user.User#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener#boolean/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/bind.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter.UserViewHolder/setDefaultAvatar/#com.bugoff.can_do.user.User/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-view-holder/set-default-avatar.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter///PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/index.html
+$dokka.location:com.bugoff.can_do.user/UserAdapter/UserAdapter/#java.util.List<com.bugoff.can_do.user.User>#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener#boolean#boolean/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-adapter.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/UserAdapter/#java.util.List<com.bugoff.can_do.user.User>#com.bugoff.can_do.user.UserAdapter.OnDeleteClickListener/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/-user-adapter.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/getItemCount/#/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/get-item-count.html
 $dokka.location:com.bugoff.can_do.user/UserAdapter/onBindViewHolder/#com.bugoff.can_do.user.UserAdapter.UserViewHolder#int/PointingToDeclaration/app/com.bugoff.can_do.user/-user-adapter/on-bind-view-holder.html
@@ -584,6 +591,8 @@ $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserEmail/#java.lang.S
 $dokka.location:com.bugoff.can_do/UserProfileActivity/saveUserPNumber/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/save-user-p-number.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/setupAdminButton/#View#java.lang.Boolean/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-admin-button.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/setupAvatarClickListener/#View/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-avatar-click-listener.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/setupClickListeners/#View#TextView#TextView#ImageButton/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-click-listeners.html
+$dokka.location:com.bugoff.can_do/UserProfileActivity/setupViewModelObservers/#View#ImageButton#TextView#TextView/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/setup-view-model-observers.html
 $dokka.location:com.bugoff.can_do/UserProfileActivity/updatePhoneNumberButtonVisibility/#View#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do/-user-profile-activity/update-phone-number-button-visibility.html
 $dokka.location:com.bugoff.can_do/switch_on_off///PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/index.html
 $dokka.location:com.bugoff.can_do/switch_on_off/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do/switch_on_off/on-create.html
