@@ -56,6 +56,7 @@ public class EventViewModel extends ViewModel {
     private final MutableLiveData<Map<String, User>> waitingListUsers = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Map<String, User>> selectedEntrantsUsers = new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Map<String, User>> enrolledEntrantsUsers = new MutableLiveData<>(new HashMap<>());
+    private final MutableLiveData<Map<String, User>> cancelledEntrants = new MutableLiveData<>(new HashMap<>());
     /**
      * Constructor that initializes the EventViewModel with the specified event ID.
      * It asynchronously fetches the event data from Firestore, including the associated
@@ -100,6 +101,7 @@ public class EventViewModel extends ViewModel {
                                     fetchUsersForList(waitingListEntrants.getValue(), waitingListUsers);
                                     fetchUsersForList(selectedEntrants.getValue(), selectedEntrantsUsers);
                                     fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
+                                    fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
                                 } else {
                                     errorMessage.setValue("Facility not found for the event.");
                                 }
@@ -142,6 +144,7 @@ public class EventViewModel extends ViewModel {
             fetchUsersForList(event.getWaitingListEntrants(), waitingListUsers);
             fetchUsersForList(event.getSelectedEntrants(), selectedEntrantsUsers);
             fetchUsersForList(event.getEnrolledEntrants(), enrolledEntrantsUsers);
+            fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
         }
     }
 
@@ -214,6 +217,7 @@ public class EventViewModel extends ViewModel {
     public LiveData<Map<String, User>> getWaitingListUsers() { return waitingListUsers; }
     public LiveData<Map<String, User>> getSelectedEntrantsUsers() { return selectedEntrantsUsers; }
     public LiveData<Map<String, User>> getEnrolledEntrantsUsers() { return enrolledEntrantsUsers; }
+    public LiveData<Map<String, User>> getCancelledUsers() { return cancelledEntrants; }
 
     /**
      * Adds a user to the waiting list and fetches the updated list of users.

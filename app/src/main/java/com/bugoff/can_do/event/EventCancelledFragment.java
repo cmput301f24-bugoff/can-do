@@ -21,34 +21,28 @@ import com.bugoff.can_do.user.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Fragment to display details of a selected event, including a list of users associated with the event.
- * Shows a RecyclerView of users, and manages visibility of a progress bar and empty state message.
+ * Fragment for displaying and managing the list of cancelled users for a specific event.
+ * Provides functionality to view the list of cancelled users.
  */
-public class EventSelectedFragment extends Fragment {
+public class EventCancelledFragment extends Fragment {
 
-    private static final String TAG = "EventSelectedFragment";
+    private static final String TAG = "EventCancelledFragment";
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
     private ProgressBar progressBar;
     private TextView emptyTextView;
 
-    private List<User> userList = new ArrayList<>();
-
-    private String eventId; // ID of the selected event, used to fetch relevant data
-
-    private EventViewModel viewModel; // ViewModel to manage event data
-
-    private Map<String, User> selectedUsersMap;
-    private Map<String, User> enrolledUsersMap;
+    private List<User> userList = new ArrayList<>(); // List of users in the cancelled list
+    private String eventId; // ID of the associated event
+    private EventViewModel viewModel; // ViewModel to manage event-related data
 
     /**
      * Default constructor required for fragment instantiation.
      */
-    public EventSelectedFragment() {
+    public EventCancelledFragment() {
         // Required empty public constructor
     }
 
@@ -65,7 +59,7 @@ public class EventSelectedFragment extends Fragment {
             eventId = args.getString("eventId");
             Log.d(TAG, "Event ID: " + eventId);
         } else {
-            Log.e(TAG, "No eventId provided to EventSelectedFragment.");
+            Log.e(TAG, "No eventId provided to EventCancelledFragment.");
         }
     }
 
@@ -80,11 +74,11 @@ public class EventSelectedFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_event_selected, container, false);
+        return inflater.inflate(R.layout.fragment_event_cancelled, container, false);
     }
 
     /**
-     * Sets up the RecyclerView, initializes the ViewModel, and observes LiveData when the view is created.
+     * Initializes views, sets up the RecyclerView and ViewModel, and observes data changes for the cancelled users list.
      *
      * @param view               The root view of the fragment's layout.
      * @param savedInstanceState Bundle containing saved instance state data.
@@ -92,9 +86,9 @@ public class EventSelectedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recycler_view_selected_users);
-        progressBar = view.findViewById(R.id.progress_bar_selected);
-        emptyTextView = view.findViewById(R.id.text_view_empty_selected);
+        recyclerView = view.findViewById(R.id.recycler_view_cancelled_users);
+        progressBar = view.findViewById(R.id.progress_bar_cancelled);
+        emptyTextView = view.findViewById(R.id.text_view_empty_cancelled);
 
         // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -105,22 +99,23 @@ public class EventSelectedFragment extends Fragment {
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
-        // Observe LiveData for selected list users
-        viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
-            if (selectedUsersMap != null) {
-                this.selectedUsersMap = selectedUsersMap;
-                updateUserList();
+        // Observe LiveData for cancelled users list
+        viewModel.getCancelledUsers().observe(getViewLifecycleOwner(), usersMap -> {
+            Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
+            if (usersMap != null && !usersMap.isEmpty()) {
+                userList.clear();
+                userList.addAll(usersMap.values());
+                userAdapter.notifyDataSetChanged();
+                emptyTextView.setVisibility(View.GONE);
+                Log.d(TAG, "Observer: Updated userList and notified adapter");
+            } else {
+                userList.clear();
+                userAdapter.notifyDataSetChanged();
+                emptyTextView.setVisibility(View.VISIBLE);
+                emptyTextView.setText("No users in the cancelled list.");
+                Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
             }
-        });
-
-        // Observe LiveData for enrolled list users
-        viewModel.getEnrolledEntrantsUsers().observe(getViewLifecycleOwner(), enrolledUsersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (enrolledUsersMap != null ? enrolledUsersMap.size() : "null"));
-            if (enrolledUsersMap != null) {
-                this.enrolledUsersMap = enrolledUsersMap;
-                updateUserList();
-            }
+            progressBar.setVisibility(View.GONE);
         });
 
         // Observe error messages from ViewModel
@@ -131,32 +126,5 @@ public class EventSelectedFragment extends Fragment {
                 emptyTextView.setText(error);
             }
         });
-    }
-
-    private void updateUserList() {
-        userList.clear();
-
-        if (selectedUsersMap != null && !selectedUsersMap.isEmpty()) {
-            userList.addAll(selectedUsersMap.values());
-        }
-
-        if (enrolledUsersMap != null && !enrolledUsersMap.isEmpty()) {
-            for (User enrolledUser : enrolledUsersMap.values()) {
-                if (!userList.contains(enrolledUser)) {
-                    userList.add(enrolledUser);
-                }
-            }
-        }
-
-        userAdapter.notifyDataSetChanged();
-
-        if (userList.isEmpty()) {
-            emptyTextView.setVisibility(View.VISIBLE);
-            emptyTextView.setText("No users in the selected list.");
-        } else {
-            emptyTextView.setVisibility(View.GONE);
-        }
-
-        progressBar.setVisibility(View.GONE);
     }
 }
