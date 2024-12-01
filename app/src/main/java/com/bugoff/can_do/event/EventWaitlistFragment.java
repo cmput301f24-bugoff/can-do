@@ -99,6 +99,7 @@ public class EventWaitlistFragment extends Fragment {
         // Randomly select users from the waitlist
         Random random = new Random();
         List<User> selectedUsers = new ArrayList<>();
+        List<String> remainingUserIds = new ArrayList<>();
         for (int i = 0; i < numberToDraw && !userList.isEmpty(); i++) {
             int randomIndex = random.nextInt(userList.size());
             User selectedUser = userList.get(randomIndex);
@@ -106,6 +107,9 @@ public class EventWaitlistFragment extends Fragment {
             userList.remove(randomIndex);
             Log.d(TAG, "performDrawing: " + selectedUser.getId() + " selected");
             userAdapter.notifyItemRemoved(randomIndex);
+        }
+        for (User user : userList) {
+            remainingUserIds.add(user.getId());
         }
         if (userList.isEmpty()) {
             // Handle empty state if necessary
@@ -149,6 +153,18 @@ public class EventWaitlistFragment extends Fragment {
                                             "You have been selected to participate!",
                                             documentSnapshot.getString("facilityId"),
                                             new ArrayList<>(selectedUserIds),
+                                            eventId
+                                    );
+                                    GlobalRepository.addNotification(notification);
+                                }
+                                if (!remainingUserIds.isEmpty()) {
+                                    String uniqueId = UUID.randomUUID().toString();
+                                    Notification notification = new Notification(
+                                            uniqueId,
+                                            "Selection Update",
+                                            "Unfortunately, you were not selected this time. Stay tuned for future opportunities!",
+                                            documentSnapshot.getString("facilityId"),
+                                            new ArrayList<>(remainingUserIds),
                                             eventId
                                     );
                                     GlobalRepository.addNotification(notification);
