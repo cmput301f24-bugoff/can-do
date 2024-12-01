@@ -151,6 +151,11 @@ $dokka.location:com.bugoff.can_do.event/EventAdapter/getItemCount/#/PointingToDe
 $dokka.location:com.bugoff.can_do.event/EventAdapter/onBindViewHolder/#com.bugoff.can_do.event.EventAdapter.EventViewHolder#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/on-bind-view-holder.html
 $dokka.location:com.bugoff.can_do.event/EventAdapter/onCreateViewHolder/#ViewGroup#int/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/on-create-view-holder.html
 $dokka.location:com.bugoff.can_do.event/EventAdapter/setEventList/#java.util.List<com.bugoff.can_do.event.Event>/PointingToDeclaration/app/com.bugoff.can_do.event/-event-adapter/set-event-list.html
+$dokka.location:com.bugoff.can_do.event/EventCancelledFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/index.html
+$dokka.location:com.bugoff.can_do.event/EventCancelledFragment/EventCancelledFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/-event-cancelled-fragment.html
+$dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-create.html
+$dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/index.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/EventSelectedFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/-event-selected-fragment.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create.html
@@ -163,6 +168,7 @@ $dokka.location:com.bugoff.can_do.event/EventViewModel/addSelectedEntrant/#java.
 $dokka.location:com.bugoff.can_do.event/EventViewModel/addWaitingListEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/add-waiting-list-entrant.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/enrollEntrant/#java.lang.String/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/enroll-entrant.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/fetchUsersForList/#java.util.List<java.lang.String>#MutableLiveData<Map<String,User>>/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/fetch-users-for-list.html
+$dokka.location:com.bugoff.can_do.event/EventViewModel/getCancelledUsers/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-cancelled-users.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getDescription/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-description.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getEnrolledEntrants/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-enrolled-entrants.html
 $dokka.location:com.bugoff.can_do.event/EventViewModel/getEnrolledEntrantsUsers/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-view-model/get-enrolled-entrants-users.html
