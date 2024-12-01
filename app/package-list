@@ -156,6 +156,11 @@ $dokka.location:com.bugoff.can_do.event/EventCancelledFragment/EventCancelledFra
 $dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-create.html
 $dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-create-view.html
 $dokka.location:com.bugoff.can_do.event/EventCancelledFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-cancelled-fragment/on-view-created.html
+$dokka.location:com.bugoff.can_do.event/EventEnrolledFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-event-enrolled-fragment/index.html
+$dokka.location:com.bugoff.can_do.event/EventEnrolledFragment/EventEnrolledFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-enrolled-fragment/-event-enrolled-fragment.html
+$dokka.location:com.bugoff.can_do.event/EventEnrolledFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-enrolled-fragment/on-create.html
+$dokka.location:com.bugoff.can_do.event/EventEnrolledFragment/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-enrolled-fragment/on-create-view.html
+$dokka.location:com.bugoff.can_do.event/EventEnrolledFragment/onViewCreated/#View#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-enrolled-fragment/on-view-created.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment///PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/index.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/EventSelectedFragment/#/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/-event-selected-fragment.html
 $dokka.location:com.bugoff.can_do.event/EventSelectedFragment/onCreate/#Bundle/PointingToDeclaration/app/com.bugoff.can_do.event/-event-selected-fragment/on-create.html
@@ -533,9 +538,12 @@ $dokka.location:com.bugoff.can_do/HomeActivity///PointingToDeclaration/app/com.
 $dokka.location:com.bugoff.can_do/HomeActivity/HomeActivity/#/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/-home-activity.html
 $dokka.location:com.bugoff.can_do/HomeActivity/fetchEventDetails/#java.util.List<java.lang.String>/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/fetch-event-details.html
 $dokka.location:com.bugoff.can_do/HomeActivity/handleEventClick/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/handle-event-click.html
+$dokka.location:com.bugoff.can_do/HomeActivity/hideEmptyState/#/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/hide-empty-state.html
 $dokka.location:com.bugoff.can_do/HomeActivity/navigateToAcceptDecline/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/navigate-to-accept-decline.html
 $dokka.location:com.bugoff.can_do/HomeActivity/navigateToEventDetails/#com.bugoff.can_do.event.Event/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/navigate-to-event-details.html
 $dokka.location:com.bugoff.can_do/HomeActivity/onCreateView/#LayoutInflater#ViewGroup#Bundle/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/on-create-view.html
+$dokka.location:com.bugoff.can_do/HomeActivity/showEmptyState/#/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/show-empty-state.html
+$dokka.location:com.bugoff.can_do/HomeActivity/updateUI/#java.util.List<com.bugoff.can_do.event.Event>/PointingToDeclaration/app/com.bugoff.can_do/-home-activity/update-u-i.html
 $dokka.location:com.bugoff.can_do/ImageUtils///PointingToDeclaration/app/com.bugoff.can_do/-image-utils/index.html
 $dokka.location:com.bugoff.can_do/ImageUtils/ImageUtils/#/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/-image-utils.html
 $dokka.location:com.bugoff.can_do/ImageUtils/compressAndEncodeBitmap/#Bitmap/PointingToDeclaration/app/com.bugoff.can_do/-image-utils/compress-and-encode-bitmap.html
