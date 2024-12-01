@@ -242,23 +242,4 @@ public class HomeActivity extends Fragment {
             eventsListView.setVisibility(View.VISIBLE);
         });
     }
-
-    private void updateAdapterIfComplete(List<Event> events, int totalEvents, int processedEvents) {
-        if (processedEvents == totalEvents) {
-            if (events.isEmpty()) {
-                // All events failed to load or were null
-                defaultSubtitle.setVisibility(View.VISIBLE);
-                getStartedText.setVisibility(View.VISIBLE);
-                arrowDown.setVisibility(View.VISIBLE);
-                eventsListView.setVisibility(View.GONE);
-            } else {
-                // Sort events by date if needed
-                defaultSubtitle.setVisibility(View.GONE);
-                getStartedText.setVisibility(View.GONE);
-                arrowDown.setVisibility(View.GONE);
-                eventsListView.setVisibility(View.VISIBLE);
-                eventsAdapter.setEventList(events);
-            }
-        }
-    }
 }
