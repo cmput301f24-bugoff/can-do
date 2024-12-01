@@ -98,71 +98,41 @@ public class EventSelectedFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar_selected);
         emptyTextView = view.findViewById(R.id.text_view_empty_selected);
 
-        // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
+        // Initialize RecyclerView with a LinearLayoutManager
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize ViewModel using a factory with the event ID
+        // Initialize ViewModel using factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
-        // Initialize RecyclerView with delete functionality for organizers
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(userList,
-                user -> showRemoveConfirmationDialog(user), // Delete click listener
-                false, // Not admin deletion
-                viewModel.isCurrentUserOrganizer() // Show delete button only for organizers
-        );
+        // Initialize adapter with default settings first
+        userAdapter = new UserAdapter(userList, null, false, false);
         recyclerView.setAdapter(userAdapter);
 
-        // Initialize the UserAdapter with the delete click listener
-        userAdapter = new UserAdapter(userList, user -> {
-
-
-            // Call the ViewModel method to update the Firestore database
-            viewModel.removeUserFromSelectedEntrants(eventId, user.getId());
-            // Remove the user from the local list
-            userList.remove(user);
-
-            // Update the adapter
-            userAdapter.setUsers(userList);
-
-            // Update the UI for empty state
-            if (userList.isEmpty()) {
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText("No users in the selected list.");
-            } else {
-                emptyTextView.setVisibility(View.GONE);
-            }
-        });
-
-        recyclerView.setAdapter(userAdapter);
-
-        // Observe LiveData for selected list users
+        // Observe selected users
         viewModel.getSelectedEntrantsUsers().observe(getViewLifecycleOwner(), selectedUsersMap -> {
             Log.d(TAG, "Observer: Received selected users map with size: " +
                     (selectedUsersMap != null ? selectedUsersMap.size() : "null"));
             if (selectedUsersMap != null) {
                 this.selectedUsersMap = selectedUsersMap;
+
+                // Only now that we have data, reinitialize the adapter with proper settings
+                userAdapter = new UserAdapter(
+                        userList,
+                        this::showRemoveConfirmationDialog,
+                        false,
+                        viewModel.isCurrentUserOrganizer()
+                );
+                recyclerView.setAdapter(userAdapter);
+
                 updateUserList();
             }
         });
 
-        // Observe LiveData for enrolled list users
-        viewModel.getEnrolledEntrantsUsers().observe(getViewLifecycleOwner(), enrolledUsersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (enrolledUsersMap != null ? enrolledUsersMap.size() : "null"));
-            if (enrolledUsersMap != null) {
-                this.enrolledUsersMap = enrolledUsersMap;
-                updateUserList();
-            }
-        });
-
-        // Observe error messages from ViewModel
+        // Observe error messages
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText(error);
             }
         });
     }

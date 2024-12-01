@@ -1,5 +1,6 @@
 package com.bugoff.can_do;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
@@ -33,6 +37,7 @@ import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
+import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -54,22 +59,51 @@ public class UserProfileActivity extends Fragment {
         super.onCreate(savedInstanceState);
 
         // Get the UserViewModel from the MainActivity
-        MainActivity activity = (MainActivity) requireActivity();
-        userViewModel = activity.getUserViewModel();
+        if (getActivity() instanceof MainActivity) {
+            MainActivity activity = (MainActivity) getActivity();
+            userViewModel = activity.getUserViewModel();
+
+            if (userViewModel == null) {
+                // If somehow ViewModel is not available from MainActivity, create it directly
+                @SuppressLint("HardwareIds")
+                String androidId = Settings.Secure.getString(requireActivity().getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                UserViewModelFactory factory = new UserViewModelFactory(androidId);
+                userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
+            }
+        } else {
+            Log.e("UserProfile", "Activity is not MainActivity");
+            Toast.makeText(getContext(), "Error initializing profile", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
+        // Initialize views first
         ImageButton avatar = view.findViewById(R.id.image_avatar);
+        TextView firstName = view.findViewById(R.id.first_name);
+        TextView lastName = view.findViewById(R.id.last_name);
 
-        // Register observers
+        // Set default or loading state
+        firstName.setText("");
+        lastName.setText("");
+
+        if (userViewModel != null) {
+            setupViewModelObservers(view, avatar, firstName, lastName);
+        } else {
+            Toast.makeText(getContext(), "Error loading profile data", Toast.LENGTH_SHORT).show();
+        }
+
+        setupClickListeners(view, firstName, lastName, avatar);
+        return view;
+    }
+
+    private void setupViewModelObservers(View view, ImageButton avatar, TextView firstName, TextView lastName) {
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
-                TextView firstName = view.findViewById(R.id.first_name);
-                TextView lastName = view.findViewById(R.id.last_name);
                 String[] parts = name.split(" ");
                 if (parts.length > 0) {
                     firstName.setText(parts[0]);
@@ -97,25 +131,25 @@ public class UserProfileActivity extends Fragment {
             setupAdminButton(view, isAdmin);
         });
 
-        // Error message observer
         userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMsg -> {
             if (errorMsg != null && !errorMsg.isEmpty()) {
                 Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        // Set up click listeners
-        view.findViewById(R.id.name_button).setOnClickListener(v -> {
-            TextView firstName = view.findViewById(R.id.first_name);
-            TextView lastName = view.findViewById(R.id.last_name);
-            editNameDialog(firstName, lastName);
-        });
+    private void setupClickListeners(View view, TextView firstName, TextView lastName, ImageButton avatar) {
+        view.findViewById(R.id.name_button).setOnClickListener(v ->
+                editNameDialog(firstName, lastName));
 
-        view.findViewById(R.id.email_button).setOnClickListener(v -> editEmailDialog());
+        view.findViewById(R.id.email_button).setOnClickListener(v ->
+                editEmailDialog());
 
-        view.findViewById(R.id.add_pnumber_button).setOnClickListener(v -> addPNumberDialog());
+        view.findViewById(R.id.add_pnumber_button).setOnClickListener(v ->
+                addPNumberDialog());
 
-        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(v -> editPNumberDialog());
+        view.findViewById(R.id.edit_pnumber_button).setOnClickListener(v ->
+                editPNumberDialog());
 
         view.findViewById(R.id.notif_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
@@ -127,17 +161,8 @@ public class UserProfileActivity extends Fragment {
             startActivity(intent);
         });
 
-        // Set up avatar click listener with proper null checks
+        // Set up avatar click listener
         setupAvatarClickListener(view);
-
-        // Initialize button states
-        Button adminButton = view.findViewById(R.id.admin_button);
-        adminButton.setVisibility(View.GONE);
-
-        view.findViewById(R.id.add_pnumber_button).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.edit_pnumber_button).setVisibility(View.GONE);
-
-        return view;
     }
 
     private void setupAvatarClickListener(View view) {

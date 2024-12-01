@@ -1,13 +1,10 @@
 package com.bugoff.can_do.event;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -193,84 +190,33 @@ public class EventWaitlistFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_bar_waitlist);
         emptyTextView = view.findViewById(R.id.text_view_empty_waitlist);
 
-        // Initialize RecyclerView with a LinearLayoutManager and UserAdapter
+        // Initialize RecyclerView with a LinearLayoutManager
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(userList, null);
-        recyclerView.setAdapter(userAdapter);
 
-        // Initialize RecyclerView with delete functionality for organizers
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        userAdapter = new UserAdapter(userList,
-                user -> showRemoveConfirmationDialog(user), // Delete click listener
-                false, // Not admin deletion
-                viewModel.isCurrentUserOrganizer() // Show delete button only for organizers
-        );
-        recyclerView.setAdapter(userAdapter);
-
-        // Initialize ViewModel using a factory with the event ID
+        // Initialize ViewModel using factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
 
-        // Observe LiveData for waiting list users
+        // Initialize adapter with default settings first
+        userAdapter = new UserAdapter(userList, null, false, false);
+        recyclerView.setAdapter(userAdapter);
+
+        // Observe waiting list users
         viewModel.getWaitingListUsers().observe(getViewLifecycleOwner(), usersMap -> {
             Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
             if (usersMap != null && !usersMap.isEmpty()) {
                 userList.clear();
                 userList.addAll(usersMap.values());
-                userAdapter.notifyDataSetChanged();
-                emptyTextView.setVisibility(View.GONE);
-                Log.d(TAG, "Observer: Updated userList and notified adapter");
-            } else {
-                userList.clear();
-                userAdapter.notifyDataSetChanged();
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText("No users in the watch list.");
-                Log.d(TAG, "Observer: userList is empty, showing emptyTextView");
-            }
-            progressBar.setVisibility(View.GONE);
-        });
 
-        // Set up "Draw" button click listener to select users from the waitlist
-        Button drawButton = view.findViewById(R.id.draw);
-        drawButton.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Enter number of users to draw");
+                // Only now that we have data, reinitialize the adapter with proper settings
+                userAdapter = new UserAdapter(
+                        userList,
+                        this::showRemoveConfirmationDialog,
+                        false,
+                        viewModel.isCurrentUserOrganizer()
+                );
+                recyclerView.setAdapter(userAdapter);
 
-            final EditText input = new EditText(getContext());
-            input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            builder.setView(input);
-
-            builder.setPositiveButton("Draw", (dialog, which) -> {
-                String inputText = input.getText().toString().trim();
-                if (!inputText.isEmpty()) {
-                    try {
-                        int numberToDraw = Integer.parseInt(inputText);
-                        if (numberToDraw <= 0) {
-                            Toast.makeText(getContext(), "Please enter a positive number.", Toast.LENGTH_SHORT).show();
-                        } else if (numberToDraw > userList.size()) {
-                            Toast.makeText(getContext(), "Number exceeds the waitlist size.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            performDrawing(numberToDraw);
-                        }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(getContext(), "Invalid number.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Please enter a number.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-            builder.show();
-        });
-
-        viewModel.getWaitingListUsers().observe(getViewLifecycleOwner(), usersMap -> {
-            Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));
-            if (usersMap != null && !usersMap.isEmpty()) {
-                userList.clear();
-                userList.addAll(usersMap.values());
-                userAdapter.notifyDataSetChanged();
                 emptyTextView.setVisibility(View.GONE);
                 Log.d(TAG, "Observer: Updated userList and notified adapter");
             } else {
@@ -283,13 +229,10 @@ public class EventWaitlistFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         });
 
-        // Observe error messages from ViewModel
+        // Observe error messages
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-                emptyTextView.setVisibility(View.VISIBLE);
-                emptyTextView.setText(error);
             }
         });
     }
