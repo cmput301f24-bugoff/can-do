@@ -8,6 +8,7 @@ import com.bugoff.can_do.database.DatabaseEntity;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.notification.Notification;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -291,7 +292,13 @@ public class User implements DatabaseEntity {
             return;
         }
 
-        DocumentReference userRef = GlobalRepository.getUsersCollection().document(id);
+        CollectionReference usersCollection = GlobalRepository.getUsersCollection();
+        if (usersCollection == null) {
+            Log.e("User", "Cannot update remote: usersCollection is null");
+            return;
+        }
+
+        DocumentReference userRef = usersCollection.document(id);
         if (userRef == null) {
             Log.e("User", "Cannot update remote: userRef is null");
             return;
@@ -300,7 +307,6 @@ public class User implements DatabaseEntity {
         Map<String, Object> update = this.toMap();
         Log.d("User", "Setting remote - User ID: " + id);
         Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
-        // Log.d("User", "Setting remote - Update Map: " + update);
 
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {

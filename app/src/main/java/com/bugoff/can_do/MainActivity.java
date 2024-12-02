@@ -8,10 +8,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
@@ -34,9 +32,6 @@ import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -117,41 +112,41 @@ public class MainActivity extends AppCompatActivity {
      * @param userId The ID of the user
      */
     private void setupNotificationListener(String userId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (!GlobalRepository.isInTestMode()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Query query = db.collection("notifications")
+                    .whereArrayContains("pendingRecipients", userId);
 
-        // Query for notifications where the user is in pendingRecipients
-        Query query = db.collection("notifications")
-                .whereArrayContains("pendingRecipients", userId);
-
-        notificationListener = query.addSnapshotListener((snapshots, error) -> {
-            if (error != null) {
-                Log.e(TAG, "Listen failed.", error);
-                return;
-            }
-
-            if (snapshots != null && !snapshots.isEmpty()) {
-                for (DocumentSnapshot doc : snapshots) {
-                    String message = doc.getString("message");
-                    String eventId = doc.getString("event");
-
-                    // Fetch event name for the notification
-                    if (eventId != null) {
-                        GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
-                            if (event != null) {
-                                String title = event.getName();
-                                sendLocalNotification(title, message);
-                            }
-                        });
-                    }
-
-                    // Atomically remove this user from pendingRecipients
-                    doc.getReference().update(
-                            "pendingRecipients",
-                            FieldValue.arrayRemove(userId)
-                    );
+            notificationListener = query.addSnapshotListener((snapshots, error) -> {
+                if (error != null) {
+                    Log.e(TAG, "Listen failed.", error);
+                    return;
                 }
-            }
-        });
+
+                if (snapshots != null && !snapshots.isEmpty()) {
+                    for (DocumentSnapshot doc : snapshots) {
+                        String message = doc.getString("message");
+                        String eventId = doc.getString("event");
+
+                        // Fetch event name for the notification
+                        if (eventId != null) {
+                            GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
+                                if (event != null) {
+                                    String title = event.getName();
+                                    sendLocalNotification(title, message);
+                                }
+                            });
+                        }
+
+                        // Atomically remove this user from pendingRecipients
+                        doc.getReference().update(
+                                "pendingRecipients",
+                                FieldValue.arrayRemove(userId)
+                        );
+                    }
+                }
+            });
+        }
     }
     /**
      * Sends a local notification to the user.
@@ -237,30 +232,23 @@ public class MainActivity extends AppCompatActivity {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
-            LocationRequest locationRequest = LocationRequest.create()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(1000) // Set interval for location updates
-                    .setFastestInterval(500);
+            // A single location fetch
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, location -> {
+                            if (location != null) {
+                                double latitude = location.getLatitude();
+                                double longitude = location.getLongitude();
 
-            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    if (locationResult != null) {
-                        Location location = locationResult.getLastLocation();
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
+                                // Update user object
+                                cuser.setLatitude(latitude);
+                                cuser.setLongitude(longitude);
+                                cuser.setRemote(); // Save to database
 
-                            // Update user object
-                            cuser.setLatitude(latitude);
-                            cuser.setLongitude(longitude);
-                            cuser.setRemote(); // Save to database
-
-                            Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
-                        }
-                    }
-                }
-            }, Looper.getMainLooper());
+                                Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
+                            }
+                        });
+            }
         } catch (SecurityException e) {
             e.printStackTrace();
         }
