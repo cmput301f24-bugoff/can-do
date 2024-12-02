@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private GlobalRepository repository;
     private static final int PERMISSIONS_REQUEST_LOCATION = 1002;
-    private ListenerRegistration notificationListener;
+    private LocationCallback locationCallback;
+    private FusedLocationProviderClient fusedLocationClient;
 
     /**
      * Initializes the activity and sets up the BottomNavigationView for navigation between different fragments.
@@ -113,45 +114,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNotificationListener(String userId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (GlobalRepository.isInTestMode()) {
+            return; // Skip notification setup in test mode
+        }
 
-        // Query for notifications where the user is in pendingRecipients
-        Query query = db.collection("notifications")
-                .whereArrayContains("pendingRecipients", userId);
+        // Use the repository to listen for notifications
+        repository.getNotificationsForUser(userId, notification -> {
+            String message = notification.getContent();
+            String eventId = notification.getEvent();
 
-        notificationListener = query.addSnapshotListener((snapshots, error) -> {
-            if (error != null) {
-                Log.e(TAG, "Listen failed.", error);
-                return;
-            }
-
-            if (snapshots != null && !snapshots.isEmpty()) {
-                for (DocumentSnapshot doc : snapshots) {
-                    String message = doc.getString("message");
-                    String eventId = doc.getString("event");
-
-                    // Fetch event name for the notification
-                    if (eventId != null) {
-                        GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
-                            if (event != null) {
-                                String title = event.getName();
-                                sendLocalNotification(title, message);
-                            }
-                        });
+            if (eventId != null) {
+                GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
+                    if (event != null) {
+                        String title = event.getName();
+                        sendLocalNotification(title, message);
                     }
-
-                    // Atomically remove this user from pendingRecipients
-                    doc.getReference().update(
-                            "pendingRecipients",
-                            FieldValue.arrayRemove(userId)
-                    );
-                }
+                });
             }
         });
     }
 
     private void sendLocalNotification(String title, String message) {
-        // Check if notifications are enabled
         if (!NotificationSettingsActivity.areOrganizerNotificationsEnabled(this)) {
             return;
         }
@@ -159,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Create notification channel for Android O and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     "default",
@@ -187,6 +169,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkLocationPermissionAndFetchLocation(User user) {
+        if (GlobalRepository.isInTestMode()) {
+            return; // Skip location in test mode
+        }
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -196,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
             getLocationAndUpdateUser(user);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -207,40 +194,41 @@ public class MainActivity extends AppCompatActivity {
                     getLocationAndUpdateUser(user);
                 }
             } else {
-                // Permission denied
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void getLocationAndUpdateUser(User cuser) {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    private void getLocationAndUpdateUser(User user) {
+        if (GlobalRepository.isInTestMode()) {
+            return; // Skip location updates in test mode
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
             LocationRequest locationRequest = LocationRequest.create()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(1000) // Set interval for location updates
+                    .setInterval(1000)
                     .setFastestInterval(500);
 
-            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+            locationCallback = new LocationCallback() {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
-                    if (locationResult != null) {
+                    if (locationResult != null && !GlobalRepository.isInTestMode()) {
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-
-                            // Update user object
-                            cuser.setLatitude(latitude);
-                            cuser.setLongitude(longitude);
-                            cuser.setRemote(); // Save to database
-
-                            Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
+                            user.setLatitude(location.getLatitude());
+                            user.setLongitude(location.getLongitude());
+                            user.setRemote();
+                            Log.d(TAG, "Location obtained: " + location.getLatitude() + ", " + location.getLongitude());
                         }
                     }
                 }
-            }, Looper.getMainLooper());
+            };
+
+            fusedLocationClient.requestLocationUpdates(locationRequest,
+                    locationCallback, Looper.getMainLooper());
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -297,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             UserAuthenticator.authenticateUser(userId).addOnSuccessListener(user -> {
                 user.setName(name);
                 user.setEmail(email);
-                Task<Void> addUserTask = repository.addUser(user);  // Use instance repository
+                Task<Void> addUserTask = repository.addUser(user);
                 addUserTask
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(MainActivity.this, "Welcome " + name + "!", Toast.LENGTH_SHORT).show();
@@ -323,6 +311,14 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationCallback != null && fusedLocationClient != null && !GlobalRepository.isInTestMode()) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+    }
+
     public UserViewModel getUserViewModel() {
         return userViewModel;
     }
@@ -335,13 +331,5 @@ public class MainActivity extends AppCompatActivity {
     @VisibleForTesting
     public GlobalRepository getRepository() {
         return repository;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (notificationListener != null) {
-            notificationListener.remove();
-        }
     }
 }

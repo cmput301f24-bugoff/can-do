@@ -1,5 +1,8 @@
 package com.bugoff.can_do;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.POST_NOTIFICATIONS;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -16,12 +19,16 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import android.app.Instrumentation;
+import android.content.Context;
+import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.MockGlobalRepository;
@@ -39,6 +46,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -61,9 +69,33 @@ public class CreateEventTest {
     @Mock
     private DocumentReference mockDocRef;
 
+    @Rule
+    public GrantPermissionRule locationPermissionRule = GrantPermissionRule.grant(
+            ACCESS_FINE_LOCATION,
+            ACCESS_COARSE_LOCATION
+    );
+
+    @Rule
+    public GrantPermissionRule notificationPermissionRule =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ?
+                    GrantPermissionRule.grant(POST_NOTIFICATIONS) :
+                    GrantPermissionRule.grant();
+
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
+
+        // Grant permissions programmatically for older Android versions
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        Context context = instrumentation.getTargetContext();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            instrumentation.getUiAutomation().executeShellCommand(
+                    "pm grant " + context.getPackageName() + " android.permission.ACCESS_FINE_LOCATION"
+            );
+            instrumentation.getUiAutomation().executeShellCommand(
+                    "pm grant " + context.getPackageName() + " android.permission.ACCESS_COARSE_LOCATION"
+            );
+        }
 
         // Get the Android ID
         androidId = Settings.Secure.getString(

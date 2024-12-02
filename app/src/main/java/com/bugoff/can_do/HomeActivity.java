@@ -26,8 +26,7 @@ import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.notification.NotificationsFragment;
 import com.bugoff.can_do.user.AcceptDeclineFragment;
 import com.bugoff.can_do.user.EventDetailsFragmentEntrant;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.bugoff.can_do.user.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +42,13 @@ public class HomeActivity extends Fragment {
     private ImageView arrowDown;
     private RecyclerView eventsListView;
     private EventAdapter eventsAdapter;
+    private GlobalRepository repository;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        repository = new GlobalRepository();
+    }
 
     @Nullable
     @Override
@@ -56,38 +62,36 @@ public class HomeActivity extends Fragment {
         eventsListView = view.findViewById(R.id.hs_events_list);
 
         eventsAdapter = new EventAdapter(new ArrayList<>(), false, false, null, event -> handleEventClick(event), true);
-//        eventsAdapter.setOnItemClickListener(this);
         eventsListView.setAdapter(eventsAdapter);
         eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        String userId = GlobalRepository.getLoggedInUser().getId();
+        User loggedInUser = GlobalRepository.getLoggedInUser();
+        if (loggedInUser != null) {
+            String userId = loggedInUser.getId();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userDoc = db.collection("users").document(userId);
+            // Use GlobalRepository instead of direct Firestore calls
+            GlobalRepository.getUser(userId)
+                    .addOnSuccessListener(user -> {
+                        List<String> eventsJoined = user.getEventsJoined();
+                        if (eventsJoined != null && !eventsJoined.isEmpty()) {
+                            // Hide default views
+                            defaultSubtitle.setVisibility(View.GONE);
+                            getStartedText.setVisibility(View.GONE);
+                            arrowDown.setVisibility(View.GONE);
 
-        userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> eventsJoined = (List<String>) documentSnapshot.get("eventsJoined");
-                if (eventsJoined != null && !eventsJoined.isEmpty()) {
-                    // Hide default views
-                    defaultSubtitle.setVisibility(View.GONE);
-                    getStartedText.setVisibility(View.GONE);
-                    arrowDown.setVisibility(View.GONE);
-
-
-                    // Show events
-                    eventsListView.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "test: made it here");
-                    fetchEventDetails(eventsJoined);
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Failed to load events.", Toast.LENGTH_SHORT).show();
-        });
+                            // Show events
+                            eventsListView.setVisibility(View.VISIBLE);
+                            fetchEventDetails(eventsJoined);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Failed to load events.", Toast.LENGTH_SHORT).show();
+                    });
+        }
 
         // Functionality of notifications button on HomeScreen
         view.findViewById(R.id.notif_hs_button).setOnClickListener(v -> {
-            NotificationsFragment notificationsFragment = NotificationsFragment.newInstance(userId);
+            NotificationsFragment notificationsFragment = NotificationsFragment.newInstance(loggedInUser.getId());
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, notificationsFragment)
@@ -100,7 +104,6 @@ public class HomeActivity extends Fragment {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
             startActivity(intent);
         });
-
 
         return view;
     }

@@ -1,6 +1,8 @@
 package com.bugoff.can_do.notification;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.List;
 
 public class Notification {
@@ -24,6 +26,16 @@ public class Notification {
         this.pendingRecipients = pendingRecipients;
         this.event = event;
         this.timestamp = Timestamp.now();
+    }
+
+    public Notification(DocumentSnapshot doc) {
+        this.id = doc.getId();
+        this.type = doc.getString("type");
+        this.message = doc.getString("message");
+        this.from = doc.getString("from");
+        this.pendingRecipients = (List<String>) doc.get("pendingRecipients");
+        this.event = doc.getString("event");
+        this.timestamp = doc.getTimestamp("timestamp");
     }
 
     public String getId() { return id; }
