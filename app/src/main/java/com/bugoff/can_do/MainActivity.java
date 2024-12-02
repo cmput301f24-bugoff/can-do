@@ -8,8 +8,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
@@ -32,6 +34,9 @@ import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -212,25 +217,35 @@ public class MainActivity extends AppCompatActivity {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(location -> {
+            LocationRequest locationRequest = LocationRequest.create()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(1000) // Set interval for location updates
+                    .setFastestInterval(500);
+
+            fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult != null) {
+                        Location location = locationResult.getLastLocation();
                         if (location != null) {
                             double latitude = location.getLatitude();
                             double longitude = location.getLongitude();
+
                             // Update user object
                             cuser.setLatitude(latitude);
                             cuser.setLongitude(longitude);
                             cuser.setRemote(); // Save to database
 
                             Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
-                        } else {
-                            Log.d(TAG, "Location is null");
                         }
-                    });
+                    }
+                }
+            }, Looper.getMainLooper());
         } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
+
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
