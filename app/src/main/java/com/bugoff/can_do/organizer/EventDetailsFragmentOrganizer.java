@@ -46,7 +46,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * Fragment for displaying event details to organizers. Allows organizers to view and manage event details.
+ */
 public class EventDetailsFragmentOrganizer extends Fragment {
     private FirebaseFirestore db;
     private TextView eventNameTextView;
@@ -129,7 +131,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
         return view;
     }
-
+    /**
+     * Sets up the buttons for the fragment.
+     */
     private void setupButtons(View view) {
         ImageButton backArrowButton = view.findViewById(R.id.back_arrow);
         ImageButton mapIconButton = view.findViewById(R.id.map_icon);
@@ -192,7 +196,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         deleteQrCodeButton.setOnClickListener(v -> confirmAndDeleteQrHash());
         deleteFacilityButton.setOnClickListener(v -> confirmAndDeleteFacilityEvents());
     }
-
+    /**
+     * Fetches the event details from Firestore and updates the UI.
+     */
     private void fetchEventDetails(View rootView) {
         View progressBar = rootView.findViewById(R.id.progress_bar);
         View mainContent = rootView.findViewById(R.id.main_content);
@@ -278,7 +284,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 })
                 .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
     }
-
+    /**
+     * Updates the geolocation requirement for the event.
+     */
     private void updateGeolocationRequirement(boolean required) {
         if (eventId == null || db == null) {
             Log.e(TAG, "Cannot update geolocation requirement: eventId or db is null");
@@ -307,7 +315,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     geolocationToggle.setChecked(!required);
                 });
     }
-
+    /**
+     * Sets up the image launchers for selecting images from gallery or camera.
+     */
     private void setupImageLaunchers() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -334,7 +344,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 }
         );
     }
-
+    /**
+     * Shows a dialog for selecting an image source.
+     */
     private void showImageSelectionDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Update Event Image")
@@ -353,7 +365,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 })
                 .show();
     }
-
+    /**
+     * Handles the selected image from the gallery.
+     */
     private void handleSelectedImage(Uri imageUri) {
         String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
         if (base64Image != null) {
@@ -362,7 +376,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Handles the captured photo from the camera.
+     */
     private void handleCapturedPhoto(Bitmap photo) {
         String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
         if (base64Image != null) {
@@ -371,7 +387,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Updates the event image in Firestore.
+     */
     private void updateEventImage(String base64Image) {
         if (eventId == null) return;
 
@@ -395,7 +413,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Toast.makeText(getContext(), "Failed to update image", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Removes the event image from Firestore.
+     */
     private void removeEventImage() {
         if (eventId == null) return;
 
@@ -415,7 +435,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Handles errors by showing a toast message and hiding the loading spinner.
+     */
     private void handleError(View rootView, String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -426,7 +448,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             mainContent.setVisibility(View.VISIBLE);
         }
     }
-
+    /**
+     * Confirms and deletes the QR code hash from Firestore.
+     */
     private void confirmAndDeleteQrHash() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete QR Code")
@@ -435,7 +459,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes the QR code hash from Firestore.
+     */
     private void deleteQrHash() {
         if (eventId == null) return;
 
@@ -454,7 +480,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Log.e(TAG, "Error deleting QR code", e);
                 });
     }
-
+    /**
+     * Confirms and deletes the facility and all associated events from Firestore.
+     */
     private void confirmAndDeleteFacilityEvents() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Facility")
@@ -463,7 +491,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes the facility and all associated events from Firestore.
+     */
     private void deleteFacilityEvents() {
         if (eventId == null) return;
 
@@ -536,13 +566,17 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Log.e(TAG, "Error getting event details", e);
                 });
     }
-
+    /**
+     * Opens the map to the event location.
+     */
     private void openMapToLocation() {
         Intent intent = new Intent(requireContext(), WaitingListMapActivity.class);
         intent.putExtra("EVENT_ID", eventId);
         startActivity(intent);
     }
-
+    /**
+     * Shares the event details via a share intent.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -553,7 +587,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
-
+    /**
+     * Generates a QR code for the given text and sets it to the ImageView.
+     */
     private void generateQRCode(String text) {
         BarcodeEncoder barcodeEncoder
                 = new BarcodeEncoder();
@@ -564,7 +600,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Log.e("TAG", e.toString());
         }
     }
-
+    /**
+     * Shows a fragment with the given fragment class and logs the message.
+     */
     private void showFragment(Fragment fragment, String logMessage) {
         Bundle args = new Bundle();
         args.putString("eventId", eventId);
