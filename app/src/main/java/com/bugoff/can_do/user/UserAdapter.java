@@ -15,7 +15,9 @@ import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 
 import java.util.List;
-
+/**
+ * Adapter for displaying a list of users in a RecyclerView.
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private List<User> users;
     private final OnDeleteClickListener deleteClickListener;
