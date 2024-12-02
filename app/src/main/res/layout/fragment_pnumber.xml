@@ -36,13 +36,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        app:cardElevation="0dp"
+        android:background="@color/zxing_transparent"
         app:cardCornerRadius="5dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/background_fill" >
+            android:background="@color/zxing_transparent" >
 
             <EditText
                 android:id="@+id/input_add_pnumber"
@@ -79,13 +81,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
+        app:cardElevation="0dp"
+        android:background="@color/zxing_transparent"
         app:cardCornerRadius="5dp">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/background_fill" >
+            android:background="@color/zxing_transparent" >
 
             <EditText
                 android:id="@+id/input_verify_pnumber"

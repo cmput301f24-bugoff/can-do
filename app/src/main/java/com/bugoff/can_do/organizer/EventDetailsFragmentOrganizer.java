@@ -46,7 +46,13 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+/**
+ * Fragment for displaying details of an event for organizers.
+ *
+ * <p>This fragment fetches the details of an event from Firestore and displays them in a view.
+ * It also provides options for the organizer to edit the event details, view the watch list,
+ * view the selected list, send notifications, and view the enrolled list.</p>
+ */
 public class EventDetailsFragmentOrganizer extends Fragment {
     private FirebaseFirestore db;
     private TextView eventNameTextView;
@@ -65,7 +71,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private static final String ARG_EVENT_ID = "selected_event_id";
 
     private static final String TAG = "EventDetailsFragmentOrg";
-
+    /**
+     * Creates a new instance of EventDetailsFragmentOrganizer with the specified event ID.
+     *
+     * @param eventId The ID of the event to display.
+     * @return A new instance of EventDetailsFragmentOrganizer.
+     */
     public static EventDetailsFragmentOrganizer newInstance(String eventId) {
         EventDetailsFragmentOrganizer fragment = new EventDetailsFragmentOrganizer();
         Bundle args = new Bundle();
@@ -128,7 +139,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
         return view;
     }
-
+    /**
+     * Sets up the buttons in the view and their click listeners.
+     *
+     * @param view The view in which the buttons are located.
+     */
     private void setupButtons(View view) {
         ImageButton backArrowButton = view.findViewById(R.id.back_arrow);
         ImageButton mapIconButton = view.findViewById(R.id.map_icon);
@@ -190,7 +205,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         deleteQrCodeButton.setOnClickListener(v -> confirmAndDeleteQrHash());
         deleteFacilityButton.setOnClickListener(v -> confirmAndDeleteFacilityEvents());
     }
-
+    /**
+     * Fetches the details of the event from Firestore and updates the UI with the data.
+     *
+     * @param rootView The root view of the fragment.
+     */
     private void fetchEventDetails(View rootView) {
         View progressBar = rootView.findViewById(R.id.progress_bar);
         View mainContent = rootView.findViewById(R.id.main_content);
@@ -263,7 +282,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 })
                 .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
     }
-
+    /**
+     * Sets up the image launchers for selecting images from the gallery or capturing photos from the camera.
+     */
     private void setupImageLaunchers() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -290,7 +311,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 }
         );
     }
-
+    /**
+     * Shows a dialog for selecting an image source (gallery or camera) or removing the event image.
+     */
     private void showImageSelectionDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Update Event Image")
@@ -309,7 +332,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 })
                 .show();
     }
-
+    /**
+     * Handles the selected image from the gallery by compressing and encoding it to base64.
+     *
+     * @param imageUri The URI of the selected image.
+     */
     private void handleSelectedImage(Uri imageUri) {
         String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
         if (base64Image != null) {
@@ -318,7 +345,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Handles the captured photo by compressing and encoding it to base64.
+     *
+     * @param photo The captured photo.
+     */
     private void handleCapturedPhoto(Bitmap photo) {
         String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
         if (base64Image != null) {
@@ -327,7 +358,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Toast.makeText(getContext(), "Failed to process image", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Updates the event document with the new base64 image.
+     *
+     * @param base64Image The base64-encoded image data.
+     */
     private void updateEventImage(String base64Image) {
         if (eventId == null) return;
 
@@ -351,7 +386,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Toast.makeText(getContext(), "Failed to update image", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Removes the event image from the event document.
+     */
     private void removeEventImage() {
         if (eventId == null) return;
 
@@ -371,7 +408,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Toast.makeText(getContext(), "Failed to remove image", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Handles an error by displaying a toast message and hiding the loading spinner.
+     *
+     * @param rootView The root view of the fragment.
+     * @param message  The error message to display.
+     */
     private void handleError(View rootView, String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -382,7 +424,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             mainContent.setVisibility(View.VISIBLE);
         }
     }
-
+    /**
+     * Confirms with the user before deleting the QR code hash from the event document.
+     */
     private void confirmAndDeleteQrHash() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete QR Code")
@@ -391,7 +435,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes the QR code hash from the event document.
+     */
     private void deleteQrHash() {
         if (eventId == null) return;
 
@@ -410,7 +456,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Log.e(TAG, "Error deleting QR code", e);
                 });
     }
-
+    /**
+     * Confirms with the user before deleting the facility and all its associated events.
+     */
     private void confirmAndDeleteFacilityEvents() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Facility")
@@ -419,7 +467,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes the facility and all its associated events from Firestore.
+     */
     private void deleteFacilityEvents() {
         if (eventId == null) return;
 
@@ -492,13 +542,17 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     Log.e(TAG, "Error getting event details", e);
                 });
     }
-
+    /**
+     * Opens the map to the event location.
+     */
     private void openMapToLocation() {
         Intent intent = new Intent(requireContext(), WaitingListMapActivity.class);
         intent.putExtra("EVENT_ID", eventId);
         startActivity(intent);
     }
-
+    /**
+     * Shares the event details via a sharing intent.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -509,7 +563,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
-
+    /**
+     * Shows the QR code for the event.
+     *
+     * @param text The text to encode in the QR code.
+     */
     private void generateQRCode(String text) {
         BarcodeEncoder barcodeEncoder
                 = new BarcodeEncoder();
@@ -520,7 +578,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
             Log.e("TAG", e.toString());
         }
     }
-
+    /**
+     * Shows the specified fragment in the fragment container.
+     *
+     * @param fragment    The fragment to show.
+     * @param logMessage  The log message to display.
+     */
     private void showFragment(Fragment fragment, String logMessage) {
         Bundle args = new Bundle();
         args.putString("eventId", eventId);

@@ -61,7 +61,11 @@ public class EventsFragment extends Fragment {
     public EventsFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Initializes the fragment, extracting the isAdmin flag from arguments if available.
+     *
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +98,14 @@ public class EventsFragment extends Fragment {
 
         eventsListViewModel = new ViewModelProvider(this, factory).get(EventsListViewModel.class);
     }
-
+    /**
+     * Inflates the layout for this fragment.
+     *
+     * @param inflater           LayoutInflater used to inflate views in the fragment.
+     * @param container          Parent view that the fragment's UI will attach to.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     * @return The root view of the inflated layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

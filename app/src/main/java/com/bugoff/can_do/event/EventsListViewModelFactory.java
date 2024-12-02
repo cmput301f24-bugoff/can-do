@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.database.GlobalRepository;
-
+/**
+ * Factory for creating a new instance of EventsListViewModel.
+ */
 public class EventsListViewModelFactory implements ViewModelProvider.Factory {
     private final GlobalRepository repository;
     private final boolean isAdmin;

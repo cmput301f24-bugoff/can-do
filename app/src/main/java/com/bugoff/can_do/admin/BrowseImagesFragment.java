@@ -27,13 +27,23 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment to browse and manage images for events and users.
+ * This fragment displays images in a grid layout and allows
+ * the admin to delete images.
+ */
 public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDeleteClickListener {
     private static final String TAG = "BrowseImagesFragment";
     private RecyclerView recyclerView;
     private ImageAdapter adapter;
     private ProgressBar progressBar;
     private TextView emptyView;
-
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment.
+     *
+     * @return A new instance of fragment BrowseImagesFragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,7 +61,9 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
 
         return view;
     }
-
+    /**
+     * Loads images from the database and updates the view accordingly.
+     */
     private void loadImages() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -68,7 +80,11 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                     showError("Error loading images");
                 });
     }
-
+    /**
+     * Loads images for events from the database.
+     *
+     * @return A task that loads images for events.
+     */
     private Task<?> loadEventImages() {
         return GlobalRepository.getEventsCollection()
                 .whereNotEqualTo("base64Image", null)
@@ -118,7 +134,11 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                     }
                 });
     }
-
+    /**
+     * Loads images for users from the database.
+     *
+     * @return A task that loads images for users.
+     */
     private Task<?> loadUserImages() {
         return GlobalRepository.getUsersCollection()
                 .whereNotEqualTo("base64Image", null)
@@ -138,7 +158,12 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                     updateViewVisibility();
                 });
     }
-
+    /**
+     * Handles the behavior when the delete button is clicked.
+     *
+     * @param item    The item to delete.
+     * @param isEvent {@code true} if the item is an event, {@code false} if it is a user.
+     */
     @Override
     public void onDeleteClick(Object item, boolean isEvent) {
         new AlertDialog.Builder(requireContext())
@@ -148,7 +173,12 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes an image from the database.
+     *
+     * @param item    The item to delete.
+     * @param isEvent {@code true} if the item is an event, {@code false} if it is a user.
+     */
     private void deleteImage(Object item, boolean isEvent) {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -168,7 +198,9 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
                     showError("Failed to delete image");
                 });
     }
-
+    /**
+     * Updates the visibility of the views based on the adapter content.
+     */
     private void updateViewVisibility() {
         progressBar.setVisibility(View.GONE);
         if (adapter.getItemCount() == 0) {
@@ -180,14 +212,22 @@ public class BrowseImagesFragment extends Fragment implements ImageAdapter.OnDel
             emptyView.setVisibility(View.GONE);
         }
     }
-
+    /**
+     * Shows an error message to the user.
+     *
+     * @param message The message to show.
+     */
     private void showError(String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
         Log.e(TAG, message);
     }
-
+    /**
+     * Shows a success message to the user.
+     *
+     * @param message The message to show.
+     */
     private void showSuccess(String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

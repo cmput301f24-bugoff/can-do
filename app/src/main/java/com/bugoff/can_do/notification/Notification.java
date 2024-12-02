@@ -2,7 +2,9 @@ package com.bugoff.can_do.notification;
 
 import com.google.firebase.Timestamp;
 import java.util.List;
-
+/**
+ * Represents a notification that can be sent to users.
+ */
 public class Notification {
     private String id;
     private String type;

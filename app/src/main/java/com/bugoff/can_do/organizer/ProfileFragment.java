@@ -118,7 +118,12 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
+    /**
+     * Generates a default avatar image with the specified letter.
+     *
+     * @param letter The letter to display on the avatar.
+     * @return The generated avatar image.
+     */
     private Bitmap generateAvatar(String letter) {
         int size = 175;
         int bgColor = Color.LTGRAY;
@@ -206,7 +211,12 @@ public class ProfileFragment extends Fragment {
             }
     );
 
-
+    /**
+     * Loads the user's data from Firestore using the specified database and Android ID.
+     *
+     * @param db       The Firestore database to load the user's data from.
+     * @param androidID The Android ID of the user to load data for.
+     */
     private void loadUserData(FirebaseFirestore db, String androidID) {
         db.collection("users").document(androidID).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -237,7 +247,12 @@ public class ProfileFragment extends Fragment {
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure to load data", Toast.LENGTH_SHORT).show());
     }
 
-
+    /**
+     * Saves the user's name to Firestore using the specified first and last name TextViews.
+     *
+     * @param firstNameTxt The TextView containing the user's first name.
+     * @param lastNameTxt  The TextView containing the user's last name.
+     */
     private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
         if (user == null) {
             Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
@@ -247,7 +262,12 @@ public class ProfileFragment extends Fragment {
         user.setName(name);
         user.setRemote();
     }
-
+    /**
+     * Displays a dialog for the user to edit their name using the specified first and last name TextViews.
+     *
+     * @param firstName The TextView containing the user's first name.
+     * @param lastName  The TextView containing the user's last name.
+     */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -272,7 +292,9 @@ public class ProfileFragment extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog for the user to edit their email address.
+     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -284,7 +306,9 @@ public class ProfileFragment extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog for the user to add or edit a phone number.
+     */
     private void addOrEditPhoneNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);

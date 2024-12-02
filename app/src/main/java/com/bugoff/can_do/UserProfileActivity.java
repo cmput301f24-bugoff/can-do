@@ -100,7 +100,14 @@ public class UserProfileActivity extends Fragment {
         setupClickListeners(view, firstName, lastName, avatar);
         return view;
     }
-
+    /**
+     * Helper for setting up ViewModel observers
+     *
+     * @param view     Fragment view
+     * @param avatar   Avatar ImageButton
+     * @param firstName First name TextView
+     * @param lastName  Last name TextView
+     */
     private void setupViewModelObservers(View view, ImageButton avatar, TextView firstName, TextView lastName) {
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
@@ -137,7 +144,14 @@ public class UserProfileActivity extends Fragment {
             }
         });
     }
-
+    /**
+     * Helper for setting up click listeners for the profile screen
+     *
+     * @param view      Fragment view
+     * @param firstName First name TextView
+     * @param lastName  Last name TextView
+     * @param avatar    Avatar ImageButton
+     */
     private void setupClickListeners(View view, TextView firstName, TextView lastName, ImageButton avatar) {
         view.findViewById(R.id.name_button).setOnClickListener(v ->
                 editNameDialog(firstName, lastName));
@@ -164,7 +178,11 @@ public class UserProfileActivity extends Fragment {
         // Set up avatar click listener
         setupAvatarClickListener(view);
     }
-
+    /**
+     * Helper for setting up avatar click listener
+     *
+     * @param view Fragment view
+     */
     private void setupAvatarClickListener(View view) {
         ImageView avatar = view.findViewById(R.id.image_avatar);
         avatar.setOnClickListener(v -> {
@@ -226,7 +244,13 @@ public class UserProfileActivity extends Fragment {
 
         return bitmap;
     }
-
+    /**
+     * Helper for saving avatar image to internal storage
+     *
+     * @param bitmap   Bitmap image to save
+     * @param filename Filename to save as
+     * @return Absolute path of saved image
+     */
     private String saveAvatar(Bitmap bitmap, String filename) {
         try {
             FileOutputStream fos = requireContext().openFileOutput(filename, Context.MODE_PRIVATE);
@@ -287,7 +311,12 @@ public class UserProfileActivity extends Fragment {
                 }
             }
     );
-
+    /**
+     * Helper for loading user profile image
+     *
+     * @param avatar      Avatar ImageView
+     * @param firstLetter First letter of user's name
+     */
     private void loadUserProfileImage(ImageView avatar, String firstLetter) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser != null && currentUser.getBase64Image() != null) {
@@ -374,6 +403,12 @@ public class UserProfileActivity extends Fragment {
         userViewModel.setPhoneNumber(pnumber);
     }
 
+    /**
+ * Opens a dialog to edit the user's name.
+ *
+ * @param firstName The TextView displaying the user's first name
+ * @param lastName  The TextView displaying the user's last name
+ */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -403,6 +438,9 @@ public class UserProfileActivity extends Fragment {
                 .show();
     }
 
+    /**
+     * Opens a dialog to edit the user's email.
+     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -424,7 +462,9 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Opens a dialog to add a phone number to the user's profile.
+     */
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -442,7 +482,9 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Opens a dialog to edit the user's phone number.
+     */
     private void editPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -468,7 +510,12 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Helper for updating phone number button visibility
+     *
+     * @param view       Fragment view
+     * @param phoneNumber Phone number string
+     */
     private void updatePhoneNumberButtonVisibility(View view, String phoneNumber) {
         View addButton = view.findViewById(R.id.add_pnumber_button);
         View editButton = view.findViewById(R.id.edit_pnumber_button);

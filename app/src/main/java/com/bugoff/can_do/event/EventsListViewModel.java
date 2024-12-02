@@ -12,7 +12,10 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ViewModel for the EventsListFragment.
+ * Manages the list of events to be displayed in the fragment.
+ */
 public class EventsListViewModel extends ViewModel {
     private static final String TAG = "EventsListViewModel";
     private final GlobalRepository repository;
@@ -22,7 +25,13 @@ public class EventsListViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final MutableLiveData<String> statusMessage = new MutableLiveData<>();
     private ListenerRegistration eventListener;
-
+    /**
+     * Creates a new instance of EventsListViewModel.
+     *
+     * @param repository The repository to fetch data from.
+     * @param isAdmin    Boolean flag indicating if the user is an admin.
+     * @param isFromAdmin Boolean flag indicating if the user is navigating from the AdminActivity.
+     */
     EventsListViewModel(GlobalRepository repository, boolean isAdmin, boolean isFromAdmin) {
         this.repository = repository;
         this.isAdmin = isAdmin;
@@ -40,7 +49,9 @@ public class EventsListViewModel extends ViewModel {
             statusMessage.setValue("Waiting for facility...");
         }
     }
-
+    /**
+     * Fetches all events from the repository and updates the eventsList LiveData.
+     */
     private void fetchAllEvents() {
         if (GlobalRepository.isInTestMode()) {
             // Handle test mode
@@ -83,7 +94,11 @@ public class EventsListViewModel extends ViewModel {
                     }
                 });
     }
-
+    /**
+     * Fetches events for a specific facility and updates the eventsList LiveData.
+     *
+     * @param facility The facility to fetch events for.
+     */
     private void fetchEvents(Facility facility) {
         if (GlobalRepository.isInTestMode()) {
             updateEventsList(facility.getEvents());
@@ -126,23 +141,43 @@ public class EventsListViewModel extends ViewModel {
                     }
                 });
     }
-
+    /**
+     * Updates the eventsList LiveData with the provided list of events.
+     *
+     * @param events The list of events to update the LiveData with.
+     */
     private void updateEventsList(List<Event> events) {
         eventsList.setValue(events);
     }
-
+    /**
+     * Returns a LiveData object containing the list of events.
+     *
+     * @return LiveData object containing the list of events.
+     */
     public LiveData<List<Event>> getEventsList() {
         return eventsList;
     }
-
+    /**
+     * Returns a LiveData object containing the error message.
+     *
+     * @return LiveData object containing the error message.
+     */
     public LiveData<String> getErrorMessage() {
         return errorMessage;
     }
-
+    /**
+     * Returns a LiveData object containing the status message.
+     *
+     * @return LiveData object containing the status message.
+     */
     public LiveData<String> getStatusMessage() {
         return statusMessage;
     }
-
+    /**
+     * Returns a boolean flag indicating if the user is an admin.
+     *
+     * @return True if the user is an admin, false otherwise.
+     */
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -154,7 +189,11 @@ public class EventsListViewModel extends ViewModel {
             eventListener.remove();
         }
     }
-
+    /**
+     * Deletes an event from the repository and updates the eventsList LiveData.
+     *
+     * @param event The event to delete.
+     */
     public void deleteEvent(Event event) {
         if (event == null) return;
 

@@ -15,7 +15,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-
+/**
+ * Activity for displaying a map of users in the waiting list for an event.
+ * This activity fetches the list of users in the waiting list from Firestore and displays their locations on a map.
+ */
 public class WaitingListMapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
     private GoogleMap googleMap;
@@ -34,13 +37,17 @@ public class WaitingListMapActivity extends AppCompatActivity implements OnMapRe
 
         db = FirebaseFirestore.getInstance();
     }
-
+    /**
+     * Called when the map is ready to be used.
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
         fetchWaitingListAndPlotMarkers();
     }
-
+    /**
+     * Fetches the list of users in the waiting list for the event and plots their locations on the map.
+     */
     private void fetchWaitingListAndPlotMarkers() {
         db.collection("events").document(eventId)
                 .get()

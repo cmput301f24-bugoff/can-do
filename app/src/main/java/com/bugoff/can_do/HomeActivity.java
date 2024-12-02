@@ -104,7 +104,11 @@ public class HomeActivity extends Fragment {
 
         return view;
     }
-
+    /**
+     * Handles the click event for an event.
+     *
+     * @param event The event that was clicked.
+     */
     private void handleEventClick(Event event) {
         String currentUserId = GlobalRepository.getLoggedInUser().getId();
         List<String> waitlist = event.getWaitingListEntrants();
@@ -129,7 +133,11 @@ public class HomeActivity extends Fragment {
             navigateToEventDetails(event);
         }
     }
-
+    /**
+     * Navigates to the event details screen for the given event.
+     *
+     * @param event The event to navigate to.
+     */
     private void navigateToEventDetails(Event event) {
         // Replace with navigation logic to event details screen
         EventDetailsFragmentEntrant fragment = new EventDetailsFragmentEntrant();
@@ -145,7 +153,11 @@ public class HomeActivity extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
+    /**
+     * Navigates to the AcceptDeclineFragment for the given event.
+     *
+     * @param event The event to navigate to.
+     */
     private void navigateToAcceptDecline(Event event) {
         // Create an instance of the AcceptDeclineFragment with the event data
         AcceptDeclineFragment fragment = AcceptDeclineFragment.newInstance(event.getId());
@@ -157,7 +169,11 @@ public class HomeActivity extends Fragment {
                 .addToBackStack(null) // Add to the back stack for navigation
                 .commit();
     }
-
+    /**
+     * Fetches the details for the given list of event IDs.
+     *
+     * @param eventIds The list of event IDs to fetch.
+     */
     private void fetchEventDetails(List<String> eventIds) {
         if (eventIds == null || eventIds.isEmpty()) {
             Log.d(TAG, "No event IDs to fetch");
@@ -203,7 +219,11 @@ public class HomeActivity extends Fragment {
                     });
         }
     }
-
+    /**
+     * Updates the UI with the given list of events.
+     *
+     * @param events The list of events to display.
+     */
     private void updateUI(List<Event> events) {
         if (getActivity() == null || !isAdded()) {
             Log.w(TAG, "Fragment not attached, skipping UI update");
@@ -221,7 +241,9 @@ public class HomeActivity extends Fragment {
             }
         });
     }
-
+    /**
+     * Shows the empty state for the Home screen.
+     */
     private void showEmptyState() {
         if (getActivity() == null || !isAdded()) return;
 
@@ -232,7 +254,9 @@ public class HomeActivity extends Fragment {
             eventsListView.setVisibility(View.GONE);
         });
     }
-
+    /**
+     * Hides the empty state for the Home screen.
+     */
     private void hideEmptyState() {
         if (getActivity() == null || !isAdded()) return;
 

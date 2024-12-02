@@ -136,7 +136,11 @@ public class EventSelectedFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Shows a confirmation dialog to remove a user from the selected list.
+     *
+     * @param user The user to remove.
+     */
     private void showRemoveConfirmationDialog(User user) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Remove from Selected List")
@@ -147,7 +151,9 @@ public class EventSelectedFragment extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Updates the user list in the adapter and shows/hides the empty state message.
+     */
     private void updateUserList() {
         userList.clear();
 

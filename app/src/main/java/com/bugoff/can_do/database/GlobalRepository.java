@@ -20,6 +20,10 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Repository for managing global operations on Firestore collections, such as users, facilities, and events.
+ * Supports test mode for unit testing.
+ */
 public class GlobalRepository {
     // Testing
     private static boolean isTestMode = false;
@@ -27,15 +31,20 @@ public class GlobalRepository {
     private static CollectionReference mockUsersCollection = null;
     private static CollectionReference mockFacilitiesCollection = null;
     private static CollectionReference mockEventsCollection = null;
-
     private static User loggedInUser;
 
-    // For testing only
+    /**
+     * Sets the test mode flag.
+     * @param testMode true to enable test mode, false to disable
+     */
     public static void setTestMode(boolean testMode) {
         isTestMode = testMode;
     }
 
-    // For testing only
+    /**
+     * Sets the mock Firestore instance for testing.
+     * @param db the mock Firestore instance
+     */
     public static void setMockFirestore(FirebaseFirestore db) {
         mockDb = db;
         if (db != null) {
@@ -50,15 +59,25 @@ public class GlobalRepository {
     private static CollectionReference eventsCollection;
     private FirebaseFirestore db;
 
+    /**
+     * Get the currently logged in user.
+     * @return the currently logged in user
+     */
     public static User getLoggedInUser() {
         return loggedInUser;
     }
-
+    /**
+     * Set the currently logged in user.
+     * @param user the currently logged in user
+     */
     public static void setLoggedInUser(User user) {
         loggedInUser = user;
     }
 
-    // Constructor to initialize Firestore
+    /**
+     * Constructor for GlobalRepository.
+     * Initializes Firestore collections based on the mode (test or production).
+     */
     public GlobalRepository() {
         if (!isTestMode) {
             db = FirestoreHelper.getInstance().getDb();
@@ -72,7 +91,10 @@ public class GlobalRepository {
             eventsCollection = mockEventsCollection;
         }
     }
-
+    /**
+     * Adds a notification to the Firestore database.
+     * @param notification the notification to add
+     */
     public static void addNotification(Notification notification) {
         if (isTestMode) {
             // Handle mock notification add
@@ -92,22 +114,43 @@ public class GlobalRepository {
                 .set(notificationMap);
     }
 
+    /**
+     * Gets the Firestore instance.
+     * @return the Firestore instance
+     */
     public FirebaseFirestore getDb() {
         return db;
     }
 
+    /**
+     * Gets the users collection.
+     * @return the users collection
+     */
     public static CollectionReference getUsersCollection() {
         return isTestMode ? mockUsersCollection : usersCollection;
     }
 
+    /**
+     * Gets the facilities collection.
+     * @return the facilities collection
+     */
     public static CollectionReference getFacilitiesCollection() {
         return isTestMode ? mockFacilitiesCollection : facilitiesCollection;
     }
 
+    /**
+     * Gets the events collection.
+     * @return the events collection
+     */
     public static CollectionReference getEventsCollection() {
         return isTestMode ? mockEventsCollection : eventsCollection;
     }
 
+    /**
+     * Adds a user to the Firestore database.
+     * @param user the user to add
+     * @return a task that adds the user
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Void> addUser(@NonNull User user) {
@@ -132,6 +175,11 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Gets a user from the Firestore database.
+     * @param androidId the ID of the user to get
+     * @return a task that gets the user
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<User> getUser(String androidId) {
@@ -155,6 +203,11 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Adds a facility to the Firestore database.
+     * @param facility the facility to add
+     * @return a task that adds the facility
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Void> addFacility(@NonNull Facility facility) {
@@ -183,6 +236,11 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+     /**
+     * Adds an event to the Firestore database.
+     * @param eventId the event to add
+     * @return a task that adds the event
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Event> getEvent(String eventId) {
@@ -212,6 +270,11 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Gets a facility from the Firestore database.
+     * @param facilityId the ID of the facility to get
+     * @return a task that gets the facility
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Facility> getFacility(String facilityId) {
@@ -236,6 +299,11 @@ public class GlobalRepository {
         return taskCompletionSource.getTask();
     }
 
+    /**
+     * Adds an event to the Firestore database.
+     * @param event the event to add
+     * @return a task that adds the event
+     */
     @SuppressLint("RestrictedApi")
     @NonNull
     public static Task<Void> addEvent(@NonNull Event event) {

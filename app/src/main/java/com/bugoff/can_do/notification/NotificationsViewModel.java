@@ -12,7 +12,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ViewModel for managing and exposing notifications to UI components.
+ *
+ * <p>This ViewModel handles the asynchronous fetching of notifications from Firestore
+ * and provides LiveData objects for observing changes to the list of notifications.
+ * It also manages the lifecycle of data listeners to prevent memory leaks.</p>
+ */
 public class NotificationsViewModel extends ViewModel {
     private static final String TAG = "NotificationsViewModel";
     private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>(new ArrayList<>());
@@ -25,7 +31,15 @@ public class NotificationsViewModel extends ViewModel {
         }
         return notifications;
     }
-
+    /**
+     * Sets up a listener for notifications where the user is in pendingRecipients.
+     *
+     * <p>This method queries Firestore for notifications where the user is in the pendingRecipients
+     * list and listens for changes to the query results. When a notification is received, the user
+     * is removed from the pendingRecipients list and the notification is added to the LiveData object.</p>
+     *
+     * @param userId The ID of the user to listen for notifications.
+     */
     private void setupNotificationListener(String userId) {
         // Check if notifications are enabled before setting up the listener
         if (!NotificationSettingsActivity.areOrganizerNotificationsEnabled(FirebaseFirestore.getInstance().getApp().getApplicationContext())) {
@@ -77,7 +91,12 @@ public class NotificationsViewModel extends ViewModel {
             }
         });
     }
-
+    /**
+     * Converts a Firestore document to a Notification object.
+     *
+     * @param doc The Firestore document to convert.
+     * @return The Notification object, or null if the document is invalid.
+     */
     private Notification documentToNotification(DocumentSnapshot doc) {
         try {
             Notification notification = new Notification(
@@ -95,7 +114,9 @@ public class NotificationsViewModel extends ViewModel {
             return null;
         }
     }
-
+    /**
+     * Removes the notification listener when the ViewModel is cleared.
+     */
     @Override
     protected void onCleared() {
         super.onCleared();

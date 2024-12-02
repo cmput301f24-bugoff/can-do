@@ -14,7 +14,10 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
-
+/**
+ * Activity for transitioning to the main organizer screen.
+ * This activity checks if the user has a facility and prompts the user to create one if not.
+ */
 public class OrganizerTransition extends AppCompatActivity {
     private GlobalRepository repository;
     private String androidId;
@@ -27,7 +30,11 @@ public class OrganizerTransition extends AppCompatActivity {
 
         checkUserFacility();
     }
-
+    /**
+     * Checks if the user has a facility.
+     * If the user has a facility, navigates to the main organizer screen.
+     * If the user does not have a facility, prompts the user to create one.
+     */
     private void checkUserFacility() {
         repository.getFacility(androidId)
                 .addOnSuccessListener(facility -> {
@@ -44,7 +51,9 @@ public class OrganizerTransition extends AppCompatActivity {
                     promptUserToCreateFacility();
                 });
     }
-
+    /**
+     * Prompts the user to create a facility.
+     */
     private void promptUserToCreateFacility() {
         setContentView(R.layout.activity_facility_edit);
 
@@ -54,13 +63,17 @@ public class OrganizerTransition extends AppCompatActivity {
         Button continueButton = findViewById(R.id.saveFacilityButton);
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
-
+    /**
+     * Navigates to the main organizer screen.
+     */
     private void navigateToNextActivity() {
         Intent intent = new Intent(this, OrganizerMain.class);
         startActivity(intent);
         finish();
     }
-
+    /**
+     * Saves the facility details and proceeds to the main organizer screen.
+     */
     private void saveFacilityAndProceed() {
         EditText facilityNameInput = findViewById(R.id.facilityNameInput);
         EditText facilityAddressInput = findViewById(R.id.facilityAddressInput);

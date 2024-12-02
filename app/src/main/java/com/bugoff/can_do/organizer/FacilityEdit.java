@@ -76,12 +76,19 @@ public class FacilityEdit extends AppCompatActivity {
             }
         });
     }
-
+    /**
+     * Checks if the facility name and address fields are valid.
+     *
+     * @return True if both fields are valid, false otherwise.
+     */
     private boolean areFieldsValid() {
         return facilityNameInput.getText() != null && !facilityNameInput.getText().toString().isEmpty()
                 && facilityAddressInput.getText() != null && !facilityAddressInput.getText().toString().isEmpty();
     }
 
+    /**
+     * Saves the facility data to Firestore and navigates back to the OrganizerMain activity.
+     */
     private void saveFacilityData() {
         String name = facilityNameInput.getText().toString();
         String address = facilityAddressInput.getText().toString();

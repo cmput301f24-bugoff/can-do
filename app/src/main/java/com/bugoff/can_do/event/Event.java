@@ -53,7 +53,9 @@ public class Event implements DatabaseEntity {
     private Runnable onUpdateListener;
     private String base64Image;
 
-    // Default constructor
+    /**
+     * Default constructor for Firestore serialization.
+     */
     public Event(@NonNull Facility facility) {
         this.id = GlobalRepository.getEventsCollection().document().getId();
         this.facility = facility;
@@ -75,7 +77,12 @@ public class Event implements DatabaseEntity {
         // facility.addEvent(this); // Ensure bidirectional reference (edit: maybe not?)
     }
 
-    // Constructor from Firestore document
+    /**
+ * Constructs an Event object from a Firestore DocumentSnapshot.
+ *
+ * @param facility The facility where the event is held.
+ * @param doc      The Firestore DocumentSnapshot containing event data.
+ */
     public Event(@NonNull Facility facility, @NonNull DocumentSnapshot doc) {
         this.id = doc.getId();
         this.facility = facility;
@@ -106,6 +113,11 @@ public class Event implements DatabaseEntity {
         deserializeUserList(doc.get("cancelledEntrants"), cancelledEntrants);
     }
 
+    /**
+     * Converts the Event object to a Map format compatible with Firestore.
+     *
+     * @return A Map object representing the Event data.
+     */
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

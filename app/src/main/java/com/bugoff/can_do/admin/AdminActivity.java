@@ -22,7 +22,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * the admin's interactions.
  */
 public class AdminActivity extends AppCompatActivity {
-
+    /**
+     * Initializes the activity, sets the content view, and sets up the bottom navigation.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +64,6 @@ public class AdminActivity extends AppCompatActivity {
             return true;
         });
     }
-
 
     /**
      * Loads the specified fragment into the fragment container.
