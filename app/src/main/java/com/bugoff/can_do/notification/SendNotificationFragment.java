@@ -32,12 +32,36 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * Fragment for sending notifications to specific groups of event participants.
+ * Provides functionality to compose and send notifications to different recipient categories,
+ * including waiting list entrants, selected entrants, and cancelled entrants.
+ */
 public class SendNotificationFragment extends Fragment {
 
+    /**
+     * Spinner for selecting the recipient group.
+     */
     private Spinner groupSpinner;
+
+    /**
+     * EditText for entering the notification message.
+     */
     private EditText messageEditText;
+
+    /**
+     * The ID of the event for which notifications are being sent.
+     */
     private String eventId;
 
+    /**
+     * Called to create the view hierarchy associated with the fragment.
+     *
+     * @param inflater  The LayoutInflater object used to inflate views.
+     * @param container The parent container in which the fragment's UI will be displayed.
+     * @param savedInstanceState Saved state for restoring the fragment (if applicable).
+     * @return The root view of the fragment's layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,8 +79,6 @@ public class SendNotificationFragment extends Fragment {
         ArrayAdapter<CharSequence> adapter = getArrayAdapter();
         groupSpinner.setAdapter(adapter);
 
-
-        // Set click listener for send button
         sendButton.setOnClickListener(v -> {
             String selectedGroup = groupSpinner.getSelectedItem().toString();
             String message = messageEditText.getText().toString().trim();
@@ -66,21 +88,16 @@ public class SendNotificationFragment extends Fragment {
             } else if (message.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter a message.", Toast.LENGTH_SHORT).show();
             } else if ("Waiting List Entrants".equals(selectedGroup)) {
-                Log.d(TAG, "Trying to send notification to waiting list entrants");
                 sendtoWaitingList(message, eventId);
                 messageEditText.setText("");
             } else if ("Selected Entrants".equals(selectedGroup)) {
-                Toast.makeText(getContext(), "Notification sent to Selected Entrants", Toast.LENGTH_SHORT).show();
                 sendtoSelectedEntrants(message, eventId);
                 messageEditText.setText("");
             } else if ("Cancelled Entrants".equals(selectedGroup)) {
-                Toast.makeText(getContext(), "Notification sent to Cancelled Entrants", Toast.LENGTH_SHORT).show();
                 sendtoCancelledEntrants(message, eventId);
                 messageEditText.setText("");
             } else {
-                // Handle notification sending logic here
                 Toast.makeText(getContext(), "Notification sent to " + selectedGroup, Toast.LENGTH_SHORT).show();
-                // Clear message text
                 messageEditText.setText("");
             }
         });
@@ -88,30 +105,30 @@ public class SendNotificationFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sends a notification to waiting list entrants for the specified event.
+     *
+     * @param message The notification message.
+     * @param eventId The ID of the event.
+     */
     private void sendtoWaitingList(String message, String eventId) {
-        Log.d(TAG, "sendtoWaitingList: starting");
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Event event = task.getResult();
                 if (event != null) {
                     List<String> waitingListEntrants = event.getWaitingListEntrants();
                     if (!waitingListEntrants.isEmpty()) {
-                        // Create single notification for all recipients
                         String uniqueId = UUID.randomUUID().toString();
                         Notification notification = new Notification(
                                 uniqueId,
                                 "Event Update",
                                 message,
                                 event.getFacility().getId(),
-                                new ArrayList<>(waitingListEntrants), // Create new list to avoid modifications
+                                new ArrayList<>(waitingListEntrants),
                                 eventId
                         );
                         GlobalRepository.addNotification(notification);
-
-                        // Send local notification
-                        String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
-
+                        sendLocalNotification(getContext(), event.getName(), message);
                         Toast.makeText(getContext(),
                                 "Notification sent to " + waitingListEntrants.size() + " waiting list entrants",
                                 Toast.LENGTH_SHORT).show();
@@ -119,16 +136,20 @@ public class SendNotificationFragment extends Fragment {
                         Toast.makeText(getContext(), "No users in waiting list", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.w(TAG, "Event not found");
                     Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.e(TAG, "Error retrieving event", task.getException());
                 Toast.makeText(getContext(), "Error retrieving event", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * Sends a notification to selected entrants for the specified event.
+     *
+     * @param message The notification message.
+     * @param eventId The ID of the event.
+     */
     private void sendtoSelectedEntrants(String message, String eventId) {
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -146,11 +167,7 @@ public class SendNotificationFragment extends Fragment {
                                 eventId
                         );
                         GlobalRepository.addNotification(notification);
-
-                        // Send local notification
-                        String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
-
+                        sendLocalNotification(getContext(), event.getName(), message);
                         Toast.makeText(getContext(),
                                 "Notification sent to " + selectedEntrants.size() + " selected entrants",
                                 Toast.LENGTH_SHORT).show();
@@ -166,6 +183,12 @@ public class SendNotificationFragment extends Fragment {
         });
     }
 
+    /**
+     * Sends a notification to cancelled entrants for the specified event.
+     *
+     * @param message The notification message.
+     * @param eventId The ID of the event.
+     */
     private void sendtoCancelledEntrants(String message, String eventId) {
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -183,11 +206,7 @@ public class SendNotificationFragment extends Fragment {
                                 eventId
                         );
                         GlobalRepository.addNotification(notification);
-
-                        // Send local notification
-                        String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
-
+                        sendLocalNotification(getContext(), event.getName(), message);
                         Toast.makeText(getContext(),
                                 "Notification sent to " + cancelledEntrants.size() + " cancelled entrants",
                                 Toast.LENGTH_SHORT).show();
@@ -203,11 +222,15 @@ public class SendNotificationFragment extends Fragment {
         });
     }
 
+    /**
+     * Sends a local notification to the device.
+     *
+     * @param context The application context.
+     * @param title   The title of the notification.
+     * @param message The content of the notification.
+     */
     private static void sendLocalNotification(Context context, String title, String message) {
-        // Create NotificationManager
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Notification Channel setup (required for Android O and above)
         String channelId = "waiting_list_channel";
         NotificationChannel channel = new NotificationChannel(
                 channelId,
@@ -216,48 +239,40 @@ public class SendNotificationFragment extends Fragment {
         );
         channel.setDescription("Notifications for waiting list updates");
         notificationManager.createNotificationChannel(channel);
-
-        // Build Notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.notifications_24px)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
-
-        // Show Notification
-        int notificationId = new Random().nextInt(); // Unique ID for each notification
+        int notificationId = new Random().nextInt();
         notificationManager.notify(notificationId, builder.build());
     }
 
-
-
+    /**
+     * Creates an ArrayAdapter for the group selection spinner.
+     *
+     * @return An ArrayAdapter populated with recipient group options.
+     */
     @NonNull
     private ArrayAdapter<CharSequence> getArrayAdapter() {
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.notification_groups)) {
+        return new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.notification_groups)) {
             @Override
             public boolean isEnabled(int position) {
-                // Disable the first item ("Select Recipient")
-                return position != 0;
+                return position != 0; // Disable the first item ("Select Recipient")
             }
 
             @Override
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = (TextView) view;
-
-                // Set the first item in grey color
                 if (position == 0) {
                     textView.setTextColor(ContextCompat.getColor(getContext(), R.color.grey));
                 } else {
                     textView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.black));
                 }
-                
-
                 return view;
             }
         };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
     }
 }

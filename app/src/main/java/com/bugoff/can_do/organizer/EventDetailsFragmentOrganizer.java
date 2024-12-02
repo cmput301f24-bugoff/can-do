@@ -47,26 +47,72 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Fragment for displaying and managing event details from an organizer's perspective.
+ * This fragment allows the organizer to view, update, and manage various event-related actions,
+ * such as sharing, editing, QR code generation, and navigation to specific entrant lists.
+ */
 public class EventDetailsFragmentOrganizer extends Fragment {
+
+    /**
+     * Firebase Firestore instance for interacting with the database.
+     */
     private FirebaseFirestore db;
+
+    /**
+     * TextViews for displaying event information.
+     */
     private TextView eventNameTextView;
     private TextView eventDateTextView;
     private TextView eventDescriptionTextView;
     private TextView eventLocationTextView;
-    private ListView entrantsListView;
+
+    /**
+     * ImageView for displaying event-related images and QR codes.
+     */
     private ImageView eventImageView;
+    private ImageView qrCodeImageView;
+
+    /**
+     * ListView for displaying entrants.
+     */
+    private ListView entrantsListView;
+
+    /**
+     * Event data fields.
+     */
     private String eventLocation;
     private String eventDescription;
     private String eventName;
     private String eventId;
-    private ImageView qrCodeImageView;
+
+    /**
+     * Launchers for gallery and camera activities.
+     */
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
+
+    /**
+     * Key for passing the event ID as an argument to the fragment.
+     */
     private static final String ARG_EVENT_ID = "selected_event_id";
+
+    /**
+     * Switch for toggling geolocation requirement for the event.
+     */
     private androidx.appcompat.widget.SwitchCompat geolocationToggle;
 
+    /**
+     * Tag for logging.
+     */
     private static final String TAG = "EventDetailsFragmentOrg";
 
+    /**
+     * Factory method for creating a new instance of the fragment with the given event ID.
+     *
+     * @param eventId The ID of the event.
+     * @return A new instance of EventDetailsFragmentOrganizer.
+     */
     public static EventDetailsFragmentOrganizer newInstance(String eventId) {
         EventDetailsFragmentOrganizer fragment = new EventDetailsFragmentOrganizer();
         Bundle args = new Bundle();
@@ -75,6 +121,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         return fragment;
     }
 
+    /**
+     * Initializes the fragment, setting up Firebase Firestore and image launchers.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +141,14 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         setupImageLaunchers();
     }
 
+    /**
+     * Inflates the layout for the fragment and initializes UI components.
+     *
+     * @param inflater  The LayoutInflater for inflating views.
+     * @param container The parent container.
+     * @param savedInstanceState The saved instance state.
+     * @return The root view of the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,6 +189,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         return view;
     }
 
+    /**
+     * Sets up button click listeners for various actions.
+     *
+     * @param view The root view of the fragment.
+     */
     private void setupButtons(View view) {
         ImageButton backArrowButton = view.findViewById(R.id.back_arrow);
         ImageButton mapIconButton = view.findViewById(R.id.map_icon);
@@ -193,6 +257,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         deleteFacilityButton.setOnClickListener(v -> confirmAndDeleteFacilityEvents());
     }
 
+    /**
+     * Fetches event details from Firestore and updates the UI.
+     *
+     * @param rootView The root view of the fragment.
+     */
     private void fetchEventDetails(View rootView) {
         View progressBar = rootView.findViewById(R.id.progress_bar);
         View mainContent = rootView.findViewById(R.id.main_content);
@@ -279,6 +348,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
     }
 
+    /**
+     * Updates geolocation requirements in Firestore.
+     *
+     * @param required Whether geolocation is required.
+     */
     private void updateGeolocationRequirement(boolean required) {
         if (eventId == null || db == null) {
             Log.e(TAG, "Cannot update geolocation requirement: eventId or db is null");
@@ -308,6 +382,10 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 });
     }
 
+
+    /**
+     * Sets up the gallery and camera launchers for selecting and capturing images.
+     */
     private void setupImageLaunchers() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -335,6 +413,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         );
     }
 
+    /**
+     * Sets up the gallery and camera launchers for selecting and capturing images.
+     */
     private void showImageSelectionDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Update Event Image")
@@ -354,6 +435,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .show();
     }
 
+    /**
+     * Handles the selected image from the gallery.
+     *
+     * @param imageUri The URI of the selected image.
+     */
     private void handleSelectedImage(Uri imageUri) {
         String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
         if (base64Image != null) {
@@ -363,6 +449,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         }
     }
 
+    /**
+     * Handles the captured photo from the camera.
+     *
+     * @param photo The captured photo as a Bitmap.
+     */
     private void handleCapturedPhoto(Bitmap photo) {
         String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
         if (base64Image != null) {
@@ -372,6 +463,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         }
     }
 
+    /**
+     * Updates the event image in the Firestore database and updates the UI with the new image.
+     *
+     * @param base64Image The new image encoded as a Base64 string.
+     */
     private void updateEventImage(String base64Image) {
         if (eventId == null) return;
 
@@ -416,6 +512,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 });
     }
 
+    /**
+     * Handles errors during data fetching or operations.
+     *
+     * @param rootView The root view of the fragment.
+     * @param message The error message to display.
+     */
     private void handleError(View rootView, String message) {
         if (getContext() != null) {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -427,6 +529,10 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         }
     }
 
+    /**
+     * Displays a confirmation dialog to the user for deleting the event's QR code.
+     * If the user confirms, the QR code is deleted from the Firestore database.
+     */
     private void confirmAndDeleteQrHash() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete QR Code")
@@ -435,7 +541,9 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
-
+    /**
+     * Deletes the QR code hash for the event.
+     */
     private void deleteQrHash() {
         if (eventId == null) return;
 
@@ -537,12 +645,18 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                 });
     }
 
+    /**
+     * Opens the map activity with the event location.
+     */
     private void openMapToLocation() {
         Intent intent = new Intent(requireContext(), WaitingListMapActivity.class);
         intent.putExtra("EVENT_ID", eventId);
         startActivity(intent);
     }
 
+    /**
+     * Shares the event details via other applications.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -565,6 +679,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         }
     }
 
+    /**
+     * Shows another fragment in place of the current fragment.
+     *
+     * @param fragment The new fragment to show.
+     * @param logMessage A log message for tracking the action.
+     */
     private void showFragment(Fragment fragment, String logMessage) {
         Bundle args = new Bundle();
         args.putString("eventId", eventId);

@@ -15,10 +15,22 @@ import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
 
+/**
+ * OrganizerTransition activity handles the logic for transitioning between activities
+ * based on whether the user is associated with a facility.
+ * If no facility exists, the user is prompted to create one.
+ */
 public class OrganizerTransition extends AppCompatActivity {
     private GlobalRepository repository;
     private String androidId;
 
+    /**
+     * Called when the activity is first created.
+     * Initializes the Android ID and GlobalRepository and determines the user's associated facility.
+     *
+     * @param savedInstanceState If the activity is being reinitialized after previously being shut down,
+     *                           this Bundle contains the most recent data. Otherwise, it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +40,10 @@ public class OrganizerTransition extends AppCompatActivity {
         checkUserFacility();
     }
 
+    /**
+     * Checks if the current user has an associated facility.
+     * If the facility exists, navigates to the next activity. Otherwise, prompts the user to create one.
+     */
     private void checkUserFacility() {
         repository.getFacility(androidId)
                 .addOnSuccessListener(facility -> {
@@ -45,6 +61,10 @@ public class OrganizerTransition extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Prompts the user to create a new facility by setting the content view to the facility edit layout.
+     * Adds listeners to handle user interactions for creating a facility.
+     */
     private void promptUserToCreateFacility() {
         setContentView(R.layout.activity_facility_edit);
 
@@ -55,12 +75,19 @@ public class OrganizerTransition extends AppCompatActivity {
         continueButton.setOnClickListener(v -> saveFacilityAndProceed());
     }
 
+    /**
+     * Navigates to the OrganizerMain activity.
+     */
     private void navigateToNextActivity() {
         Intent intent = new Intent(this, OrganizerMain.class);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Saves the facility information entered by the user and proceeds to the OrganizerMain activity.
+     * Validates input fields and handles success and failure cases for saving the facility.
+     */
     private void saveFacilityAndProceed() {
         EditText facilityNameInput = findViewById(R.id.facilityNameInput);
         EditText facilityAddressInput = findViewById(R.id.facilityAddressInput);
@@ -89,7 +116,11 @@ public class OrganizerTransition extends AppCompatActivity {
                 );
     }
 
-    // For testing purposes
+    /**
+     * For testing purposes: Sets a custom repository instance.
+     *
+     * @param repository The new GlobalRepository instance to use in this activity.
+     */
     public void setRepository(GlobalRepository repository) {
         this.repository = repository;
     }
