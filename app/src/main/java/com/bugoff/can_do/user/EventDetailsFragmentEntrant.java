@@ -189,6 +189,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
                         } else {
                             Boolean requiresGeolocation = documentSnapshot.getBoolean("geolocationRequired");
                             if (Boolean.TRUE.equals(requiresGeolocation)) {
+                                // check if user has non-null latitude and longitude
+                                if (currentUser.getLatitude() == null || currentUser.getLongitude() == null) {
+                                    getLocationAndUpdateUser(viewModel, currentUser);
+                                    return;
+                                }
                                 // Display warning dialog if geolocation is required
                                 new androidx.appcompat.app.AlertDialog.Builder(requireContext())
                                         .setTitle("Geolocation Required")
@@ -228,7 +233,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
 
     private void getLocationAndUpdateUser(EventViewModel viewModel, User currentUser) {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-
         try {
             fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(location -> {
@@ -247,6 +251,8 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     });
         } catch (SecurityException e) {
             e.printStackTrace();
+            // make toast to inform user that location permission is required and they cannot join the event
+            Toast.makeText(requireContext(), "Location permission is required to join this event.", Toast.LENGTH_SHORT).show();
         }
     }
 
