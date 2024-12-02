@@ -8,10 +8,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
@@ -34,17 +32,9 @@ import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 
 import java.util.Random;
 
@@ -56,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private GlobalRepository repository;
     private static final int PERMISSIONS_REQUEST_LOCATION = 1002;
-    private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationClient;
 
     /**
@@ -201,34 +190,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void getLocationAndUpdateUser(User user) {
         if (GlobalRepository.isInTestMode()) {
-            return; // Skip location updates in test mode
+            return;
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
-            LocationRequest locationRequest = LocationRequest.create()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(1000)
-                    .setFastestInterval(500);
-
-            locationCallback = new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    if (locationResult != null && !GlobalRepository.isInTestMode()) {
-                        Location location = locationResult.getLastLocation();
+            // Request location only once
+            fusedLocationClient.getCurrentLocation(com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener(this, location -> {
                         if (location != null) {
                             user.setLatitude(location.getLatitude());
                             user.setLongitude(location.getLongitude());
                             user.setRemote();
-                            Log.d(TAG, "Location obtained: " + location.getLatitude() + ", " + location.getLongitude());
+                            Log.d(TAG, "Initial location obtained: " + location.getLatitude() + ", " + location.getLongitude());
                         }
-                    }
-                }
-            };
-
-            fusedLocationClient.requestLocationUpdates(locationRequest,
-                    locationCallback, Looper.getMainLooper());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error getting location: ", e);
+                    });
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -314,9 +294,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (locationCallback != null && fusedLocationClient != null && !GlobalRepository.isInTestMode()) {
-            fusedLocationClient.removeLocationUpdates(locationCallback);
-        }
     }
 
     public UserViewModel getUserViewModel() {
