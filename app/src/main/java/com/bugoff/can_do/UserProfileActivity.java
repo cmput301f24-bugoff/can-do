@@ -82,76 +82,63 @@ public class UserProfileActivity extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.user_profile_screen, container, false);
 
-        // Initialize views first
-        ImageButton avatar = view.findViewById(R.id.image_avatar);
+        // Initialize views
         TextView firstName = view.findViewById(R.id.first_name);
         TextView lastName = view.findViewById(R.id.last_name);
+        ImageView avatar = view.findViewById(R.id.image_avatar);
 
-        // Set default or loading state
-        firstName.setText("");
-        lastName.setText("");
+        // Get UserViewModel from MainActivity
+        if (getActivity() instanceof MainActivity) {
+            MainActivity activity = (MainActivity) getActivity();
+            userViewModel = activity.getUserViewModel();
 
-        if (userViewModel != null) {
-            setupViewModelObservers(view, avatar, firstName, lastName);
-        } else {
-            Toast.makeText(getContext(), "Error loading profile data", Toast.LENGTH_SHORT).show();
+            if (userViewModel != null) {
+                // Observe name changes with immediate UI update
+                userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
+                    if (name != null) {
+                        updateNameFields(name, firstName, lastName);
+                        // Update avatar with the new first letter
+                        String firstLetter = firstName.getText().toString();
+                        if (!firstLetter.isEmpty()) {
+                            firstLetter = firstLetter.substring(0, 1).toUpperCase();
+                            loadUserProfileImage(avatar, firstLetter);
+                        }
+                    }
+                });
+
+                // Observe email changes
+                userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
+                    currEmail = email != null ? email : "";
+                });
+
+                // Observe phone number changes
+                userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
+                    currPNumber = phoneNumber != null ? phoneNumber : "";
+                    updatePhoneNumberButtonVisibility(view, phoneNumber);
+                });
+
+                userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
+                    setupAdminButton(view, isAdmin);
+                });
+            }
         }
 
-        setupClickListeners(view, firstName, lastName, avatar);
+        setupClickListeners(view, firstName, lastName, (ImageButton) avatar);
         return view;
     }
-    /**
-     * Helper for setting up ViewModel observers
-     *
-     * @param view     Fragment view
-     * @param avatar   Avatar ImageButton
-     * @param firstName First name TextView
-     * @param lastName  Last name TextView
-     */
-    private void setupViewModelObservers(View view, ImageButton avatar, TextView firstName, TextView lastName) {
-        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
-            if (name != null) {
-                String[] parts = name.split(" ");
-                if (parts.length > 0) {
-                    firstName.setText(parts[0]);
-                    String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
-                    loadUserProfileImage(avatar, firstLetter);
-                }
-                if (parts.length > 1) {
-                    lastName.setText(parts[1]);
-                } else {
-                    lastName.setText("");
-                }
-            }
-        });
 
-        userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
-            currEmail = email != null ? email : "";
-        });
+    private void updateNameFields(String fullName, TextView firstName, TextView lastName) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            firstName.setText("");
+            lastName.setText("");
+            return;
+        }
 
-        userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
-            currPNumber = phoneNumber != null ? phoneNumber : "";
-            updatePhoneNumberButtonVisibility(view, phoneNumber);
-        });
-
-        userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
-            setupAdminButton(view, isAdmin);
-        });
-
-        userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMsg -> {
-            if (errorMsg != null && !errorMsg.isEmpty()) {
-                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+        String[] parts = fullName.trim().split("\\s+", 2); // Split into max 2 parts
+        firstName.setText(parts[0]);
+        lastName.setText(parts.length > 1 ? parts[1] : "");
     }
-    /**
-     * Helper for setting up click listeners for the profile screen
-     *
-     * @param view      Fragment view
-     * @param firstName First name TextView
-     * @param lastName  Last name TextView
-     * @param avatar    Avatar ImageButton
-     */
+
     private void setupClickListeners(View view, TextView firstName, TextView lastName, ImageButton avatar) {
         view.findViewById(R.id.name_button).setOnClickListener(v ->
                 editNameDialog(firstName, lastName));
@@ -178,11 +165,7 @@ public class UserProfileActivity extends Fragment {
         // Set up avatar click listener
         setupAvatarClickListener(view);
     }
-    /**
-     * Helper for setting up avatar click listener
-     *
-     * @param view Fragment view
-     */
+
     private void setupAvatarClickListener(View view) {
         ImageView avatar = view.findViewById(R.id.image_avatar);
         avatar.setOnClickListener(v -> {
@@ -244,13 +227,7 @@ public class UserProfileActivity extends Fragment {
 
         return bitmap;
     }
-    /**
-     * Helper for saving avatar image to internal storage
-     *
-     * @param bitmap   Bitmap image to save
-     * @param filename Filename to save as
-     * @return Absolute path of saved image
-     */
+
     private String saveAvatar(Bitmap bitmap, String filename) {
         try {
             FileOutputStream fos = requireContext().openFileOutput(filename, Context.MODE_PRIVATE);
@@ -311,12 +288,7 @@ public class UserProfileActivity extends Fragment {
                 }
             }
     );
-    /**
-     * Helper for loading user profile image
-     *
-     * @param avatar      Avatar ImageView
-     * @param firstLetter First letter of user's name
-     */
+
     private void loadUserProfileImage(ImageView avatar, String firstLetter) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser != null && currentUser.getBase64Image() != null) {
@@ -403,44 +375,56 @@ public class UserProfileActivity extends Fragment {
         userViewModel.setPhoneNumber(pnumber);
     }
 
-    /**
- * Opens a dialog to edit the user's name.
- *
- * @param firstName The TextView displaying the user's first name
- * @param lastName  The TextView displaying the user's last name
- */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
 
-        String first = firstName.getText().toString();
-        String last = lastName.getText().toString();
-
         EditText editFirstName = nameView.findViewById(R.id.input_first_name);
         EditText editLastName = nameView.findViewById(R.id.input_last_name);
 
-        editFirstName.setText(first);
-        editLastName.setText(last);
+        // Pre-fill with current values
+        editFirstName.setText(firstName.getText());
+        editLastName.setText(lastName.getText());
 
-        new AlertDialog.Builder(getContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setView(nameView)
                 .setNeutralButton("CANCEL", null)
-                .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    String newFirstName = editFirstName.getText().toString().trim();
-                    String newLastName = editLastName.getText().toString().trim();
-                    String fullName = newFirstName;
-                    if (!newLastName.isEmpty()) {
-                        fullName += " " + newLastName;
-                    }
-                    userViewModel.setName(fullName);
-                })
-                .create()
-                .show();
+                .setPositiveButton("CONFIRM", null) // Set to null initially
+                .create();
+
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
+                String newFirstName = editFirstName.getText().toString().trim();
+                String newLastName = editLastName.getText().toString().trim();
+
+                if (newFirstName.isEmpty()) {
+                    editFirstName.setError("First name cannot be empty");
+                    return;
+                }
+
+                // Build full name
+                StringBuilder fullName = new StringBuilder(newFirstName);
+                if (!newLastName.isEmpty()) {
+                    fullName.append(" ").append(newLastName);
+                }
+
+                // Update ViewModel
+                if (userViewModel != null) {
+                    userViewModel.setName(fullName.toString());
+                }
+
+                // Update UI immediately
+                firstName.setText(newFirstName);
+                lastName.setText(newLastName);
+
+                dialog.dismiss();
+            });
+        });
+
+        dialog.show();
     }
 
-    /**
-     * Opens a dialog to edit the user's email.
-     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -455,16 +439,48 @@ public class UserProfileActivity extends Fragment {
                 .setNeutralButton("CANCEL", null)
                 .setPositiveButton("CONFIRM", (dialog, which) -> {
                     String newEmail = editEmail.getText().toString().trim();
-                    if (!newEmail.isEmpty()) {
+                    if (!newEmail.isEmpty() && userViewModel != null) {
                         userViewModel.setEmail(newEmail);
                     }
                 })
                 .create()
                 .show();
     }
-    /**
-     * Opens a dialog to add a phone number to the user's profile.
-     */
+
+    private void addOrEditPhoneNumberDialog() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+
+        EditText inputPNumber = pnumberView.findViewById(R.id.input_add_pnumber);
+        EditText editPNumber = pnumberView.findViewById(R.id.input_edit_pnumber);
+
+        boolean isEditing = currPNumber != null && !currPNumber.isEmpty();
+
+        // Show/hide appropriate views
+        pnumberView.findViewById(R.id.input_add_pnumber).setVisibility(isEditing ? View.GONE : View.VISIBLE);
+        pnumberView.findViewById(R.id.input_edit_pnumber).setVisibility(isEditing ? View.VISIBLE : View.GONE);
+        pnumberView.findViewById(R.id.title_add_pnumber).setVisibility(isEditing ? View.GONE : View.VISIBLE);
+        pnumberView.findViewById(R.id.title_edit_pnumber).setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
+        if (isEditing) {
+            editPNumber.setText(currPNumber);
+        }
+
+        new AlertDialog.Builder(getContext())
+                .setView(pnumberView)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    String newNumber = isEditing ?
+                            editPNumber.getText().toString().trim() :
+                            inputPNumber.getText().toString().trim();
+                    if (!newNumber.isEmpty() && userViewModel != null) {
+                        userViewModel.setPhoneNumber(newNumber);
+                    }
+                })
+                .create()
+                .show();
+    }
+
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -482,9 +498,7 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-    /**
-     * Opens a dialog to edit the user's phone number.
-     */
+
     private void editPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -510,12 +524,7 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-    /**
-     * Helper for updating phone number button visibility
-     *
-     * @param view       Fragment view
-     * @param phoneNumber Phone number string
-     */
+
     private void updatePhoneNumberButtonVisibility(View view, String phoneNumber) {
         View addButton = view.findViewById(R.id.add_pnumber_button);
         View editButton = view.findViewById(R.id.edit_pnumber_button);
@@ -534,6 +543,7 @@ public class UserProfileActivity extends Fragment {
      */
     private void setupAdminButton(View view, Boolean isAdmin) {
         Button adminButton = view.findViewById(R.id.admin_button);
+        Log.d("UserProfile", "isAdmin: " + isAdmin);
         if (isAdmin != null && isAdmin) {
             adminButton.setVisibility(View.VISIBLE);
             adminButton.setOnClickListener(v -> {

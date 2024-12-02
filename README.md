@@ -16,6 +16,7 @@ Our Javadoc webpage is at [here](https://cmput301f24-bugoff.github.io/can-do/). 
 Our Product Backlog can be found [here](https://github.com/orgs/cmput301f24-bugoff/projects/1). \
 Our User Interface Mockup can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/User-Interface-Mockups). \
 Our CRC Cards can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/CRC-Cards). \
+Our UML Diagram can be found [here](https://github.com/cmput301f24-bugoff/can-do/wiki/UML-Diagram).\
 For more information on the project, please visit our [wiki page](https://github.com/cmput301f24-bugoff/can-do/wiki).
 
 ## Compatibility
