@@ -116,6 +116,10 @@ public class UserProfileActivity extends Fragment {
                     currPNumber = phoneNumber != null ? phoneNumber : "";
                     updatePhoneNumberButtonVisibility(view, phoneNumber);
                 });
+
+                userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
+                    setupAdminButton(view, isAdmin);
+                });
             }
         }
 
@@ -133,43 +137,6 @@ public class UserProfileActivity extends Fragment {
         String[] parts = fullName.trim().split("\\s+", 2); // Split into max 2 parts
         firstName.setText(parts[0]);
         lastName.setText(parts.length > 1 ? parts[1] : "");
-    }
-
-    private void setupViewModelObservers(View view, ImageButton avatar, TextView firstName, TextView lastName) {
-        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
-            if (name != null) {
-                String[] parts = name.split(" ");
-                if (parts.length > 0) {
-                    firstName.setText(parts[0]);
-                    String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
-                    loadUserProfileImage(avatar, firstLetter);
-                }
-                if (parts.length > 1) {
-                    lastName.setText(parts[1]);
-                } else {
-                    lastName.setText("");
-                }
-            }
-        });
-
-        userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
-            currEmail = email != null ? email : "";
-        });
-
-        userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
-            currPNumber = phoneNumber != null ? phoneNumber : "";
-            updatePhoneNumberButtonVisibility(view, phoneNumber);
-        });
-
-        userViewModel.getIsAdmin().observe(getViewLifecycleOwner(), isAdmin -> {
-            setupAdminButton(view, isAdmin);
-        });
-
-        userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMsg -> {
-            if (errorMsg != null && !errorMsg.isEmpty()) {
-                Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void setupClickListeners(View view, TextView firstName, TextView lastName, ImageButton avatar) {
@@ -576,6 +543,7 @@ public class UserProfileActivity extends Fragment {
      */
     private void setupAdminButton(View view, Boolean isAdmin) {
         Button adminButton = view.findViewById(R.id.admin_button);
+        Log.d("UserProfile", "isAdmin: " + isAdmin);
         if (isAdmin != null && isAdmin) {
             adminButton.setVisibility(View.VISIBLE);
             adminButton.setOnClickListener(v -> {
