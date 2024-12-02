@@ -191,7 +191,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
                             if (Boolean.TRUE.equals(requiresGeolocation)) {
                                 // check if user has non-null latitude and longitude
                                 if (currentUser.getLatitude() == null || currentUser.getLongitude() == null) {
-                                    getLocationAndUpdateUser(viewModel, currentUser);
+                                    Toast.makeText(requireContext(), "Unknown Location - Location permission is required to join this event.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                                 // Display warning dialog if geolocation is required
@@ -251,8 +251,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     });
         } catch (SecurityException e) {
             e.printStackTrace();
-            // make toast to inform user that location permission is required and they cannot join the event
-            Toast.makeText(requireContext(), "Location permission is required to join this event.", Toast.LENGTH_SHORT).show();
         }
     }
 
