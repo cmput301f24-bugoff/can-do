@@ -5,9 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,282 +15,330 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.MainActivity;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.user.User;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.bugoff.can_do.user.UserViewModel;
+import com.bugoff.can_do.user.UserViewModelFactory;
 
-/**
- * A Fragment representing the user's profile in the organizer context. This fragment allows the user
- * to either navigate to the home screen as an attendee or manage their facility.
- */
 public class ProfileFragment extends Fragment {
-    private User user;
-    /**
-     * Called to inflate the fragment's view. It sets up click listeners for the buttons that allow the user
-     * to navigate to different activities: either the home screen as an attendee or the facility management screen.
-     *
-     * @param inflater The LayoutInflater object to inflate views in the fragment.
-     * @param container The parent view that the fragment's UI should be attached to.
-     * @param savedInstanceState If non-null, this Bundle contains the fragment's previously saved state.
-     * @return The inflated view for this fragment.
-     */
+    private static final String TAG = "ProfileFragment";
+    private UserViewModel userViewModel;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private ImageView avatarImageView;
+    private TextView firstNameTextView;
+    private TextView lastNameTextView;
+    private String currentEmail = "";
+    private String currentPhone = "";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupImageLaunchers();
+
+        // Initialize ViewModel
+        @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(
+                requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+        UserViewModelFactory factory = new UserViewModelFactory(androidId);
+        userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
+    }
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.user_profile_organizer, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.user_profile_organizer, container, false);
+    }
 
-        TextView userNameTextView = view.findViewById(R.id.first_name);
-        String userName = userNameTextView.getText().toString();
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeViews(view);
+        setupObservers();
+        setupClickListeners(view);
+    }
 
-        @SuppressLint("HardwareIds") String androidID = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void initializeViews(View view) {
+        avatarImageView = view.findViewById(R.id.image_avatar);
+        firstNameTextView = view.findViewById(R.id.first_name);
+        lastNameTextView = view.findViewById(R.id.last_name);
+    }
 
-        loadUserData(db, androidID);
-
-        // If user clicks "Edit Name"
-        view.findViewById(R.id.name_button).setOnClickListener(v -> {
-            TextView lastName = view.findViewById(R.id.last_name);
-            editNameDialog(userNameTextView, lastName);
+    private void setupObservers() {
+        userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
+            if (name != null) {
+                updateNameFields(name);
+                // Update avatar with first letter when name changes
+                String firstLetter = firstNameTextView.getText().toString();
+                if (!firstLetter.isEmpty()) {
+                    firstLetter = firstLetter.substring(0, 1).toUpperCase();
+                    loadUserProfileImage(firstLetter);
+                }
+            }
         });
 
-        // If user clicks "Edit Email"
-        view.findViewById(R.id.email_button).setOnClickListener(v -> editEmailDialog());
+        userViewModel.getEmail().observe(getViewLifecycleOwner(), email -> {
+            currentEmail = email != null ? email : "";
+        });
 
-        // If user clicks "Add Phone Number"
+        userViewModel.getPhoneNumber().observe(getViewLifecycleOwner(), phoneNumber -> {
+            currentPhone = phoneNumber != null ? phoneNumber : "";
+        });
+    }
+
+    private void setupClickListeners(View view) {
+        // Edit Name
+        view.findViewById(R.id.name_button).setOnClickListener(v -> showEditNameDialog());
+
+        // Edit Email
+        view.findViewById(R.id.email_button).setOnClickListener(v -> showEditEmailDialog());
+
+        // Phone Number
         view.findViewById(R.id.add_pnumber_button).setOnClickListener(v -> addOrEditPhoneNumberDialog());
 
-        // User clicks "Notification Settings"
+        // Notification Settings
         view.findViewById(R.id.notif_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), NotificationSettingsActivity.class);
             startActivity(intent);
         });
 
-        // If user clicks "Manage Facility"
+        // Manage Facility
         view.findViewById(R.id.manage_facility_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FacilityEdit.class);
             startActivity(intent);
         });
 
-        // If user clicks "I'm an Attendee"
+        // Attendee Mode
         view.findViewById(R.id.attendee_button).setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         });
 
-        view.findViewById(R.id.image_avatar).setOnClickListener(v -> {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Change Profile Picture")
-                    .setMessage("Choose a source")
-                    .setPositiveButton("Gallery", (dialog, which) -> {
-                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        galleryLauncher.launch(galleryIntent);
-                    })
-                    .setNegativeButton("Camera", (dialog, which) -> {
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        cameraLauncher.launch(cameraIntent);
-                    })
-                    .setNeutralButton("Remove", (dialog, which) -> {
-                        user.setBase64Image(null);
-                        ImageView avatar = getView().findViewById(R.id.image_avatar);
-                        String firstLetter = user.getName() != null && !user.getName().isEmpty()
-                                ? user.getName().substring(0, 1).toUpperCase()
-                                : "A";
-                        avatar.setImageBitmap(generateAvatar(firstLetter));
-                        user.setRemote(); // Save changes to Firestore
-                    })
-                    .show();
-        });
-
-
-        return view;
+        // Avatar
+        avatarImageView.setOnClickListener(v -> showImageSourceDialog());
     }
 
-    private Bitmap generateAvatar(String letter) {
-        int size = 175;
-        int bgColor = Color.LTGRAY;
-        int txtColor = Color.WHITE;
+    private void setupImageLaunchers() {
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        handleGalleryImage(selectedImageUri);
+                    }
+                }
+        );
 
-        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(bgColor);
-        bgPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(0, 0, size, size, bgPaint);
-
-        Paint txtPaint = new Paint();
-        txtPaint.setColor(txtColor);
-        txtPaint.setTextSize((float) size / 2);
-        txtPaint.setTextAlign(Paint.Align.CENTER);
-        txtPaint.setAntiAlias(true);
-
-        float x = (float) size / 2;
-        float y = (float) (size / 2) - ((txtPaint.descent() + txtPaint.ascent()) / 2);
-        canvas.drawText(letter, x, y, txtPaint);
-
-        return bitmap;
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Bundle extras = result.getData().getExtras();
+                        if (extras != null && extras.get("data") instanceof Bitmap) {
+                            handleCameraImage((Bitmap) extras.get("data"));
+                        }
+                    }
+                }
+        );
     }
 
-    /**
-     * Loads the user's profile image from base64 or sets a default avatar.
-     *
-     * @param avatar      The ImageView to display the avatar.
-     * @param firstLetter The first letter of the user's name for the default avatar.
-     */
-    private void loadUserProfileImage(ImageView avatar, String firstLetter) {
-        if (user != null && user.getBase64Image() != null) {
-            Bitmap bitmap = ImageUtils.decodeBase64Image(user.getBase64Image());
+    private void handleGalleryImage(Uri imageUri) {
+        if (imageUri != null) {
+            String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
+            if (base64Image != null) {
+                updateUserProfileImage(base64Image);
+            }
+        }
+    }
+
+    private void handleCameraImage(Bitmap photo) {
+        String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
+        if (base64Image != null) {
+            updateUserProfileImage(base64Image);
+        }
+    }
+
+    private void updateUserProfileImage(String base64Image) {
+        User currentUser = getViewModel().getUser();
+        if (currentUser != null) {
+            currentUser.setBase64Image(base64Image);
+            Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
             if (bitmap != null) {
-                avatar.setImageBitmap(bitmap);
-            } else {
-                avatar.setImageBitmap(generateAvatar(firstLetter));
+                avatarImageView.setImageBitmap(bitmap);
             }
-        } else {
-            avatar.setImageBitmap(generateAvatar(firstLetter));
         }
     }
 
-    private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Uri selectedImageUri = result.getData().getData();
-                    ImageView avatar = getView().findViewById(R.id.image_avatar);
-
-                    // Compress and encode image to base64
-                    String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), selectedImageUri);
-                    if (base64Image != null) {
-                        user.setBase64Image(base64Image);
-                        avatar.setImageBitmap(ImageUtils.decodeBase64Image(base64Image));
-                        user.setRemote(); // Save changes to Firestore
-                    }
-                }
-            }
-    );
-
-
-    private ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                    Bundle extras = result.getData().getExtras();
-                    if (extras != null) {
-                        Bitmap photo = (Bitmap) extras.get("data"); // Corrected key to "data"
-                        if (photo != null) {
-                            ImageView avatar = getView().findViewById(R.id.image_avatar);
-
-                            // Compress and encode bitmap to base64
-                            String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
-                            if (base64Image != null) {
-                                user.setBase64Image(base64Image);
-                                avatar.setImageBitmap(photo);
-                                user.setRemote(); // Save changes to Firestore
-                            }
-                        }
-                    }
-                }
-            }
-    );
-
-
-    private void loadUserData(FirebaseFirestore db, String androidID) {
-        db.collection("users").document(androidID).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        user = new User(documentSnapshot);
-                        String userName = user.getName();
-                        TextView firstName = getView().findViewById(R.id.first_name);
-                        TextView lastName = getView().findViewById(R.id.last_name);
-                        ImageView avatar = getView().findViewById(R.id.image_avatar); // Ensure avatar is defined here
-
-                        if (userName != null && !userName.isEmpty()) {
-                            String[] parts = userName.split(" ");
-                            if (parts.length > 0) {
-                                firstName.setText(parts[0]);
-                            }
-                            if (parts.length > 1) {
-                                lastName.setText(parts[1]);
-                            }
-
-                            // Load profile image using base64
-                            String firstLetter = parts[0].isEmpty() ? "A" : parts[0].substring(0, 1).toUpperCase();
-                            loadUserProfileImage(avatar, firstLetter);
-                        }
-                    } else {
-                        user = new User(androidID);
-                    }
+    private void showImageSourceDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Change Profile Picture")
+                .setMessage("Choose a source")
+                .setPositiveButton("Gallery", (dialog, which) -> {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    galleryLauncher.launch(galleryIntent);
                 })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failure to load data", Toast.LENGTH_SHORT).show());
-    }
-
-
-    private void saveUserData(TextView firstNameTxt, TextView lastNameTxt) {
-        if (user == null) {
-            Toast.makeText(getContext(), "User data is not loaded yet", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String name = firstNameTxt.getText().toString() + " " + lastNameTxt.getText().toString();
-        user.setName(name);
-        user.setRemote();
-    }
-
-    private void editNameDialog(TextView firstName, TextView lastName) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
-
-        String first = firstName.getText().toString();
-        String last = lastName.getText().toString();
-
-        EditText editFirstName = nameView.findViewById(R.id.input_first_name);
-        EditText editLastName = nameView.findViewById(R.id.input_last_name);
-
-        editFirstName.setText(first);
-        editLastName.setText(last);
-
-        new AlertDialog.Builder(getContext())
-                .setView(nameView)
-                .setNeutralButton("CANCEL", null)
-                .setPositiveButton("CONFIRM", (dialog, which) -> {
-                    firstName.setText(editFirstName.getText().toString());
-                    lastName.setText(editLastName.getText().toString());
-                    saveUserData(firstName, lastName);
+                .setNegativeButton("Camera", (dialog, which) -> {
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraLauncher.launch(cameraIntent);
                 })
-                .create()
+                .setNeutralButton("Remove", (dialog, which) -> removeProfileImage())
                 .show();
     }
 
-    private void editEmailDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
+    private void removeProfileImage() {
+        User currentUser = getViewModel().getUser();
+        if (currentUser != null) {
+            currentUser.setBase64Image(null);
+            String firstLetter = getFirstLetterOfName();
+            loadUserProfileImage(firstLetter);
+        }
+    }
 
-        new AlertDialog.Builder(getContext())
+    private void loadUserProfileImage(String firstLetter) {
+        User currentUser = getViewModel().getUser();
+        if (currentUser != null && currentUser.getBase64Image() != null) {
+            Bitmap bitmap = ImageUtils.decodeBase64Image(currentUser.getBase64Image());
+            if (bitmap != null) {
+                avatarImageView.setImageBitmap(bitmap);
+                return;
+            }
+        }
+        avatarImageView.setImageBitmap(ImageUtils.generateDefaultAvatar(firstLetter));
+    }
+
+    private void updateNameFields(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) {
+            firstNameTextView.setText("");
+            lastNameTextView.setText("");
+            return;
+        }
+
+        String[] parts = fullName.trim().split("\\s+", 2);
+        firstNameTextView.setText(parts[0]);
+        lastNameTextView.setText(parts.length > 1 ? parts[1] : "");
+    }
+
+    private void showEditNameDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.fragment_edit_name, null);
+        EditText firstNameInput = dialogView.findViewById(R.id.input_first_name);
+        EditText lastNameInput = dialogView.findViewById(R.id.input_last_name);
+
+        // Pre-fill current values
+        firstNameInput.setText(firstNameTextView.getText());
+        lastNameInput.setText(lastNameTextView.getText());
+
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .setNeutralButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", null) // Set to null initially
+                .create();
+
+        dialog.setOnShowListener(dialogInterface -> {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+                String newFirstName = firstNameInput.getText().toString().trim();
+                String newLastName = lastNameInput.getText().toString().trim();
+
+                if (newFirstName.isEmpty()) {
+                    firstNameInput.setError("First name cannot be empty");
+                    return;
+                }
+
+                StringBuilder fullName = new StringBuilder(newFirstName);
+                if (!newLastName.isEmpty()) {
+                    fullName.append(" ").append(newLastName);
+                }
+
+                userViewModel.setName(fullName.toString());
+                dialog.dismiss();
+            });
+        });
+
+        dialog.show();
+    }
+
+    private void showEditEmailDialog() {
+        View emailView = getLayoutInflater().inflate(R.layout.fragment_edit_email, null);
+        TextView oldEmail = emailView.findViewById(R.id.textview_old_email);
+        EditText editEmail = emailView.findViewById(R.id.input_new_email);
+
+        oldEmail.setText(currentEmail);
+
+        new AlertDialog.Builder(requireContext())
                 .setView(emailView)
                 .setNeutralButton("CANCEL", null)
-                .setPositiveButton("CONFIRM", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    String newEmail = editEmail.getText().toString().trim();
+                    if (!newEmail.isEmpty() && userViewModel != null) {
+                        userViewModel.setEmail(newEmail);
+                    }
+                })
                 .create()
                 .show();
     }
 
     private void addOrEditPhoneNumberDialog() {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
+        View pnumberView = getLayoutInflater().inflate(R.layout.fragment_pnumber, null);
 
-        new AlertDialog.Builder(getContext())
+        // Get references to all views we need to manage
+        View addLayout = pnumberView.findViewById(R.id.input_add_pnumber);
+        View editLayout = pnumberView.findViewById(R.id.input_edit_pnumber);
+        View addTitle = pnumberView.findViewById(R.id.title_add_pnumber);
+        View editTitle = pnumberView.findViewById(R.id.title_edit_pnumber);
+        EditText inputPNumber = pnumberView.findViewById(R.id.input_add_pnumber);
+        EditText editPNumber = pnumberView.findViewById(R.id.input_edit_pnumber);
+
+        boolean isEditing = currentPhone != null && !currentPhone.isEmpty();
+
+        // Show/hide appropriate views
+        addLayout.setVisibility(isEditing ? View.GONE : View.VISIBLE);
+        editLayout.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+        addTitle.setVisibility(isEditing ? View.GONE : View.VISIBLE);
+        editTitle.setVisibility(isEditing ? View.VISIBLE : View.GONE);
+
+        // Set current phone number if editing
+        if (isEditing) {
+            editPNumber.setText(currentPhone);
+        }
+
+        new AlertDialog.Builder(requireContext())
                 .setView(pnumberView)
                 .setNeutralButton("CANCEL", null)
-                .setPositiveButton("CONFIRM", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("CONFIRM", (dialog, which) -> {
+                    String newNumber = isEditing ?
+                            editPNumber.getText().toString().trim() :
+                            inputPNumber.getText().toString().trim();
+                    if (!newNumber.isEmpty()) {
+                        userViewModel.setPhoneNumber(newNumber);
+                    }
+                })
                 .create()
                 .show();
+    }
+
+    private String getFirstLetterOfName() {
+        String firstName = firstNameTextView.getText().toString();
+        return !firstName.isEmpty() ? firstName.substring(0, 1).toUpperCase() : "A";
+    }
+
+    private UserViewModel getViewModel() {
+        if (userViewModel == null) {
+            @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(
+                    requireActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+            UserViewModelFactory factory = new UserViewModelFactory(androidId);
+            userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
+        }
+        return userViewModel;
     }
 }

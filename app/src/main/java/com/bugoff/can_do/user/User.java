@@ -300,7 +300,7 @@ public class User implements DatabaseEntity {
         Map<String, Object> update = this.toMap();
         Log.d("User", "Setting remote - User ID: " + id);
         Log.d("User", "Setting remote - Events Joined (before update): " + eventsJoined);
-        Log.d("User", "Setting remote - Update Map: " + update);
+        // Log.d("User", "Setting remote - Update Map: " + update);
 
         userRef.set(update, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {

@@ -63,6 +63,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private ActivityResultLauncher<Intent> galleryLauncher;
     private ActivityResultLauncher<Intent> cameraLauncher;
     private static final String ARG_EVENT_ID = "selected_event_id";
+    private androidx.appcompat.widget.SwitchCompat geolocationToggle;
 
     private static final String TAG = "EventDetailsFragmentOrg";
 
@@ -141,6 +142,7 @@ public class EventDetailsFragmentOrganizer extends Fragment {
         Button sendNotificationButton = view.findViewById(R.id.send_notification);
         Button viewCancelled = view.findViewById(R.id.view_cancelled_list);
         Button viewEnrolledButton = view.findViewById(R.id.view_enrolled_list);
+        geolocationToggle = view.findViewById(R.id.geolocation_toggle);
 
         // Check if we're in admin view
         boolean isFromAdmin = getActivity() instanceof AdminActivity;
@@ -257,11 +259,53 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                         } else {
                             handleError(rootView, "No facility ID found for event");
                         }
+
+                        // Set geolocation toggle state
+                        Boolean geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
+                        geolocationToggle.setChecked(Boolean.TRUE.equals(geolocationRequired));
+
+                        // Setup toggle listener
+                        geolocationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            updateGeolocationRequirement(isChecked);
+                        });
+
+                        // Now that we have everything, show the content
+                        progressBar.setVisibility(View.GONE);
+                        mainContent.setVisibility(View.VISIBLE);
                     } else {
                         handleError(rootView, "Event not found");
                     }
                 })
                 .addOnFailureListener(e -> handleError(rootView, "Failed to load event details: " + e.getMessage()));
+    }
+
+    private void updateGeolocationRequirement(boolean required) {
+        if (eventId == null || db == null) {
+            Log.e(TAG, "Cannot update geolocation requirement: eventId or db is null");
+            return;
+        }
+
+        View progressBar = requireView().findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        db.collection("events").document(eventId)
+                .update("geolocationRequired", required)
+                .addOnSuccessListener(aVoid -> {
+                    progressBar.setVisibility(View.GONE);
+                    String message = required ?
+                            "Geolocation requirement enabled" :
+                            "Geolocation requirement disabled";
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    Log.e(TAG, "Error updating geolocation requirement", e);
+                    Toast.makeText(requireContext(),
+                            "Failed to update geolocation requirement",
+                            Toast.LENGTH_SHORT).show();
+                    // Revert the toggle if update fails
+                    geolocationToggle.setChecked(!required);
+                });
     }
 
     private void setupImageLaunchers() {
