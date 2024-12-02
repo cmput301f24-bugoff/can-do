@@ -62,28 +62,35 @@ public class HomeActivity extends Fragment {
 
         String userId = GlobalRepository.getLoggedInUser().getId();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userDoc = db.collection("users").document(userId);
+        if (!GlobalRepository.isInTestMode()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userDoc = db.collection("users").document(userId);
 
-        userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> eventsJoined = (List<String>) documentSnapshot.get("eventsJoined");
-                if (eventsJoined != null && !eventsJoined.isEmpty()) {
-                    // Hide default views
-                    defaultSubtitle.setVisibility(View.GONE);
-                    getStartedText.setVisibility(View.GONE);
-                    arrowDown.setVisibility(View.GONE);
+            userDoc.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    List<String> eventsJoined = (List<String>) documentSnapshot.get("eventsJoined");
+                    if (eventsJoined != null && !eventsJoined.isEmpty()) {
+                        // Hide default views
+                        defaultSubtitle.setVisibility(View.GONE);
+                        getStartedText.setVisibility(View.GONE);
+                        arrowDown.setVisibility(View.GONE);
 
-
-                    // Show events
-                    eventsListView.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "test: made it here");
-                    fetchEventDetails(eventsJoined);
+                        // Show events
+                        eventsListView.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "test: made it here");
+                        fetchEventDetails(eventsJoined);
+                    }
                 }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Failed to load events.", Toast.LENGTH_SHORT).show();
-        });
+            }).addOnFailureListener(e -> {
+                Toast.makeText(getContext(), "Failed to load events.", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // In test mode, just show empty state
+            defaultSubtitle.setVisibility(View.VISIBLE);
+            getStartedText.setVisibility(View.VISIBLE);
+            arrowDown.setVisibility(View.VISIBLE);
+            eventsListView.setVisibility(View.GONE);
+        }
 
         // Functionality of notifications button on HomeScreen
         view.findViewById(R.id.notif_hs_button).setOnClickListener(v -> {

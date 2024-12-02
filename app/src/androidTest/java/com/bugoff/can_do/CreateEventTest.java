@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
 
@@ -64,6 +65,19 @@ public class CreateEventTest {
     @Before
     public void setup() {
         MockitoAnnotations.openMocks(this);
+
+        // Grant permissions automatically for tests
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                    "pm grant " + InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName() +
+                            " android.permission.ACCESS_FINE_LOCATION");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
+                        "pm grant " + InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName() +
+                                " android.permission.POST_NOTIFICATIONS");
+            }
+        }
 
         // Get the Android ID
         androidId = Settings.Secure.getString(

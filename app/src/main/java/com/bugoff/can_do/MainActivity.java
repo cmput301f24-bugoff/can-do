@@ -113,41 +113,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNotificationListener(String userId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (!GlobalRepository.isInTestMode()) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Query query = db.collection("notifications")
+                    .whereArrayContains("pendingRecipients", userId);
 
-        // Query for notifications where the user is in pendingRecipients
-        Query query = db.collection("notifications")
-                .whereArrayContains("pendingRecipients", userId);
-
-        notificationListener = query.addSnapshotListener((snapshots, error) -> {
-            if (error != null) {
-                Log.e(TAG, "Listen failed.", error);
-                return;
-            }
-
-            if (snapshots != null && !snapshots.isEmpty()) {
-                for (DocumentSnapshot doc : snapshots) {
-                    String message = doc.getString("message");
-                    String eventId = doc.getString("event");
-
-                    // Fetch event name for the notification
-                    if (eventId != null) {
-                        GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
-                            if (event != null) {
-                                String title = event.getName();
-                                sendLocalNotification(title, message);
-                            }
-                        });
-                    }
-
-                    // Atomically remove this user from pendingRecipients
-                    doc.getReference().update(
-                            "pendingRecipients",
-                            FieldValue.arrayRemove(userId)
-                    );
+            notificationListener = query.addSnapshotListener((snapshots, error) -> {
+                if (error != null) {
+                    Log.e(TAG, "Listen failed.", error);
+                    return;
                 }
-            }
-        });
+
+                if (snapshots != null && !snapshots.isEmpty()) {
+                    for (DocumentSnapshot doc : snapshots) {
+                        String message = doc.getString("message");
+                        String eventId = doc.getString("event");
+
+                        // Fetch event name for the notification
+                        if (eventId != null) {
+                            GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
+                                if (event != null) {
+                                    String title = event.getName();
+                                    sendLocalNotification(title, message);
+                                }
+                            });
+                        }
+
+                        // Atomically remove this user from pendingRecipients
+                        doc.getReference().update(
+                                "pendingRecipients",
+                                FieldValue.arrayRemove(userId)
+                        );
+                    }
+                }
+            });
+        }
     }
 
     private void sendLocalNotification(String title, String message) {
