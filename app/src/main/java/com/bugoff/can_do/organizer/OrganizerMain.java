@@ -11,7 +11,10 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+/**
+ * Main activity for the organizer user type.
+ * This activity displays the main screen for organizers, which includes a list of events and the user's profile.
+ */
 public class OrganizerMain extends AppCompatActivity {
     private static final String TAG = "OrganizerMain";
     private GlobalRepository repository;
@@ -31,7 +34,9 @@ public class OrganizerMain extends AppCompatActivity {
 
         setupBottomNavigation();
     }
-
+    /**
+     * Sets up the bottom navigation bar for switching between events and profile screens.
+     */
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_organizer);
         bottomNavigationView.setOnItemSelectedListener(item -> {

@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
+    /**
+     * Sets up a listener for notifications for the user.
+     *
+     * @param userId The ID of the user
+     */
     private void setupNotificationListener(String userId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -149,7 +153,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    /**
+     * Sends a local notification to the user.
+     *
+     * @param title   The title of the notification
+     * @param message The message of the notification
+     */
     private void sendLocalNotification(String title, String message) {
         // Check if notifications are enabled
         if (!NotificationSettingsActivity.areOrganizerNotificationsEnabled(this)) {
@@ -185,7 +194,11 @@ public class MainActivity extends AppCompatActivity {
 
         notificationManager.notify(new Random().nextInt(), builder.build());
     }
-
+    /**
+     * Checks if the app has location permission and fetches the location if permission is granted.
+     *
+     * @param user The user object
+     */
     private void checkLocationPermissionAndFetchLocation(User user) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -196,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
             getLocationAndUpdateUser(user);
         }
     }
+    /**
+     * Requests location permission from the user and fetches the location if permission is granted.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -212,7 +228,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+    /**
+     * Fetches the location of the user and updates the user object with the location.
+     *
+     * @param cuser The user object
+     */
     private void getLocationAndUpdateUser(User cuser) {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -246,7 +266,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Sets up the bottom navigation bar for switching between home, scan, and profile screens.
+     */
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {

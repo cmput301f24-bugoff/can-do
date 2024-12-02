@@ -22,6 +22,10 @@ import com.bugoff.can_do.user.UserAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment for displaying and managing the list of enrolled users for a specific event.
+ * Provides functionality to view the list of enrolled users.
+ */
 public class EventEnrolledFragment extends Fragment {
     private static final String TAG = "EventEnrolledFragment";
     private RecyclerView recyclerView;
@@ -35,7 +39,11 @@ public class EventEnrolledFragment extends Fragment {
     public EventEnrolledFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Initializes the fragment, extracting the event ID from arguments if available.
+     *
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +55,25 @@ public class EventEnrolledFragment extends Fragment {
             Log.e(TAG, "No eventId provided to EventEnrolledFragment.");
         }
     }
-
+    /**
+     * Inflates the fragment layout and initializes the RecyclerView and ViewModel.
+     *
+     * @param inflater The layout inflater.
+     * @param container The view group container.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     * @return The inflated view.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_event_enrolled, container, false);
     }
-
+    /**
+     * Initializes the RecyclerView and ViewModel, and observes the enrolled users LiveData.
+     *
+     * @param view The fragment view.
+     * @param savedInstanceState Bundle containing saved instance state data.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

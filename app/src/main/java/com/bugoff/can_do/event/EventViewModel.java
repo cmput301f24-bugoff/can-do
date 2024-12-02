@@ -147,7 +147,12 @@ public class EventViewModel extends ViewModel {
             fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
         }
     }
-
+    /**
+     * Fetches User details for a list of user IDs and updates the target LiveData object.
+     *
+     * @param userIds The list of user IDs to fetch.
+     * @param targetLiveData The LiveData object to update with the fetched User details.
+     */
     private void fetchUsersForList(List<String> userIds, MutableLiveData<Map<String, User>> targetLiveData) {
         if (userIds == null || userIds.isEmpty()) {
             Log.d(TAG, "fetchUsersForList: userIds is null or empty");
@@ -328,7 +333,11 @@ public class EventViewModel extends ViewModel {
                     Log.e(TAG, "Failed to remove user from selectedEntrants", e);
                 });
     }
-
+    /**
+     * Removes a user from the enrolled entrants list in Firestore and updates LiveData.
+     *
+     * @param userId  The ID of the user to remove.
+     */
     public void removeUserFromWaitingList(String userId) {
         if (event == null) return;
 
@@ -360,7 +369,11 @@ public class EventViewModel extends ViewModel {
                     errorMessage.postValue("Failed to remove user from waiting list");
                 });
     }
-
+    /**
+     * Removes a user from the enrolled entrants list and updates the LiveData.
+     *
+     * @param userId The ID of the user to remove from the enrolled entrants list.
+     */
     public void removeUserFromSelectedList(String userId) {
         if (event == null) return;
 
@@ -393,6 +406,10 @@ public class EventViewModel extends ViewModel {
                 });
     }
 
+    /**
+     * Checks if the currently logged-in user is an organizer for the current event.
+     * @return {@code true} if the user is an organizer for the event, {@code false} otherwise.
+     */
     public boolean isCurrentUserOrganizer() {
         if (event == null || event.getFacility() == null) return false;
         User currentUser = GlobalRepository.getLoggedInUser();

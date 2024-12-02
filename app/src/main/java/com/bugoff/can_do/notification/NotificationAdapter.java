@@ -17,17 +17,31 @@ import androidx.annotation.Nullable;
 import com.bugoff.can_do.R;
 
 import java.util.List;
-
+/**
+ * Adapter for displaying notifications in a ListView.
+ */
 public class NotificationAdapter extends ArrayAdapter<Notification> {
     private Context context;
     private List<Notification> notifications;
-
+    /**
+     * Constructs a new NotificationAdapter with the specified context and list of notifications.
+     *
+     * @param context       The context in which the adapter is used.
+     * @param notifications The list of notifications to display.
+     */
     public NotificationAdapter(Context context, List<Notification> notifications) {
         super(context, R.layout.notif_list_item, notifications);
         this.context = context;
         this.notifications = notifications;
     }
-
+    /**
+     * Returns the view for the specified position in the list.
+     *
+     * @param position    The position of the item within the adapter's data set.
+     * @param convertView The old view to reuse, if possible.
+     * @param parent      The parent that this view will eventually be attached to.
+     * @return The view for the specified position.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

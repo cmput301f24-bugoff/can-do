@@ -275,6 +275,11 @@ public class EventWaitlistFragment extends Fragment {
         });
     }
 
+    /**
+     * Shows a confirmation dialog to remove a user from the waiting list.
+     *
+     * @param user The user to remove.
+     */
     private void showRemoveConfirmationDialog(User user) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Remove from Waiting List")

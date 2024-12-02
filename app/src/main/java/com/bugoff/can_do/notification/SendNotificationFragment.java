@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
+/**
+ * Fragment for sending notifications to event entrants.
+ */
 public class SendNotificationFragment extends Fragment {
 
     private Spinner groupSpinner;
@@ -87,7 +89,12 @@ public class SendNotificationFragment extends Fragment {
 
         return view;
     }
-
+    /**
+     * Sends a notification to all users on the waiting list for the specified event.
+     *
+     * @param message The message to send in the notification.
+     * @param eventId The ID of the event to send the notification for.
+     */
     private void sendtoWaitingList(String message, String eventId) {
         Log.d(TAG, "sendtoWaitingList: starting");
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
@@ -128,7 +135,12 @@ public class SendNotificationFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Sends a notification to all selected entrants for the specified event.
+     *
+     * @param message The message to send in the notification.
+     * @param eventId The ID of the event to send the notification for.
+     */
     private void sendtoSelectedEntrants(String message, String eventId) {
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -165,7 +177,12 @@ public class SendNotificationFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Sends a notification to all cancelled entrants for the specified event.
+     *
+     * @param message The message to send in the notification.
+     * @param eventId The ID of the event to send the notification for.
+     */
     private void sendtoCancelledEntrants(String message, String eventId) {
         GlobalRepository.getEvent(eventId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -202,7 +219,13 @@ public class SendNotificationFragment extends Fragment {
             }
         });
     }
-
+    /**
+     * Sends a local notification to the user's device.
+     *
+     * @param context The application context.
+     * @param title   The title of the notification.
+     * @param message The message to display in the notification.
+     */
     private static void sendLocalNotification(Context context, String title, String message) {
         // Create NotificationManager
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -231,7 +254,11 @@ public class SendNotificationFragment extends Fragment {
     }
 
 
-
+    /**
+     * Returns an ArrayAdapter for the recipient group spinner.
+     *
+     * @return The ArrayAdapter for the recipient group spinner.
+     */
     @NonNull
     private ArrayAdapter<CharSequence> getArrayAdapter() {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(), android.R.layout.simple_spinner_item, getResources().getTextArray(R.array.notification_groups)) {

@@ -8,11 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bugoff.can_do.R;
 import com.google.android.material.materialswitch.MaterialSwitch;
-
+/**
+ * Activity for managing notification settings.
+ */
 public class NotificationSettingsActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "NotificationPrefs";
     private static final String KEY_ORGANIZER_NOTIFICATIONS = "organizer_notifications_enabled";
-
+    /**
+     * Sets up the activity layout and initializes the notification settings.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
