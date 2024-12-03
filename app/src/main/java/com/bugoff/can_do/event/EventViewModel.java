@@ -11,14 +11,13 @@ import com.bugoff.can_do.EntrantStatus;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ViewModel for managing and exposing an Event's data to the UI layer.
@@ -62,36 +61,19 @@ public class EventViewModel extends ViewModel {
      * @param eventId The ID of the event to fetch and observe.
      */
     public EventViewModel(String eventId) {
+        Log.d(TAG, "Creating EventViewModel: " + eventId);
         GlobalRepository.getEvent(eventId)
                 .addOnSuccessListener(fetchedEvent -> {
                     if (fetchedEvent != null) {
                         this.event = fetchedEvent;
-                        // Initialize LiveData
-                        eventName.setValue(event.getName());
-                        description.setValue(event.getDescription());
-                        qrCodeHash.setValue(event.getQrCodeHash());
-                        registrationStartDate.setValue(event.getRegistrationStartDate());
-                        registrationEndDate.setValue(event.getRegistrationEndDate());
-                        eventStartDate.setValue(event.getEventStartDate());
-                        eventEndDate.setValue(event.getEventEndDate());
-                        maxNumberOfParticipants.setValue(event.getMaxNumberOfParticipants());
-                        geolocationRequired.setValue(event.getGeolocationRequired());
-                        waitingListEntrants.setValue(event.getWaitingListEntrants());
-                        entrantsLocations.setValue(event.getEntrantsLocations());
-                        entrantStatuses.setValue(event.getEntrantStatuses());
-                        selectedEntrants.setValue(event.getSelectedEntrants());
-                        enrolledEntrants.setValue(event.getEnrolledEntrants());
-
-                        facility.setValue(event.getFacility());
-
-                        // Set listeners
-                        event.setOnUpdateListener(this::updateLiveData);
-                        event.attachListener();
+                        updateLiveData();
+                        this.event.setOnUpdateListener(this::updateLiveData);
+                        this.event.attachListener();
 
                         // Fetch User details based on user IDs
-                        fetchUsersForList(waitingListEntrants.getValue(), waitingListUsers);
-                        fetchUsersForList(selectedEntrants.getValue(), selectedEntrantsUsers);
-                        fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
+                        fetchUsersForList(event.getWaitingListEntrants(), waitingListUsers);
+                        fetchUsersForList(event.getSelectedEntrants(), selectedEntrantsUsers);
+                        fetchUsersForList(event.getEnrolledEntrants(), enrolledEntrantsUsers);
                         fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
                     } else {
                         errorMessage.setValue("Event does not exist.");
@@ -99,8 +81,9 @@ public class EventViewModel extends ViewModel {
                 })
                 .addOnFailureListener(e -> {
                     errorMessage.setValue(e.getMessage());
-                    Log.e("EventViewModel", "Error fetching event", e);
+                    Log.e(TAG, "Error fetching event", e);
                 });
+        Log.d(TAG, "EventViewModel created for: " + eventId);
     }
     /**
      * Updates the LiveData objects with the current values of the event fields.
@@ -144,32 +127,26 @@ public class EventViewModel extends ViewModel {
             return;
         }
 
-        Log.d(TAG, "fetchUsersForList: Fetching users for IDs: " + userIds);
-
         Map<String, User> usersMap = new HashMap<>();
-        List<Task<User>> userTasks = new ArrayList<>();
+        AtomicInteger counter = new AtomicInteger(userIds.size());
 
-        // Use GlobalRepository to fetch each user
         for (String userId : userIds) {
-            userTasks.add(GlobalRepository.getUser(userId));
-        }
-
-        Tasks.whenAllComplete(userTasks)
-                .addOnSuccessListener(tasks -> {
-                    for (Task<?> task : tasks) {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            User user = (User) task.getResult();
+            GlobalRepository.getUser(userId)
+                    .addOnSuccessListener(user -> {
+                        if (user != null) {
                             usersMap.put(user.getId(), user);
-                            Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName());
                         }
-                    }
-                    targetLiveData.postValue(usersMap);
-                    Log.d(TAG, "fetchUsersForList: Updated targetLiveData with usersMap size: " + usersMap.size());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "fetchUsersForList: Error fetching users", e);
-                    targetLiveData.postValue(new HashMap<>());
-                });
+                        if (counter.decrementAndGet() == 0) {
+                            targetLiveData.postValue(usersMap);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching user: " + userId, e);
+                        if (counter.decrementAndGet() == 0) {
+                            targetLiveData.postValue(usersMap);
+                        }
+                    });
+        }
     }
 
     // Getters for LiveData
@@ -261,35 +238,14 @@ public class EventViewModel extends ViewModel {
             return;
         }
 
-        // Remove user from Firestore `selectedEntrants` array
-        GlobalRepository.getEventsCollection()
-                .document(eventId)
-                .update("selectedEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "User successfully removed from selectedEntrants: " + userId);
-
-                    // Update the local `selectedEntrants` LiveData
-                    List<String> currentSelectedEntrants = selectedEntrants.getValue();
-                    if (currentSelectedEntrants == null) {
-                        currentSelectedEntrants = new ArrayList<>();
-                    } else {
-                        currentSelectedEntrants = new ArrayList<>(currentSelectedEntrants); // Defensive copy
-                    }
-                    currentSelectedEntrants.remove(userId);
-                    selectedEntrants.postValue(currentSelectedEntrants);
-
-                    // Update the `selectedEntrantsUsers` LiveData
-                    Map<String, User> currentSelectedUsers = selectedEntrantsUsers.getValue();
-                    if (currentSelectedUsers == null) {
-                        currentSelectedUsers = new HashMap<>();
-                    } else {
-                        currentSelectedUsers = new HashMap<>(currentSelectedUsers); // Defensive copy
-                    }
-                    currentSelectedUsers.remove(userId);
-                    selectedEntrantsUsers.postValue(currentSelectedUsers);
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    event.removeSelectedEntrant(userId);
+                    event.setRemote();
+                    updateLiveData();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to remove user from selectedEntrants", e);
+                    Log.e(TAG, "Failed to remove user from selected entrants", e);
                 });
     }
     /**
@@ -300,33 +256,9 @@ public class EventViewModel extends ViewModel {
     public void removeUserFromWaitingList(String userId) {
         if (event == null) return;
 
-        // Remove from waiting list array in Firestore
-        GlobalRepository.getEventsCollection()
-                .document(event.getId())
-                .update("waitingListEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "User successfully removed from waiting list: " + userId);
-
-                    // Update local LiveData
-                    List<String> currentWaitingList = waitingListEntrants.getValue();
-                    if (currentWaitingList != null) {
-                        List<String> updatedList = new ArrayList<>(currentWaitingList);
-                        updatedList.remove(userId);
-                        waitingListEntrants.postValue(updatedList);
-
-                        // Update users map
-                        Map<String, User> currentUsers = waitingListUsers.getValue();
-                        if (currentUsers != null) {
-                            Map<String, User> updatedUsers = new HashMap<>(currentUsers);
-                            updatedUsers.remove(userId);
-                            waitingListUsers.postValue(updatedUsers);
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error removing user from waiting list", e);
-                    errorMessage.postValue("Failed to remove user from waiting list");
-                });
+        event.removeWaitingListEntrant(userId);
+        event.setRemote();
+        updateLiveData();
     }
     /**
      * Removes a user from the enrolled entrants list and updates the LiveData.
@@ -336,33 +268,9 @@ public class EventViewModel extends ViewModel {
     public void removeUserFromSelectedList(String userId) {
         if (event == null) return;
 
-        // Remove from selected entrants array in Firestore
-        GlobalRepository.getEventsCollection()
-                .document(event.getId())
-                .update("selectedEntrants", com.google.firebase.firestore.FieldValue.arrayRemove(userId))
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "User successfully removed from selected list: " + userId);
-
-                    // Update local LiveData
-                    List<String> currentSelectedList = selectedEntrants.getValue();
-                    if (currentSelectedList != null) {
-                        List<String> updatedList = new ArrayList<>(currentSelectedList);
-                        updatedList.remove(userId);
-                        selectedEntrants.postValue(updatedList);
-
-                        // Update users map
-                        Map<String, User> currentUsers = selectedEntrantsUsers.getValue();
-                        if (currentUsers != null) {
-                            Map<String, User> updatedUsers = new HashMap<>(currentUsers);
-                            updatedUsers.remove(userId);
-                            selectedEntrantsUsers.postValue(updatedUsers);
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error removing user from selected list", e);
-                    errorMessage.postValue("Failed to remove user from selected list");
-                });
+        event.removeSelectedEntrant(userId);
+        event.setRemote();
+        updateLiveData();
     }
 
     /**

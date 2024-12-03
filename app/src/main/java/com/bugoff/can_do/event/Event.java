@@ -567,4 +567,8 @@ public class Event implements DatabaseEntity {
         this.onUpdateListener = listener;
     }
 
+    public void setCancelledEntrants(List<String> updatedCancelledEntrants) {
+        this.cancelledEntrants = updatedCancelledEntrants;
+        setRemote();
+    }
 }

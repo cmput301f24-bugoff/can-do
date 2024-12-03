@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class EventDetailsFragmentEntrant extends Fragment {
+    private static final String TAG = "EventDetailsFragmentEntrant";
     private TextView eventNameTextView;
     private TextView eventDateTextView;
     private TextView eventDescriptionTextView;
@@ -84,10 +86,13 @@ public class EventDetailsFragmentEntrant extends Fragment {
             Toast.makeText(requireContext(), "No Event ID provided", Toast.LENGTH_SHORT).show();
         }
 
+        Log.d(TAG, "Finished onCreateView for event:" + eventId);
+
         return view;
     }
 
     private void fetchEventDetails(String eventId) {
+        Log.d("EventDetailsEntrant", "Fetching event details for: " + eventId);
         GlobalRepository.getEvent(eventId)
                 .addOnSuccessListener(event -> {
                     if (event != null) {
@@ -119,11 +124,14 @@ public class EventDetailsFragmentEntrant extends Fragment {
                         } else {
                             eventImageView.setVisibility(View.GONE);
                         }
+                    } else {
+                        Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Failed to load event details", Toast.LENGTH_SHORT).show();
                 });
+        Log.d("TAG", "Finished fetchEventDetails for: " + eventId);
     }
 
     private void openMapToLocation() {
@@ -205,9 +213,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
             return;
         }
 
-        // Update Firestore with the user's joined events
-        GlobalRepository.getUsersCollection().document(currentUser.getId())
-                .update("eventsJoined", currentUser.getEventsJoined())
+        GlobalRepository.addUser(currentUser)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
                 })
