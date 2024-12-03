@@ -245,6 +245,12 @@ public class Facility implements DatabaseEntity {
      * @param event The Event to add to the facility. Must not be null.
      */
     public void addEvent(@NonNull Event event) {
+        // ensure only one reference to the event is stored, checking using id
+        for (Event e : events) {
+            if (e.getId().equals(event.getId())) {
+                return;
+            }
+        }
         events.add(event);
         setRemote();
     }

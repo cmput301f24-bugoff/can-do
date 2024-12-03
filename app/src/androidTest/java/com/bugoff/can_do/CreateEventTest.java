@@ -11,10 +11,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import android.os.Build;
 import android.os.SystemClock;
@@ -25,29 +21,19 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.bugoff.can_do.database.GlobalRepository;
-import com.bugoff.can_do.database.MockGlobalRepository;
-import com.bugoff.can_do.database.UserAuthenticator;
+import com.bugoff.can_do.database.NoOpDatabaseBehavior;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.organizer.OrganizerMain;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.HandleQRScan;
 import com.bugoff.can_do.user.User;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RunWith(AndroidJUnit4.class)
@@ -57,18 +43,10 @@ public class CreateEventTest {
     private static final String TEST_FACILITY_NAME = "Test Facility";
     private static final String TEST_FACILITY_ADDRESS = "123 Test St";
     private String androidId;
-    private MockGlobalRepository mockRepository;
-
-    @Mock
-    private FirebaseFirestore mockDb;
-
-    @Mock
-    private DocumentReference mockDocRef;
+    private NoOpDatabaseBehavior testBehavior;
 
     @Before
     public void setup() {
-        MockitoAnnotations.openMocks(this);
-
         // Grant permissions automatically for tests
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             InstrumentationRegistry.getInstrumentation().getUiAutomation().executeShellCommand(
@@ -88,52 +66,24 @@ public class CreateEventTest {
                 Settings.Secure.ANDROID_ID
         );
 
-        // Setup mock Firestore and collections
-        mockDb = mock(FirebaseFirestore.class);
-        CollectionReference mockUsersCollection = mock(CollectionReference.class);
-        CollectionReference mockFacilitiesCollection = mock(CollectionReference.class);
-        CollectionReference mockEventsCollection = mock(CollectionReference.class);
-        DocumentReference mockDocRef = mock(DocumentReference.class);
-
-        when(mockDocRef.getId()).thenReturn("test-event-id");
-        when(mockDocRef.set(any(Map.class))).thenReturn(Tasks.forResult(null));
-
-        when(mockEventsCollection.document()).thenReturn(mockDocRef);
-        when(mockEventsCollection.document(anyString())).thenReturn(mockDocRef);
-        when(mockUsersCollection.document(anyString())).thenReturn(mock(DocumentReference.class));
-        when(mockFacilitiesCollection.document(anyString())).thenReturn(mock(DocumentReference.class));
-
-        when(mockDb.collection("users")).thenReturn(mockUsersCollection);
-        when(mockDb.collection("facilities")).thenReturn(mockFacilitiesCollection);
-        when(mockDb.collection("events")).thenReturn(mockEventsCollection);
-
-        // Enable test mode and set mock Firestore
+        // Set up test behavior
+        testBehavior = new NoOpDatabaseBehavior();
         GlobalRepository.setTestMode(true);
-        GlobalRepository.setMockFirestore(mockDb);
+        GlobalRepository.setBehavior(testBehavior);
+        Event.setDatabaseBehavior(testBehavior);
 
-        // Initialize mock repository
-        mockRepository = MockGlobalRepository.getInstance();
-
-        // Set the mock repository in UserAuthenticator
-        UserAuthenticator.setRepository(mockRepository);
-
-        // Create a mock user without name and email to simulate new user
+        // Create initial test user
         User mockUser = new User(androidId);
         mockUser.setName("");
         mockUser.setEmail("");
-
-        // Set up mock user authentication to return the "new" user
-        Task<User> mockUserTask = Tasks.forResult(mockUser);
-        UserAuthenticator.setMockTask(mockUserTask);
-
-        // Add the blank user to mock repository
-        MockGlobalRepository.addUser(mockUser);
+        testBehavior.addUser(mockUser);
+        GlobalRepository.setLoggedInUser(mockUser);
     }
 
     @After
     public void tearDown() {
-        MockGlobalRepository.resetInstance();
-        UserAuthenticator.reset();
+        testBehavior.clearAll();
+        GlobalRepository.setLoggedInUser(null);
         GlobalRepository.setTestMode(false);
     }
 
@@ -167,7 +117,7 @@ public class CreateEventTest {
         ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
 
         mainScenario.onActivity(activity -> {
-            activity.setRepository(mockRepository);
+            GlobalRepository.setBehavior(testBehavior);
         });
 
         // Complete user profile setup
@@ -187,7 +137,7 @@ public class CreateEventTest {
         // Inject mock repository into OrganizerTransition
         ActivityScenario.launch(OrganizerTransition.class)
                 .onActivity(activity -> {
-                    activity.setRepository(mockRepository);
+                    GlobalRepository.setBehavior(testBehavior);
                 });
 
         // Verify facility creation screen
@@ -205,14 +155,14 @@ public class CreateEventTest {
 
         ActivityScenario.launch(OrganizerMain.class)
                 .onActivity(activity -> {
-                    activity.setRepository(mockRepository);
+                    GlobalRepository.setBehavior(testBehavior);
                 });
 
         // Verify we moved to the organizer main screen
         onView(withId(R.id.bottom_navigation_organizer)).check(matches(isDisplayed()));
 
         // Verify facility was created in mock repository
-        User user = mockRepository.getUser(androidId).getResult();
+        User user = testBehavior.getUser(androidId).getResult();
         assertNotNull("User should exist", user);
 
         Facility facility = user.getFacility();
@@ -231,7 +181,9 @@ public class CreateEventTest {
     public void testEventCreation() {
         // First complete the necessary setup steps from previous tests
         ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
-        mainScenario.onActivity(activity -> activity.setRepository(mockRepository));
+        mainScenario.onActivity(activity -> {
+            GlobalRepository.setBehavior(testBehavior);
+        });
 
         // Complete user profile setup
         onView(withId(R.id.nameEditText)).perform(typeText(TEST_NAME), closeSoftKeyboard());
@@ -243,7 +195,7 @@ public class CreateEventTest {
         onView(withId(R.id.organizer_button)).perform(click());
 
         ActivityScenario.launch(OrganizerTransition.class)
-                .onActivity(activity -> activity.setRepository(mockRepository));
+                .onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
         onView(withId(R.id.facilityNameInput)).perform(typeText(TEST_FACILITY_NAME), closeSoftKeyboard());
         onView(withId(R.id.facilityAddressInput)).perform(typeText(TEST_FACILITY_ADDRESS), closeSoftKeyboard());
@@ -251,7 +203,7 @@ public class CreateEventTest {
 
         // Launch OrganizerMain and set repository
         ActivityScenario<OrganizerMain> organizerScenario = ActivityScenario.launch(OrganizerMain.class);
-        organizerScenario.onActivity(activity -> activity.setRepository(mockRepository));
+        organizerScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
         // Click FAB to create new event
         onView(withId(R.id.fab_add_event)).perform(click());
@@ -296,7 +248,7 @@ public class CreateEventTest {
         onView(withId(R.id.buttonCreateEvent)).perform(click());
 
         // Verify the event was created in mock repository
-        User user = mockRepository.getUser(androidId).getResult();
+        User user = testBehavior.getUser(androidId).getResult();
         Facility facility = user.getFacility();
         assertNotNull("Facility should exist", facility);
 
@@ -328,7 +280,7 @@ public class CreateEventTest {
     public void testQRCodeScanAndEventView() throws ExecutionException, InterruptedException {
         // First create an event that we can scan
         ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
-        mainScenario.onActivity(activity -> activity.setRepository(mockRepository));
+        mainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
         // Complete user profile setup
         onView(withId(R.id.nameEditText)).perform(typeText(TEST_NAME), closeSoftKeyboard());
@@ -340,7 +292,7 @@ public class CreateEventTest {
         onView(withId(R.id.organizer_button)).perform(click());
 
         ActivityScenario.launch(OrganizerTransition.class)
-                .onActivity(activity -> activity.setRepository(mockRepository));
+                .onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
         onView(withId(R.id.facilityNameInput)).perform(typeText(TEST_FACILITY_NAME), closeSoftKeyboard());
         onView(withId(R.id.facilityAddressInput)).perform(typeText(TEST_FACILITY_ADDRESS), closeSoftKeyboard());
@@ -348,7 +300,7 @@ public class CreateEventTest {
 
         // Launch OrganizerMain and set repository
         ActivityScenario<OrganizerMain> organizerScenario = ActivityScenario.launch(OrganizerMain.class);
-        organizerScenario.onActivity(activity -> activity.setRepository(mockRepository));
+        organizerScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
         // Create a test event
         String testEventName = "QR Test Event";
@@ -394,7 +346,7 @@ public class CreateEventTest {
         SystemClock.sleep(1000);
 
         // Get the created event from the repository
-        User user = mockRepository.getUser(androidId).getResult();
+        User user = testBehavior.getUser(androidId).getResult();
         Facility facility = user.getFacility();
         Event createdEvent = facility.getEvents().stream()
                 .filter(e -> e.getName().equals(testEventName))
@@ -402,28 +354,10 @@ public class CreateEventTest {
                 .orElseThrow(() -> new AssertionError("Event not found"));
 
         // Add event to mock repository
-        Task<Void> addEventTask = GlobalRepository.addEvent(createdEvent);
-        Tasks.await(addEventTask); // Wait for the event to be added
-
-        // Set up mock document behavior for Event
-        DocumentReference mockEventDoc = mock(DocumentReference.class);
-        DocumentSnapshot mockEventSnapshot = mock(DocumentSnapshot.class);
-        when(mockEventSnapshot.exists()).thenReturn(true);
-        when(mockEventSnapshot.getString("name")).thenReturn(testEventName);
-        when(mockEventSnapshot.getString("description")).thenReturn(testEventDescription);
-        when(mockEventSnapshot.getString("facilityId")).thenReturn(facility.getId());
-        when(mockEventDoc.get()).thenReturn(Tasks.forResult(mockEventSnapshot));
-        when(mockDb.collection("events").document(createdEvent.getId())).thenReturn(mockEventDoc);
+        testBehavior.addEvent(createdEvent);
 
         // Set up mock document behavior for Facility
-        DocumentReference mockFacilityDoc = mock(DocumentReference.class);
-        DocumentSnapshot mockFacilitySnapshot = mock(DocumentSnapshot.class);
-        when(mockFacilitySnapshot.exists()).thenReturn(true);
-        when(mockFacilitySnapshot.getString("name")).thenReturn(TEST_FACILITY_NAME);
-        when(mockFacilitySnapshot.getString("address")).thenReturn(TEST_FACILITY_ADDRESS);
-        when(mockFacilitySnapshot.getString("ownerId")).thenReturn(user.getId());
-        when(mockFacilityDoc.get()).thenReturn(Tasks.forResult(mockFacilitySnapshot));
-        when(mockDb.collection("facilities").document(facility.getId())).thenReturn(mockFacilityDoc);
+        testBehavior.addFacility(facility);
 
         // Close the existing scenarios before starting new one
         mainScenario.close();
@@ -432,7 +366,7 @@ public class CreateEventTest {
         // Launch a fresh MainActivity for QR scanning
         ActivityScenario<MainActivity> scanScenario = ActivityScenario.launch(MainActivity.class);
         scanScenario.onActivity(activity -> {
-            activity.setRepository(mockRepository);
+            GlobalRepository.setBehavior(testBehavior);
             HandleQRScan.processQRCode("cando-" + createdEvent.getId(), activity);
         });
 
