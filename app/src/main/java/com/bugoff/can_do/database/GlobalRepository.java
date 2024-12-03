@@ -28,6 +28,10 @@ public class GlobalRepository {
         GlobalRepository.behavior = behavior;
     }
 
+    public static DatabaseBehavior getBehavior() {
+        return behavior;
+    }
+
     public static void setTestMode(boolean testMode) {
         isTestMode = testMode;
         if (testMode) {

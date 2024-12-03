@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,6 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -204,6 +200,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
 
+        if (GlobalRepository.isInTestMode()) {
+            Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Update Firestore with the user's joined events
         GlobalRepository.getUsersCollection().document(currentUser.getId())
                 .update("eventsJoined", currentUser.getEventsJoined())
@@ -213,35 +214,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    private void getLocationAndUpdateUser(EventViewModel viewModel, User currentUser) {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        try {
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            currentUser.setLatitude(location.getLatitude());
-                            currentUser.setLongitude(location.getLongitude());
-                            Log.d("User", "Location updated: " + location.getLatitude() + ", " + location.getLongitude());
-                        } else {
-                            Log.d("User", "Location is null");
-                        }
-                        updateUserInFirestore(viewModel, currentUser); // Proceed regardless of location success
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("User", "Failed to get location", e);
-                        updateUserInFirestore(viewModel, currentUser); // Proceed without location update
-                    });
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateUserInFirestore(EventViewModel viewModel, User currentUser) {
-        viewModel.addWaitingListEntrant(currentUser.getId());
-        currentUser.addEventJoined(eventId);
-        currentUser.setRemote(); // Updates Firestore document with the user's data, including latitude and longitude
     }
 
     public void leaveWaitingList(EventViewModel viewModel) {

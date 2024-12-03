@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.R;
+import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
 
@@ -87,6 +88,10 @@ public class EventEnrolledFragment extends Fragment {
 
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
+
+        if (GlobalRepository.isInTestMode()) {
+            progressBar.setVisibility(View.GONE);
+        }
 
         viewModel.getEnrolledEntrantsUsers().observe(getViewLifecycleOwner(), usersMap -> {
             Log.d(TAG, "Observer: Received usersMap with size: " + (usersMap != null ? usersMap.size() : "null"));

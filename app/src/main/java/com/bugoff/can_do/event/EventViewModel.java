@@ -13,9 +13,6 @@ import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.user.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -150,59 +147,34 @@ public class EventViewModel extends ViewModel {
         Log.d(TAG, "fetchUsersForList: Fetching users for IDs: " + userIds);
 
         Map<String, User> usersMap = new HashMap<>();
-        int batchSize = 10;
-        List<List<String>> batches = new ArrayList<>();
+        List<Task<User>> userTasks = new ArrayList<>();
 
-        for (int i = 0; i < userIds.size(); i += batchSize) {
-            int end = Math.min(i + batchSize, userIds.size());
-            batches.add(new ArrayList<>(userIds.subList(i, end)));
+        // Use GlobalRepository to fetch each user
+        for (String userId : userIds) {
+            userTasks.add(GlobalRepository.getUser(userId));
         }
 
-        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
-        for (List<String> batch : batches) {
-            tasks.add(GlobalRepository.getUsersCollection()
-                    .whereIn(FieldPath.documentId(), batch)
-                    .get());
-        }
-
-        Tasks.whenAllSuccess(tasks)
-                .addOnSuccessListener(results -> {
-                    for (Object result : results) {
-                        if (result instanceof QuerySnapshot) {
-                            QuerySnapshot snapshot = (QuerySnapshot) result;
-                            for (DocumentSnapshot document : snapshot.getDocuments()) {
-                                // Create user without triggering remote updates
-                                User user = new User(document);
-                                usersMap.put(user.getId(), user);
-                                Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName() +
-                                        " with events: " + user.getEventsJoined());
-                            }
+        Tasks.whenAllComplete(userTasks)
+                .addOnSuccessListener(tasks -> {
+                    for (Task<?> task : tasks) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            User user = (User) task.getResult();
+                            usersMap.put(user.getId(), user);
+                            Log.d(TAG, "fetchUsersForList: Fetched user: " + user.getName());
                         }
                     }
                     targetLiveData.postValue(usersMap);
                     Log.d(TAG, "fetchUsersForList: Updated targetLiveData with usersMap size: " + usersMap.size());
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "fetchUsersForList: Error fetching user batches", e);
+                    Log.e(TAG, "fetchUsersForList: Error fetching users", e);
+                    targetLiveData.postValue(new HashMap<>());
                 });
     }
 
     // Getters for LiveData
-    public LiveData<String> getEventName() { return eventName; }
     public LiveData<Facility> getFacility() { return facility; }
     public LiveData<String> getDescription() { return description; }
-    public LiveData<String> getQrCodeHash() { return qrCodeHash; }
-    public LiveData<Date> getRegistrationStartDate() { return registrationStartDate; }
-    public LiveData<Date> getRegistrationEndDate() { return registrationEndDate; }
-    public LiveData<Date> getEventStartDate() { return eventStartDate; }
-    public LiveData<Date> getEventEndDate() { return eventEndDate; }
-    public LiveData<Integer> getMaxNumberOfParticipants() { return maxNumberOfParticipants; }
-    public LiveData<Boolean> getGeolocationRequired() { return geolocationRequired; }
-    public LiveData<List<String>> getWaitingListEntrants() { return waitingListEntrants; }
-    public LiveData<Map<String, Location>> getEntrantsLocations() { return entrantsLocations; }
-    public LiveData<Map<String, EntrantStatus>> getEntrantStatuses() { return entrantStatuses; }
-    public LiveData<List<String>> getSelectedEntrants() { return selectedEntrants; }
-    public LiveData<List<String>> getEnrolledEntrants() { return enrolledEntrants; }
     public LiveData<String> getErrorMessage() { return errorMessage; }
 
     // LiveData getters for User details

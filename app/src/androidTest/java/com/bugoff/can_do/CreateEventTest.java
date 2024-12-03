@@ -1,11 +1,13 @@
 package com.bugoff.can_do;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
@@ -22,13 +24,16 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.database.NoOpDatabaseBehavior;
+import com.bugoff.can_do.database.UserAuthenticator;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.organizer.OrganizerMain;
 import com.bugoff.can_do.organizer.OrganizerTransition;
 import com.bugoff.can_do.user.HandleQRScan;
 import com.bugoff.can_do.user.User;
+import com.google.android.gms.tasks.TaskCompletionSource;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,6 +90,7 @@ public class CreateEventTest {
         testBehavior.clearAll();
         GlobalRepository.setLoggedInUser(null);
         GlobalRepository.setTestMode(false);
+        UserAuthenticator.reset();
     }
 
     @Test
@@ -274,6 +280,7 @@ public class CreateEventTest {
         // Clean up
         mainScenario.close();
         organizerScenario.close();
+        UserAuthenticator.reset();
     }
 
     @Test
@@ -380,5 +387,166 @@ public class CreateEventTest {
 
         // Clean up
         scanScenario.close();
+    }
+
+    @Test
+    public void testWaitlistSelectionFlow() throws ExecutionException, InterruptedException {
+        // First complete the necessary setup steps for organizer
+        ActivityScenario<MainActivity> mainScenario = ActivityScenario.launch(MainActivity.class);
+        mainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
+
+        // Complete organizer profile setup
+        onView(withId(R.id.nameEditText)).perform(typeText(TEST_NAME), closeSoftKeyboard());
+        onView(withId(R.id.emailEditText)).perform(typeText(TEST_EMAIL), closeSoftKeyboard());
+        onView(withId(R.id.submitButton)).perform(click());
+
+        // Navigate to organizer section and set up facility
+        onView(withId(R.id.nav_profile)).perform(click());
+        onView(withId(R.id.organizer_button)).perform(click());
+
+        ActivityScenario.launch(OrganizerTransition.class)
+                .onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
+
+        onView(withId(R.id.facilityNameInput)).perform(typeText(TEST_FACILITY_NAME), closeSoftKeyboard());
+        onView(withId(R.id.facilityAddressInput)).perform(typeText(TEST_FACILITY_ADDRESS), closeSoftKeyboard());
+        onView(withId(R.id.saveFacilityButton)).perform(click());
+
+        // Launch OrganizerMain and create event
+        ActivityScenario<OrganizerMain> organizerScenario = ActivityScenario.launch(OrganizerMain.class);
+        organizerScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
+
+        // Click FAB to create new event
+        onView(withId(R.id.fab_add_event)).perform(click());
+
+        // Fill in event details
+        String testEventName = "Waitlist Test Event";
+        String testEventDescription = "Test event for waitlist flow";
+        int testMaxParticipants = 1; // Set to 1 to test selection process
+
+        onView(withId(R.id.editTextEventName))
+                .perform(typeText(testEventName), closeSoftKeyboard());
+        onView(withId(R.id.editTextEventDescription))
+                .perform(typeText(testEventDescription), closeSoftKeyboard());
+        onView(withId(R.id.editTextMaxNumParticipants))
+                .perform(typeText(String.valueOf(testMaxParticipants)), closeSoftKeyboard());
+
+        // Set all dates using the buttons - accepting defaults
+        onView(withId(R.id.buttonRegStartDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonRegStartTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonRegEndDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonRegEndTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonEventStartDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonEventStartTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        onView(withId(R.id.buttonEventEndDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.buttonEventEndTime)).perform(click());
+        onView(withText("OK")).perform(click());
+
+        // Create the event
+        onView(withId(R.id.buttonCreateEvent)).perform(click());
+
+        // Wait for the event to be created
+        SystemClock.sleep(1000);
+
+        // Get the created event
+        User organizer = testBehavior.getUser(androidId).getResult();
+        Facility facility = organizer.getFacility();
+        Event createdEvent = facility.getEvents().stream()
+                .filter(e -> e.getName().equals(testEventName))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Event not found"));
+
+        // Create and set up entrant user
+        String entrantId = "test_entrant_" + System.currentTimeMillis();
+        User entrantUser = new User(entrantId);
+        entrantUser.setName("Test Entrant");
+        entrantUser.setEmail("entrant@test.com");
+        testBehavior.addUser(entrantUser);
+
+        // Set up mock task for entrant authentication
+        TaskCompletionSource<User> mockEntrantTask = new TaskCompletionSource<>();
+        mockEntrantTask.setResult(entrantUser);
+        UserAuthenticator.setMockTask(mockEntrantTask.getTask());
+
+        // Switch to entrant view
+        GlobalRepository.setLoggedInUser(entrantUser);
+
+        // Launch MainActivity for entrant and process QR code
+        ActivityScenario<MainActivity> entrantScenario = ActivityScenario.launch(MainActivity.class);
+        entrantScenario.onActivity(activity -> {
+            GlobalRepository.setBehavior(testBehavior);
+            HandleQRScan.processQRCode("cando-" + createdEvent.getId(), activity);
+        });
+
+        SystemClock.sleep(1000);
+
+        // Verify event details and join waitlist
+        onView(withId(R.id.class_tile)).check(matches(withText(testEventName)));
+        onView(withId(R.id.join_waiting_list)).perform(click());
+
+        // Set up mock task for organizer authentication
+        TaskCompletionSource<User> mockOrganizerTask = new TaskCompletionSource<>();
+        mockOrganizerTask.setResult(organizer);
+        UserAuthenticator.setMockTask(mockOrganizerTask.getTask());
+
+        // Switch back to organizer view
+        GlobalRepository.setLoggedInUser(organizer);
+
+        // Re-launch OrganizerMain to ensure we have the latest state
+        ActivityScenario<OrganizerMain> organizerMainScenario = ActivityScenario.launch(OrganizerMain.class);
+        organizerMainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
+
+        // Give time for the UI to update
+        SystemClock.sleep(1000);
+
+        // Click on the event to view details
+        onView(withText(testEventName)).perform(click());
+
+        // Navigate to waitlist and perform draw
+        onView(withId(R.id.view_watch_list)).perform(click());
+
+        // Give time for the waitlist to load
+        SystemClock.sleep(1000);
+
+        // Verify the entrant is in the waitlist
+        onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
+
+        onView(withId(R.id.draw)).perform(click());
+
+        // Enter number to draw in dialog
+        onView(withClassName(Matchers.endsWith("EditText")))
+                .perform(typeText("1"), closeSoftKeyboard());
+        onView(withText("Draw")).perform(click());
+
+        // Give time for the draw to process
+        SystemClock.sleep(1000);
+
+        // Go back to event details
+        pressBack();
+
+        // Check selected entrants list
+        onView(withId(R.id.view_selected_list)).perform(click());
+
+        // Give time for the selected list to load
+        SystemClock.sleep(1000);
+
+        // Verify the entrant is in the selected list
+        onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
+
+        // Clean up
+        mainScenario.close();
+        organizerScenario.close();
+        entrantScenario.close();
+        organizerMainScenario.close();
+        UserAuthenticator.reset();
     }
 }
