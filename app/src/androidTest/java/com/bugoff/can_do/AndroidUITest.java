@@ -45,7 +45,7 @@ import org.junit.runner.RunWith;
 import java.util.concurrent.ExecutionException;
 
 @RunWith(AndroidJUnit4.class)
-public class CreateEventTest {
+public class AndroidUITest {
     private static final String TEST_NAME = "Test User";
     private static final String TEST_EMAIL = "test@example.com";
     private static final String TEST_FACILITY_NAME = "Test Facility";
