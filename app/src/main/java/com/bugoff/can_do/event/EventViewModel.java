@@ -65,50 +65,37 @@ public class EventViewModel extends ViewModel {
      * @param eventId The ID of the event to fetch and observe.
      */
     public EventViewModel(String eventId) {
-        // Fetch Event asynchronously
-        GlobalRepository.getEventsCollection().document(eventId).get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        String facilityId = doc.getString("facilityId");
-                        GlobalRepository.getFacility(facilityId).addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                Facility eventFacility = task.getResult();
-                                if (eventFacility != null) {
-                                    event = new Event(eventFacility, doc);
-                                    // Initialize LiveData
-                                    eventName.setValue(event.getName());
-                                    description.setValue(event.getDescription());
-                                    qrCodeHash.setValue(event.getQrCodeHash());
-                                    registrationStartDate.setValue(event.getRegistrationStartDate());
-                                    registrationEndDate.setValue(event.getRegistrationEndDate());
-                                    eventStartDate.setValue(event.getEventStartDate());
-                                    eventEndDate.setValue(event.getEventEndDate());
-                                    maxNumberOfParticipants.setValue(event.getMaxNumberOfParticipants());
-                                    geolocationRequired.setValue(event.getGeolocationRequired());
-                                    waitingListEntrants.setValue(event.getWaitingListEntrants());
-                                    entrantsLocations.setValue(event.getEntrantsLocations());
-                                    entrantStatuses.setValue(event.getEntrantStatuses());
-                                    selectedEntrants.setValue(event.getSelectedEntrants());
-                                    enrolledEntrants.setValue(event.getEnrolledEntrants());
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(fetchedEvent -> {
+                    if (fetchedEvent != null) {
+                        this.event = fetchedEvent;
+                        // Initialize LiveData
+                        eventName.setValue(event.getName());
+                        description.setValue(event.getDescription());
+                        qrCodeHash.setValue(event.getQrCodeHash());
+                        registrationStartDate.setValue(event.getRegistrationStartDate());
+                        registrationEndDate.setValue(event.getRegistrationEndDate());
+                        eventStartDate.setValue(event.getEventStartDate());
+                        eventEndDate.setValue(event.getEventEndDate());
+                        maxNumberOfParticipants.setValue(event.getMaxNumberOfParticipants());
+                        geolocationRequired.setValue(event.getGeolocationRequired());
+                        waitingListEntrants.setValue(event.getWaitingListEntrants());
+                        entrantsLocations.setValue(event.getEntrantsLocations());
+                        entrantStatuses.setValue(event.getEntrantStatuses());
+                        selectedEntrants.setValue(event.getSelectedEntrants());
+                        enrolledEntrants.setValue(event.getEnrolledEntrants());
 
-                                    facility.setValue(event.getFacility());
+                        facility.setValue(event.getFacility());
 
-                                    // Set listeners
-                                    event.setOnUpdateListener(this::updateLiveData);
-                                    event.attachListener();
+                        // Set listeners
+                        event.setOnUpdateListener(this::updateLiveData);
+                        event.attachListener();
 
-                                    // Fetch User details based on user IDs
-                                    fetchUsersForList(waitingListEntrants.getValue(), waitingListUsers);
-                                    fetchUsersForList(selectedEntrants.getValue(), selectedEntrantsUsers);
-                                    fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
-                                    fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
-                                } else {
-                                    errorMessage.setValue("Facility not found for the event.");
-                                }
-                            } else {
-                                errorMessage.setValue("Facility not found for the event.");
-                            }
-                        });
+                        // Fetch User details based on user IDs
+                        fetchUsersForList(waitingListEntrants.getValue(), waitingListUsers);
+                        fetchUsersForList(selectedEntrants.getValue(), selectedEntrantsUsers);
+                        fetchUsersForList(enrolledEntrants.getValue(), enrolledEntrantsUsers);
+                        fetchUsersForList(event.getCancelledEntrants(), cancelledEntrants);
                     } else {
                         errorMessage.setValue("Event does not exist.");
                     }

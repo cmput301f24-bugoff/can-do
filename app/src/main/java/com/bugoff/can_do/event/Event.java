@@ -6,12 +6,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.bugoff.can_do.EntrantStatus;
+import com.bugoff.can_do.database.DatabaseBehavior;
 import com.bugoff.can_do.database.DatabaseEntity;
+import com.bugoff.can_do.database.FirebaseBehavior;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.facility.Facility;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * {@code Event} represents an event that can be held at a facility. It contains
@@ -48,16 +47,27 @@ public class Event implements DatabaseEntity {
     private List<String> selectedEntrants; // Entrants selected in the lottery (user IDs)
     private List<String> enrolledEntrants; // Entrants who accepted and enrolled (user IDs)
     private List<String> cancelledEntrants; // Entrants who cancelled (user IDs)
-    private FirebaseFirestore db;
+    private String base64Image;
+    private static DatabaseBehavior databaseBehavior = new FirebaseBehavior();
     private ListenerRegistration listener;
     private Runnable onUpdateListener;
-    private String base64Image;
+
+    public static void setDatabaseBehavior(DatabaseBehavior behavior) {
+        databaseBehavior = behavior;
+    }
 
     /**
      * Default constructor for Firestore serialization.
      */
     public Event(@NonNull Facility facility) {
-        this.id = GlobalRepository.getEventsCollection().document().getId();
+        if (GlobalRepository.isInTestMode()) {
+            // Generate our ID for test mode
+            this.id = "test_event_" + System.currentTimeMillis();
+        } else {
+            // Use Firestore-generated ID
+            this.id = GlobalRepository.getEventsCollection().document().getId();
+        }
+
         this.facility = facility;
         this.name = "";
         this.description = "";
@@ -74,7 +84,14 @@ public class Event implements DatabaseEntity {
         this.selectedEntrants = new ArrayList<>();
         this.enrolledEntrants = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        // facility.addEvent(this); // Ensure bidirectional reference (edit: maybe not?)
+
+        // Event to the facility's event list
+        facility.addEvent(this);
+
+        // If in test mode, add the event to the mock database
+        if (GlobalRepository.isInTestMode() && databaseBehavior != null) {
+            databaseBehavior.saveEvent(this);
+        }
     }
 
     /**
@@ -483,15 +500,9 @@ public class Event implements DatabaseEntity {
      */
     @Override
     public void setRemote() {
-        DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
-        Map<String, Object> update = this.toMap();
-        eventRef.set(update)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "Event updated successfully");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error updating event", e);
-                });
+        if (!GlobalRepository.isInTestMode()) {
+            databaseBehavior.saveEvent(this);
+        }
     }
 
     /**
@@ -512,54 +523,10 @@ public class Event implements DatabaseEntity {
      */
     @Override
     public void attachListener() {
-        DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
-        listener = eventRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (e != null) {
-                Log.e("Firestore", "Error listening to event changes for event: " + id, e);
-                return;
-            }
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                String updatedFacilityId = documentSnapshot.getString("facilityId");
-                AtomicBoolean isChanged = new AtomicBoolean(false);
-                if (updatedFacilityId != null && !updatedFacilityId.equals(this.facility.getId())) {
-                    GlobalRepository.getFacility(updatedFacilityId)
-                            .addOnSuccessListener(facility -> {
-                                this.facility = facility;
-                                this.facility.addEvent(this);
-                                isChanged.set(true);
-                                onUpdate();
-                            })
-                            .addOnFailureListener(error -> {
-                                Log.e("Firestore", "Error fetching updated facility for event: " + id, error);
-                            });
-                    return;
-                }
-                this.name = documentSnapshot.getString("name");
-                this.description = documentSnapshot.getString("description");
-                this.qrCodeHash = documentSnapshot.getString("qrCodeHash");
-                this.registrationStartDate = documentSnapshot.getDate("registrationStartDate");
-                this.registrationEndDate = documentSnapshot.getDate("registrationEndDate");
-                this.eventStartDate = documentSnapshot.getDate("eventStartDate");
-                this.eventEndDate = documentSnapshot.getDate("eventEndDate");
-                this.maxNumberOfParticipants = documentSnapshot.getLong("maxNumberOfParticipants") != null
-                        ? documentSnapshot.getLong("maxNumberOfParticipants").intValue()
-                        : 0;
-                this.geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
-                this.base64Image = documentSnapshot.getString("base64Image");
-
-                // Deserialize complex fields
-                this.waitingListEntrants = deserializeUserList(documentSnapshot.get("waitingListEntrants"));
-                this.cancelledEntrants = deserializeUserList(documentSnapshot.get("cancelledEntrants"));
-                this.entrantsLocations = deserializeEntrantsLocations(documentSnapshot.get("entrantsLocations"));
-                this.entrantStatuses = deserializeEntrantStatuses(documentSnapshot.get("entrantStatuses"));
-                this.selectedEntrants = deserializeUserList(documentSnapshot.get("selectedEntrants"));
-                this.enrolledEntrants = deserializeUserList(documentSnapshot.get("enrolledEntrants"));
-
-                if (isChanged.get()) {
-                    onUpdate();
-                }
-            }
-        });
+        if (GlobalRepository.isInTestMode()) {
+            return;
+        }
+        databaseBehavior.attachListener(this, this::onUpdate);
     }
 
     /**
@@ -571,10 +538,8 @@ public class Event implements DatabaseEntity {
      */
     @Override
     public void detachListener() {
-        if (listener != null) {
-            listener.remove();
-            listener = null;
-            Log.d("Firestore", "Listener detached for event: " + id);
+        if (!GlobalRepository.isInTestMode()) {
+            databaseBehavior.detachListener(this);
         }
     }
 
