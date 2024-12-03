@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 
 import org.hamcrest.Matchers;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,6 +90,10 @@ public class CreateEventTest {
     public void tearDown() {
         testBehavior.clearAll();
         GlobalRepository.setLoggedInUser(null);
+    }
+
+    @AfterClass
+    public static void cleanUp() {
         GlobalRepository.setTestMode(false);
         UserAuthenticator.reset();
     }
