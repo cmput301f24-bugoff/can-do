@@ -38,7 +38,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Fragment for accepting or declining an event invitation.
+ */
 public class AcceptDeclineFragment extends Fragment {
     private FirebaseFirestore db;
     private TextView eventNameTextView;
@@ -50,7 +52,12 @@ public class AcceptDeclineFragment extends Fragment {
     private String eventId;
     private String eventLocation;
     private static final String ARG_EVENT_ID = "selected_event_id";
-
+    /**
+     * Creates a new instance of AcceptDeclineFragment with the provided event ID.
+     *
+     * @param eventId ID of the event to accept or decline
+     * @return A new instance of AcceptDeclineFragment
+     */
     public static AcceptDeclineFragment newInstance(String eventId) {
         AcceptDeclineFragment fragment = new AcceptDeclineFragment();
         Bundle args = new Bundle();
@@ -93,7 +100,11 @@ public class AcceptDeclineFragment extends Fragment {
 
         return view;
     }
-
+    /**
+     * Fetches event details from Firestore and populates the UI.
+     *
+     * @param eventId ID of the event to fetch
+     */
     private void fetchEventDetails(String eventId) {
         db.collection("events").document(eventId)
                 .get()
@@ -146,7 +157,11 @@ public class AcceptDeclineFragment extends Fragment {
     private void openMapToLocation() {
         Toast.makeText(requireContext(), "Map feature not implemented.", Toast.LENGTH_SHORT).show();
     }
-
+    /**
+     * Accepts an invitation to an event.
+     *
+     * @param eventId ID of the event to accept
+     */
     private void acceptInvitation(String eventId) {
         String androidId = GlobalRepository.getLoggedInUser().getId();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -179,7 +194,11 @@ public class AcceptDeclineFragment extends Fragment {
                 Toast.makeText(requireContext(), "Error accepting invitation: " + e.getMessage(), Toast.LENGTH_SHORT).show()
         );
     }
-
+    /**
+     * Rejects an invitation to an event.
+     *
+     * @param eventId ID of the event to reject
+     */
     private void rejectInvitation(String eventId) {
         String androidId = GlobalRepository.getLoggedInUser().getId();
 

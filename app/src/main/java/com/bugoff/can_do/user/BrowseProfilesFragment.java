@@ -19,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bugoff.can_do.R;
 
 import java.util.ArrayList;
-
+/**
+ * Fragment for browsing user profiles. Displays a list of user profiles and allows admins to delete them.
+ */
 public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDeleteClickListener {
     private RecyclerView recyclerViewProfiles;
     private UserAdapter userAdapter;
@@ -30,7 +32,9 @@ public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDe
     public BrowseProfilesFragment() {
         // Required empty public constructor
     }
-
+    /**
+     * Inflates the layout for this fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -48,7 +52,9 @@ public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDe
 
         return view;
     }
-
+    /**
+     * Initializes the ViewModel and observes LiveData for profiles list and error messages.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -81,7 +87,11 @@ public class BrowseProfilesFragment extends Fragment implements UserAdapter.OnDe
             }
         });
     }
-
+    /**
+     * Handles the delete button click for a user.
+     *
+     * @param user The user to delete
+     */
     @Override
     public void onDeleteClick(User user) {
         new AlertDialog.Builder(requireContext())
