@@ -512,6 +512,9 @@ public class Event implements DatabaseEntity {
      */
     @Override
     public void attachListener() {
+        if (GlobalRepository.isInTestMode()) {
+            return;
+        }
         DocumentReference eventRef = GlobalRepository.getEventsCollection().document(id);
         listener = eventRef.addSnapshotListener((documentSnapshot, e) -> {
             if (e != null) {

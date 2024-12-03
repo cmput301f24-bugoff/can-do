@@ -1,7 +1,5 @@
 package com.bugoff.can_do.user;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,8 +27,6 @@ import com.bugoff.can_do.event.EventViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class EventDetailsFragmentEntrant extends Fragment {
-    private FirebaseFirestore db;
     private TextView eventNameTextView;
     private TextView eventDateTextView;
     private TextView eventDescriptionTextView;
@@ -63,7 +58,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_details_entrant, container, false);
 
-        db = FirebaseFirestore.getInstance();
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
         }
@@ -98,24 +92,19 @@ public class EventDetailsFragmentEntrant extends Fragment {
     }
 
     private void fetchEventDetails(String eventId) {
-        db.collection("events").document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        eventName = documentSnapshot.getString("name");
-                        eventDescription = documentSnapshot.getString("description");
-                        GlobalRepository.getFacility(documentSnapshot.getString("facilityId")).addOnSuccessListener(facility -> {
-                            eventLocation = facility.getAddress();
-                            Log.d(TAG, "fetchEventDetails: " + eventLocation);
-                            eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
-                        });
-                        Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        eventName = event.getName();
+                        eventDescription = event.getDescription();
+                        eventLocation = event.getFacility().getAddress();
 
                         eventNameTextView.setText(eventName != null ? eventName : "N/A");
                         eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
+                        eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
 
-                        if (eventDateTimestamp != null) {
-                            Date eventDate = eventDateTimestamp.toDate();
+                        Date eventDate = event.getEventStartDate();
+                        if (eventDate != null) {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
                             String formattedDate = dateFormat.format(eventDate);
                             eventDateTextView.setText("Date: " + formattedDate);
@@ -123,7 +112,7 @@ public class EventDetailsFragmentEntrant extends Fragment {
                             eventDateTextView.setText("Date: N/A");
                         }
 
-                        String base64Image = documentSnapshot.getString("base64Image");
+                        String base64Image = event.getBase64Image();
                         if (base64Image != null) {
                             Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
                             if (bitmap != null) {
@@ -134,8 +123,6 @@ public class EventDetailsFragmentEntrant extends Fragment {
                         } else {
                             eventImageView.setVisibility(View.GONE);
                         }
-                    } else {
-                        Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -175,21 +162,19 @@ public class EventDetailsFragmentEntrant extends Fragment {
             throw new IllegalStateException("User not logged in");
         }
 
-        // Check if the event exists and if it requires geolocation
-        db.collection("events").document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Long maxParticipants = documentSnapshot.getLong("maxNumberOfParticipants"); // Maximum allowed participants
-                        List<String> currentParticipants = (List<String>) documentSnapshot.get("waitingListEntrants"); // Current waiting list
+        // Fetch the current event
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        List<String> currentParticipants = event.getWaitingListEntrants();
+                        long maxParticipants = event.getMaxNumberOfParticipants();
 
-                        if (currentParticipants != null && maxParticipants != null && currentParticipants.size() >= maxParticipants) {
-                            // Show a dialog or toast to inform the user the waiting list is full
+                        if (currentParticipants.size() >= maxParticipants) {
                             Toast.makeText(requireContext(), "The waiting list is full. You cannot join this event.", Toast.LENGTH_SHORT).show();
                         } else {
-                            Boolean requiresGeolocation = documentSnapshot.getBoolean("geolocationRequired");
+                            Boolean requiresGeolocation = event.getGeolocationRequired();
                             if (Boolean.TRUE.equals(requiresGeolocation)) {
-                                // check if user has non-null latitude and longitude
+                                // Check if user has non-null latitude and longitude
                                 if (currentUser.getLatitude() == null || currentUser.getLongitude() == null) {
                                     Toast.makeText(requireContext(), "Unknown Location - Location permission is required to join this event.", Toast.LENGTH_SHORT).show();
                                     return;
@@ -215,20 +200,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
                 });
     }
 
-
     private void proceedWithJoining(EventViewModel viewModel, User currentUser) {
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
-
-        // Update Firestore with the user's joined events
-        GlobalRepository.getUsersCollection().document(currentUser.getId())
-                .update("eventsJoined", currentUser.getEventsJoined())
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
-                });
+        currentUser.setRemote();
+        Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
     }
 
     private void getLocationAndUpdateUser(EventViewModel viewModel, User currentUser) {
