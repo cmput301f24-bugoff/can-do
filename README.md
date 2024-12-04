@@ -35,3 +35,5 @@ For more information on the project, please visit our [wiki page](https://github
 - Install JDK 21.0.3 or higher
 - If you get an error of: `Invalid Gradle JDK configuration found`, then make sure you have the proper `local.properties` file
 - You may need to `git reset --hard` to the latest commit after setting up the project for the first time to avoid minor file differences with the main branch
+### Some Comments
+- The Android UI tests do not work fully on the CI/CD pipeline, so please run them locally (hence why the fails tasks)
