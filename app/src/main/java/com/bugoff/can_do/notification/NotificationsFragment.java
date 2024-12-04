@@ -26,7 +26,10 @@ import java.util.List;
 
 /**
  * Fragment for displaying a list of notifications for the current user.
- * This fragment fetches the user's notification list from Firestore and displays it in a ListView.
+ *
+ * <p>This fragment retrieves the user's notification list from Firestore and displays it
+ * in a ListView. The notifications are observed using a {@link NotificationsViewModel},
+ * ensuring the UI updates reactively to any changes in the notifications data.</p>
  */
 public class NotificationsFragment extends Fragment {
 
@@ -34,7 +37,12 @@ public class NotificationsFragment extends Fragment {
     private ListView notifListView;
     private NotificationAdapter adapter;
     private NotificationsViewModel notificationsViewModel;
-
+    /**
+     * Creates a new instance of {@code NotificationsFragment} for a specific user ID.
+     *
+     * @param userId The ID of the user whose notifications are to be displayed.
+     * @return A new instance of {@code NotificationsFragment}.
+     */
     public static NotificationsFragment newInstance(String userId) {
         NotificationsFragment fragment = new NotificationsFragment();
         Bundle args = new Bundle();
@@ -42,6 +50,15 @@ public class NotificationsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    /**
+     * Inflates the layout for the fragment, initializes the notification list view,
+     * sets up the ViewModel, and observes notifications for the current user.
+     *
+     * @param inflater  The LayoutInflater object used to inflate views.
+     * @param container The parent view that the fragment's UI should attach to.
+     * @param savedInstanceState The previously saved state of the fragment, if any.
+     * @return The root {@link View} for the fragment's layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

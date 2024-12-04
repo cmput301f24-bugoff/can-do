@@ -48,7 +48,11 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Fragment for displaying event details to organizers. Allows organizers to view and manage event details.
+ * Fragment for displaying and managing event details for organizers.
+ *
+ * <p>This fragment allows organizers to view detailed information about an event, manage its
+ * associated resources (e.g., QR codes, images, geolocation settings), and perform various
+ * operations such as sharing event details, sending notifications, and viewing event participant lists.</p>
  */
 public class EventDetailsFragmentOrganizer extends Fragment {
     private FirebaseFirestore db;
@@ -70,7 +74,12 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private NoOpDatabaseBehavior testBehavior;
 
     private static final String TAG = "EventDetailsFragmentOrg";
-
+    /**
+     * Creates a new instance of {@code EventDetailsFragmentOrganizer} for the specified event ID.
+     *
+     * @param eventId The ID of the event to manage.
+     * @return A new instance of the fragment.
+     */
     public static EventDetailsFragmentOrganizer newInstance(String eventId) {
         EventDetailsFragmentOrganizer fragment = new EventDetailsFragmentOrganizer();
         Bundle args = new Bundle();

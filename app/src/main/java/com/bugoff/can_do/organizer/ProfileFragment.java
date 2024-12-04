@@ -30,7 +30,13 @@ import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
-
+/**
+ * Fragment for displaying and managing the user's profile in the organizer mode.
+ *
+ * <p>This fragment allows users to view and update their profile details, such as
+ * name, email, phone number, and avatar image. It also provides navigation to other
+ * activities, including notification settings, facility management, and switching to attendee mode.</p>
+ */
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private UserViewModel userViewModel;
@@ -41,7 +47,11 @@ public class ProfileFragment extends Fragment {
     private TextView lastNameTextView;
     private String currentEmail = "";
     private String currentPhone = "";
-
+    /**
+     * Called to initialize the fragment and set up the ViewModel and image launchers.
+     *
+     * @param savedInstanceState The saved state of the fragment, if any.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +63,26 @@ public class ProfileFragment extends Fragment {
         UserViewModelFactory factory = new UserViewModelFactory(androidId);
         userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
     }
-
+    /**
+     * Called to create and return the view hierarchy for the fragment.
+     *
+     * @param inflater  The LayoutInflater used to inflate the fragment's layout.
+     * @param container The parent container for the fragment's view.
+     * @param savedInstanceState The saved state of the fragment, if any.
+     * @return The root view of the fragment's layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.user_profile_organizer, container, false);
     }
-
+    /**
+     * Called after the fragment's view has been created.
+     *
+     * @param view               The root view of the fragment's layout.
+     * @param savedInstanceState The saved state of the fragment, if any.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -68,13 +90,19 @@ public class ProfileFragment extends Fragment {
         setupObservers();
         setupClickListeners(view);
     }
-
+    /**
+     * Called after the fragment's view has been created.
+     *
+     * @param view               The root view of the fragment's layout.
+     */
     private void initializeViews(View view) {
         avatarImageView = view.findViewById(R.id.image_avatar);
         firstNameTextView = view.findViewById(R.id.first_name);
         lastNameTextView = view.findViewById(R.id.last_name);
     }
-
+    /**
+     * Sets up observers for LiveData from the ViewModel to update the UI reactively.
+     */
     private void setupObservers() {
         userViewModel.getUserName().observe(getViewLifecycleOwner(), name -> {
             if (name != null) {
@@ -96,7 +124,11 @@ public class ProfileFragment extends Fragment {
             currentPhone = phoneNumber != null ? phoneNumber : "";
         });
     }
-
+    /**
+     * Sets up click listeners for various profile actions, such as editing name, email, and phone number.
+     *
+     * @param view The root view of the fragment's layout.
+     */
     private void setupClickListeners(View view) {
         // Edit Name
         view.findViewById(R.id.name_button).setOnClickListener(v -> showEditNameDialog());
@@ -128,7 +160,9 @@ public class ProfileFragment extends Fragment {
         // Avatar
         avatarImageView.setOnClickListener(v -> showImageSourceDialog());
     }
-
+    /**
+     * Sets up the image launchers for selecting or capturing a profile picture.
+     */
     private void setupImageLaunchers() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -152,7 +186,11 @@ public class ProfileFragment extends Fragment {
                 }
         );
     }
-
+    /**
+     * Handles an image selected from the gallery.
+     *
+     * @param imageUri The URI of the selected image.
+     */
     private void handleGalleryImage(Uri imageUri) {
         if (imageUri != null) {
             String base64Image = ImageUtils.compressAndEncodeImage(requireContext(), imageUri);
@@ -161,14 +199,22 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-
+    /**
+     * Handles an image captured from the camera.
+     *
+     * @param photo The captured image as a Bitmap.
+     */
     private void handleCameraImage(Bitmap photo) {
         String base64Image = ImageUtils.compressAndEncodeBitmap(photo);
         if (base64Image != null) {
             updateUserProfileImage(base64Image);
         }
     }
-
+    /**
+     * Updates the user's profile picture with a given base64-encoded image.
+     *
+     * @param base64Image The base64-encoded image string.
+     */
     private void updateUserProfileImage(String base64Image) {
         User currentUser = getViewModel().getUser();
         if (currentUser != null) {
@@ -179,7 +225,9 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-
+    /**
+     * Displays a dialog to select the image source for the profile picture.
+     */
     private void showImageSourceDialog() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Change Profile Picture")
@@ -196,7 +244,9 @@ public class ProfileFragment extends Fragment {
                 .setNeutralButton("Remove", (dialog, which) -> removeProfileImage())
                 .show();
     }
-
+    /**
+     * Removes the user's profile picture and updates the UI with a default avatar.
+     */
     private void removeProfileImage() {
         User currentUser = getViewModel().getUser();
         if (currentUser != null) {
@@ -205,7 +255,11 @@ public class ProfileFragment extends Fragment {
             loadUserProfileImage(firstLetter);
         }
     }
-
+    /**
+     * Loads the user's profile picture from the base64-encoded image or generates a default avatar.
+     *
+     * @param firstLetter The first letter of the user's name.
+     */
     private void loadUserProfileImage(String firstLetter) {
         User currentUser = getViewModel().getUser();
         if (currentUser != null && currentUser.getBase64Image() != null) {
@@ -217,7 +271,11 @@ public class ProfileFragment extends Fragment {
         }
         avatarImageView.setImageBitmap(ImageUtils.generateDefaultAvatar(firstLetter));
     }
-
+    /**
+     * Updates the name fields (first and last name) in the UI.
+     *
+     * @param fullName The full name to split into first and last name.
+     */
     private void updateNameFields(String fullName) {
         if (fullName == null || fullName.trim().isEmpty()) {
             firstNameTextView.setText("");
@@ -229,7 +287,9 @@ public class ProfileFragment extends Fragment {
         firstNameTextView.setText(parts[0]);
         lastNameTextView.setText(parts.length > 1 ? parts[1] : "");
     }
-
+    /**
+     * Displays a dialog to edit the user's name.
+     */
     private void showEditNameDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.fragment_edit_name, null);
         EditText firstNameInput = dialogView.findViewById(R.id.input_first_name);
@@ -267,7 +327,12 @@ public class ProfileFragment extends Fragment {
 
         dialog.show();
     }
-
+    /**
+     * Displays a dialog to edit the user's email address.
+     *
+     * <p>The dialog pre-fills the current email and allows the user to input a new email.
+     * If the input is valid and not empty, the new email is updated in the {@link UserViewModel}.</p>
+     */
     private void showEditEmailDialog() {
         View emailView = getLayoutInflater().inflate(R.layout.fragment_edit_email, null);
         TextView oldEmail = emailView.findViewById(R.id.textview_old_email);
@@ -287,7 +352,13 @@ public class ProfileFragment extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog to add or edit the user's phone number.
+     *
+     * <p>The dialog dynamically adjusts to show either an "Add Phone Number" or "Edit Phone Number"
+     * interface based on whether a phone number already exists. The input is validated before
+     * updating the {@link UserViewModel}.</p>
+     */
     private void addOrEditPhoneNumberDialog() {
         View pnumberView = getLayoutInflater().inflate(R.layout.fragment_pnumber, null);
 
@@ -326,12 +397,20 @@ public class ProfileFragment extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Retrieves the first letter of the user's first name.
+     *
+     * @return The first letter, or "A" if the name is empty.
+     */
     private String getFirstLetterOfName() {
         String firstName = firstNameTextView.getText().toString();
         return !firstName.isEmpty() ? firstName.substring(0, 1).toUpperCase() : "A";
     }
-
+    /**
+     * Gets the current {@link UserViewModel}, initializing it if necessary.
+     *
+     * @return The current UserViewModel instance.
+     */
     private UserViewModel getViewModel() {
         if (userViewModel == null) {
             @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(

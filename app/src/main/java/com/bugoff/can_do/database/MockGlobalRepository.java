@@ -17,8 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A mock/test implementation of GlobalRepository for testing purposes that stores data in memory instead of Firebase.
- * Avoids making actual Firebase connections by storing data in memory.
- * This class is only meant to be used for testing purposes.
+ * Designed to avoid actual Firebase connections by using in-memory storage for test data.
  */
 @VisibleForTesting(otherwise = VisibleForTesting.NONE)
 public class MockGlobalRepository extends GlobalRepository {
@@ -35,21 +34,33 @@ public class MockGlobalRepository extends GlobalRepository {
     }
 
     // Override methods that interact with Firebase
-
+    /**
+     * Overrides to return null as Firebase is not used in the mock implementation.
+     */
     @NonNull
     @Override
     public FirebaseFirestore getDb() {
         // Return null since we won't be using actual Firebase
         return null;
     }
-
+    /**
+     * Adds a user to the in-memory storage.
+     *
+     * @param user The {@link User} to add.
+     * @return A {@link Task} representing the success of the operation.
+     */
     @NonNull
     public static Task<Void> addUser(@NonNull User user) {
         MockGlobalRepository instance = getInstance();
         instance.mockUsers.put(user.getId(), user);
         return Tasks.forResult(null);
     }
-
+    /**
+     * Retrieves a user from in-memory storage by their ID.
+     *
+     * @param androidId The ID of the user to retrieve.
+     * @return A {@link Task} containing the user or an exception if not found.
+     */
     @NonNull
     public static Task<User> getUser(String androidId) {
         MockGlobalRepository instance = getInstance();
@@ -59,7 +70,12 @@ public class MockGlobalRepository extends GlobalRepository {
         }
         return Tasks.forException(new Exception("User not found"));
     }
-
+    /**
+     * Adds a facility to the in-memory storage and updates its owner.
+     *
+     * @param facility The {@link Facility} to add.
+     * @return A {@link Task} representing the success of the operation.
+     */
     @NonNull
     public static Task<Void> addFacility(@NonNull Facility facility) {
         MockGlobalRepository instance = getInstance();
@@ -73,7 +89,12 @@ public class MockGlobalRepository extends GlobalRepository {
 
         return Tasks.forResult(null);
     }
-
+    /**
+     * Retrieves a facility from in-memory storage by its ID.
+     *
+     * @param facilityId The ID of the facility to retrieve.
+     * @return A {@link Task} containing the facility or an exception if not found.
+     */
     @NonNull
     public static Task<Facility> getFacility(String facilityId) {
         MockGlobalRepository instance = getInstance();
@@ -83,11 +104,20 @@ public class MockGlobalRepository extends GlobalRepository {
         }
         return Tasks.forException(new Exception("Facility not found"));
     }
-
+    /**
+     * Retrieves all facilities as an unmodifiable map.
+     *
+     * @return A map of all facilities in memory.
+     */
     public Map<String, Facility> getFacilities() {
         return Collections.unmodifiableMap(mockFacilities);
     }
-
+    /**
+     * Adds an event to the in-memory storage and updates its facility's event list.
+     *
+     * @param event The {@link Event} to add.
+     * @return A {@link Task} representing the success of the operation.
+     */
     @NonNull
     public static Task<Void> addEvent(@NonNull Event event) {
         MockGlobalRepository instance = getInstance();
@@ -101,7 +131,12 @@ public class MockGlobalRepository extends GlobalRepository {
 
         return Tasks.forResult(null);
     }
-
+    /**
+     * Retrieves an event from in-memory storage by its ID.
+     *
+     * @param eventId The ID of the event to retrieve.
+     * @return A {@link Task} containing the event or an exception if not found.
+     */
     @NonNull
     public static Task<Event> getEvent(String eventId) {
         MockGlobalRepository instance = getInstance();
@@ -111,14 +146,20 @@ public class MockGlobalRepository extends GlobalRepository {
         }
         return Tasks.forException(new Exception("Event not found"));
     }
-
+    /**
+     * Adds a notification to the in-memory storage.
+     *
+     * @param notification The {@link Notification} to add.
+     */
     public static void addNotification(Notification notification) {
         MockGlobalRepository instance = getInstance();
         instance.mockNotifications.put(notification.getId(), notification);
     }
 
     // Helper methods for testing
-
+    /**
+     * Clears all in-memory data for users, facilities, events, and notifications.
+     */
     public void clearAllData() {
         mockUsers.clear();
         mockFacilities.clear();
@@ -128,7 +169,11 @@ public class MockGlobalRepository extends GlobalRepository {
 
     // Singleton pattern for the mock repository
     private static MockGlobalRepository instance;
-
+    /**
+     * Retrieves the singleton instance of the mock repository.
+     *
+     * @return The singleton instance.
+     */
     public static synchronized MockGlobalRepository getInstance() {
         if (instance == null) {
             instance = new MockGlobalRepository();
@@ -137,6 +182,9 @@ public class MockGlobalRepository extends GlobalRepository {
     }
 
     // Method to reset the instance (useful between tests)
+    /**
+     * Resets the singleton instance, clearing all data.
+     */
     public static void resetInstance() {
         if (instance != null) {
             instance.clearAllData();

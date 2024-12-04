@@ -29,7 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Fragment for displaying and managing event details for entrants.
+ *
+ * <p>This fragment allows users to view detailed information about an event,
+ * join or leave the event's waiting list, share the event details, and view
+ * the event location on a map. It uses {@link EventViewModel} to interact with
+ * the event data.</p>
+ */
 public class EventDetailsFragmentEntrant extends Fragment {
     private static final String TAG = "EventDetailsFragmentEntrant";
     private TextView eventNameTextView;
@@ -42,7 +49,12 @@ public class EventDetailsFragmentEntrant extends Fragment {
     private String eventName;
     private String eventId;
     private static final String ARG_EVENT_ID = "selected_event_id";
-
+    /**
+     * Creates a new instance of {@code EventDetailsFragmentEntrant} with the specified event ID.
+     *
+     * @param eventId The ID of the event to display.
+     * @return A new instance of the fragment.
+     */
     public static EventDetailsFragmentEntrant newInstance(String eventId) {
         EventDetailsFragmentEntrant fragment = new EventDetailsFragmentEntrant();
         Bundle args = new Bundle();
@@ -50,7 +62,14 @@ public class EventDetailsFragmentEntrant extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Called to create and return the view hierarchy for the fragment.
+     *
+     * @param inflater  The LayoutInflater object to use for inflating the layout.
+     * @param container The parent view that the fragment's UI will be attached to.
+     * @param savedInstanceState The previously saved state, if any.
+     * @return The root view for the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,7 +109,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
 
         return view;
     }
-
+    /**
+     * Fetches event details from the repository and updates the UI.
+     *
+     * @param eventId The ID of the event to fetch.
+     */
     private void fetchEventDetails(String eventId) {
         Log.d("EventDetailsEntrant", "Fetching event details for: " + eventId);
         GlobalRepository.getEvent(eventId)
@@ -133,7 +156,9 @@ public class EventDetailsFragmentEntrant extends Fragment {
                 });
         Log.d("TAG", "Finished fetchEventDetails for: " + eventId);
     }
-
+    /**
+     * Opens the map application to display the event location.
+     */
     private void openMapToLocation() {
         if (eventLocation != null && !eventLocation.isEmpty()) {
             Uri geoLocation = Uri.parse("geo:0,0?q=" + Uri.encode(eventLocation));
@@ -148,7 +173,9 @@ public class EventDetailsFragmentEntrant extends Fragment {
             Toast.makeText(requireContext(), "Event location not available", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Shares the event details via a share intent.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -159,7 +186,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
-
+    /**
+     * Adds the current user to the waiting list for the event.
+     *
+     * @param viewModel The {@link EventViewModel} instance managing the event data.
+     */
     public void joinWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {
@@ -203,7 +234,12 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     Toast.makeText(requireContext(), "Failed to check event requirements", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Proceeds with adding the current user to the waiting list.
+     *
+     * @param viewModel   The {@link EventViewModel} instance managing the event data.
+     * @param currentUser The current user joining the waiting list.
+     */
     private void proceedWithJoining(EventViewModel viewModel, User currentUser) {
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
@@ -221,7 +257,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Removes the current user from the waiting list for the event.
+     *
+     * @param viewModel The {@link EventViewModel} instance managing the event data.
+     */
     public void leaveWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {

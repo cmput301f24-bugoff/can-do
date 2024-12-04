@@ -46,6 +46,11 @@ import java.io.IOException;
 
 /**
  * Fragment for the user profile screen.
+ *
+ * <p>This fragment allows the user to view and update their profile information, including
+ * name, email, and phone number. Users can also manage their profile picture and navigate
+ * to related activities such as notifications, organizer, or admin screens. The fragment
+ * observes changes in the user's data and updates the UI accordingly.</p>
  */
 public class UserProfileActivity extends Fragment {
     private User user;
@@ -53,7 +58,11 @@ public class UserProfileActivity extends Fragment {
     private String currEmail;
     private String currPNumber;
     private Uri cameraPicUri;
-
+    /**
+     * Initializes the fragment, setting up the UserViewModel from the parent activity or directly if unavailable.
+     *
+     * @param savedInstanceState The saved state of the fragment, if any.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +85,14 @@ public class UserProfileActivity extends Fragment {
             Toast.makeText(getContext(), "Error initializing profile", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Inflates the profile screen layout and initializes view components.
+     *
+     * @param inflater  The LayoutInflater for inflating the fragment's view.
+     * @param container The parent container.
+     * @param savedInstanceState The saved state of the fragment, if any.
+     * @return The root view of the profile screen.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -126,7 +142,13 @@ public class UserProfileActivity extends Fragment {
         setupClickListeners(view, firstName, lastName, (ImageButton) avatar);
         return view;
     }
-
+    /**
+     * Updates the UI fields for the user's first and last name.
+     *
+     * @param fullName  The full name of the user.
+     * @param firstName The TextView for the first name.
+     * @param lastName  The TextView for the last name.
+     */
     private void updateNameFields(String fullName, TextView firstName, TextView lastName) {
         if (fullName == null || fullName.trim().isEmpty()) {
             firstName.setText("");
@@ -138,7 +160,15 @@ public class UserProfileActivity extends Fragment {
         firstName.setText(parts[0]);
         lastName.setText(parts.length > 1 ? parts[1] : "");
     }
-
+    /**
+     * Sets up click listeners for various profile actions such as editing name, email, phone number,
+     * and profile picture.
+     *
+     * @param view      The root view of the fragment.
+     * @param firstName The TextView for the first name.
+     * @param lastName  The TextView for the last name.
+     * @param avatar    The ImageView for the profile picture.
+     */
     private void setupClickListeners(View view, TextView firstName, TextView lastName, ImageButton avatar) {
         view.findViewById(R.id.name_button).setOnClickListener(v ->
                 editNameDialog(firstName, lastName));
@@ -165,7 +195,11 @@ public class UserProfileActivity extends Fragment {
         // Set up avatar click listener
         setupAvatarClickListener(view);
     }
-
+    /**
+     * Sets up the click listener for the profile picture.
+     *
+     * @param view The root view of the fragment.
+     */
     private void setupAvatarClickListener(View view) {
         ImageView avatar = view.findViewById(R.id.image_avatar);
         avatar.setOnClickListener(v -> {
@@ -196,10 +230,10 @@ public class UserProfileActivity extends Fragment {
     }
 
     /**
-     * Helper for generating default avatar when custom avatar is removed
+     * Generates a default avatar bitmap with the user's initial.
      *
-     * @param letter First letter of user's name
-     * @return Bitmap of default avatar
+     * @param letter The first letter of the user's name.
+     * @return A Bitmap representing the default avatar.
      */
     // Helper for generating default avatar when custom avatar is removed
     private Bitmap generateAvatar(String letter) {
@@ -288,7 +322,12 @@ public class UserProfileActivity extends Fragment {
                 }
             }
     );
-
+    /**
+     * Loads the user's profile picture from Firestore or generates a default avatar.
+     *
+     * @param avatar     The ImageView to update.
+     * @param firstLetter The first letter of the user's name.
+     */
     private void loadUserProfileImage(ImageView avatar, String firstLetter) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser != null && currentUser.getBase64Image() != null) {
@@ -366,15 +405,29 @@ public class UserProfileActivity extends Fragment {
         String name = firstNameTxt.getText().toString() + " " + lastNameTxt.getText().toString();
         userViewModel.setName(name);
     }
-
+    /**
+     * Saves the user's email to the ViewModel.
+     *
+     * @param email The new email address to save.
+     */
     private void saveUserEmail(String email) {
         userViewModel.setEmail(email);
     }
-
+    /**
+     * Saves the user's phone number to the ViewModel.
+     *
+     * @param pnumber The new phone number to save.
+     */
     private void saveUserPNumber(String pnumber) {
         userViewModel.setPhoneNumber(pnumber);
     }
-
+    /**
+     * Displays a dialog to edit the user's name. Pre-fills the current first and last name,
+     * validates the input, and updates the ViewModel and UI upon confirmation.
+     *
+     * @param firstName The TextView displaying the user's first name.
+     * @param lastName  The TextView displaying the user's last name.
+     */
     private void editNameDialog(TextView firstName, TextView lastName) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View nameView = inflater.inflate(R.layout.fragment_edit_name, null);
@@ -424,7 +477,10 @@ public class UserProfileActivity extends Fragment {
 
         dialog.show();
     }
-
+    /**
+     * Displays a dialog to edit the user's email address. Pre-fills the current email
+     * and updates the ViewModel upon confirmation.
+     */
     private void editEmailDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View emailView = inflater.inflate(R.layout.fragment_edit_email, null);
@@ -446,7 +502,9 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog for adding or editing the user's phone number. Updates the ViewModel upon confirmation.
+     */
     private void addOrEditPhoneNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -480,7 +538,9 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog for adding a new phone number.
+     */
     private void addPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -498,7 +558,9 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Displays a dialog for editing the user's phone number. Pre-fills the current phone number.
+     */
     private void editPNumberDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View pnumberView = inflater.inflate(R.layout.fragment_pnumber, null);
@@ -524,7 +586,13 @@ public class UserProfileActivity extends Fragment {
                 .create()
                 .show();
     }
-
+    /**
+     * Updates the visibility of the "Add Phone Number" and "Edit Phone Number" buttons based on
+     * the current phone number state.
+     *
+     * @param view       The root view of the fragment.
+     * @param phoneNumber The current phone number of the user.
+     */
     private void updatePhoneNumberButtonVisibility(View view, String phoneNumber) {
         View addButton = view.findViewById(R.id.add_pnumber_button);
         View editButton = view.findViewById(R.id.edit_pnumber_button);
@@ -539,7 +607,11 @@ public class UserProfileActivity extends Fragment {
     }
 
     /**
-     * Helper for setting up admin button
+     * Configures the admin button to be visible if the user is an admin, and sets its click
+     * listener to navigate to the AdminActivity.
+     *
+     * @param view    The root view of the fragment.
+     * @param isAdmin The admin status of the user.
      */
     private void setupAdminButton(View view, Boolean isAdmin) {
         Button adminButton = view.findViewById(R.id.admin_button);

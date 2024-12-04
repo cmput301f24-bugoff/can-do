@@ -117,6 +117,7 @@
                   <entry key="Medium_Phone_API_35" value="120" />
                   <entry key="Pixel_8a_API_35" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="loc_test" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
@@ -131,6 +132,7 @@
                   <entry key="Medium_Phone_API_35" value="120" />
                   <entry key="Pixel_8a_API_35" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="loc_test" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
