@@ -144,4 +144,11 @@ public class ImageUtils {
 
         return bitmap;
     }
+
+    public static float calculateScaleForDimensions(int width, int height) {
+        return Math.min(
+                ((float) MAX_DIMENSION) / width,
+                ((float) MAX_DIMENSION) / height
+        );
+    }
 }

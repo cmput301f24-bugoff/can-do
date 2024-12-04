@@ -266,7 +266,7 @@ public class AndroidUITest {
         assertNotNull("Facility should exist", facility);
 
         // Wait for the event to be created and added to the facility
-        SystemClock.sleep(1000); // Give time for async operations
+        SystemClock.sleep(1000);
 
         // Verify event details
         assertEquals("Facility should have 1 event", 1, facility.getEvents().size());
@@ -512,7 +512,6 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> organizerMainScenario = ActivityScenario.launch(OrganizerMain.class);
         organizerMainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        // Give time for the UI to update
         SystemClock.sleep(1000);
 
         // Click on the event to view details
@@ -521,7 +520,6 @@ public class AndroidUITest {
         // Navigate to waitlist and perform draw
         onView(withId(R.id.view_watch_list)).perform(click());
 
-        // Give time for the waitlist to load
         SystemClock.sleep(1000);
 
         // Verify the entrant is in the waitlist
@@ -534,7 +532,6 @@ public class AndroidUITest {
                 .perform(typeText("1"), closeSoftKeyboard());
         onView(withText("Draw")).perform(click());
 
-        // Give time for the draw to process
         SystemClock.sleep(1000);
 
         // Go back to event details
@@ -543,7 +540,6 @@ public class AndroidUITest {
         // Check selected entrants list
         onView(withId(R.id.view_selected_list)).perform(click());
 
-        // Give time for the selected list to load
         SystemClock.sleep(1000);
 
         // Verify the entrant is in the selected list
@@ -622,7 +618,6 @@ public class AndroidUITest {
         // Create the event
         onView(withId(R.id.buttonCreateEvent)).perform(click());
 
-        // Wait for the event to be created
         SystemClock.sleep(1000);
 
         // Get the created event
@@ -857,7 +852,6 @@ public class AndroidUITest {
         // Create the event
         onView(withId(R.id.buttonCreateEvent)).perform(click());
 
-        // Wait for the event to be created
         SystemClock.sleep(1000);
 
         // Get the created event
