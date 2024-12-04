@@ -3,10 +3,10 @@ package com.bugoff.can_do;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.bugoff.can_do.testmodels.TestEvent;
-import com.bugoff.can_do.testmodels.TestFacility;
-import com.bugoff.can_do.testmodels.TestNoOpDatabaseBehavior;
-import com.bugoff.can_do.testmodels.TestUser;
+import com.bugoff.can_do.testclasses.TestEvent;
+import com.bugoff.can_do.testclasses.TestFacility;
+import com.bugoff.can_do.testclasses.TestNoOpDatabaseBehavior;
+import com.bugoff.can_do.testclasses.TestUser;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +36,7 @@ class NoOpDatabaseBehaviorTest {
         testEvent.setDescription("Test Description");
     }
 
+    @Test
     void testMultipleUsersAndRetrieval() throws Exception {
         TestUser user1 = new TestUser("user-1");
         user1.setName("User One");

@@ -1,4 +1,4 @@
-package com.bugoff.can_do.testmodels;
+package com.bugoff.can_do.testclasses;
 
 import java.util.HashMap;
 import java.util.Map;

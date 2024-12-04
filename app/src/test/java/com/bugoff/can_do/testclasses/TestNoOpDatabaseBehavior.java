@@ -1,8 +1,10 @@
-package com.bugoff.can_do.testmodels;
+package com.bugoff.can_do.testclasses;
 
 import java.util.HashMap;
 import java.util.Map;
 
+
+// Test models are stripped down versions of the models used in the app. They are used in tests to avoid the need for a real database or any interaction with Android components.
 public class TestNoOpDatabaseBehavior {
     private final Map<String, TestUser> users = new HashMap<>();
     private final Map<String, TestFacility> facilities = new HashMap<>();
