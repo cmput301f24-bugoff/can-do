@@ -20,12 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.database.NoOpDatabaseBehavior;
 import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.event.EventAdapter;
 import com.bugoff.can_do.notification.NotificationSettingsActivity;
 import com.bugoff.can_do.notification.NotificationsFragment;
 import com.bugoff.can_do.user.AcceptDeclineFragment;
 import com.bugoff.can_do.user.EventDetailsFragmentEntrant;
+import com.bugoff.can_do.user.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -56,13 +58,63 @@ public class HomeActivity extends Fragment {
         eventsListView = view.findViewById(R.id.hs_events_list);
 
         eventsAdapter = new EventAdapter(new ArrayList<>(), false, false, null, event -> handleEventClick(event), true);
-//        eventsAdapter.setOnItemClickListener(this);
         eventsListView.setAdapter(eventsAdapter);
         eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        String userId = GlobalRepository.getLoggedInUser().getId();
+        User currentUser = GlobalRepository.getLoggedInUser();
+        String userId = currentUser.getId();
+        Log.d(TAG, "HomeActivity starting for user: " + userId);
+        Log.d(TAG, "User events joined: " + currentUser.getEventsJoined());
 
-        if (!GlobalRepository.isInTestMode()) {
+        if (GlobalRepository.isInTestMode()) {
+            User user = GlobalRepository.getLoggedInUser();
+            Log.d(TAG, "Test Mode - Current user: " + user.getId());
+            Log.d(TAG, "Test Mode - Checking events from Repository");
+
+            List<String> eventsJoined = user.getEventsJoined();
+            Log.d(TAG, "Test Mode - Events joined from user: " + eventsJoined);
+
+            // Double check against test behavior
+            NoOpDatabaseBehavior behavior = (NoOpDatabaseBehavior) GlobalRepository.getBehavior();
+            User storedUser = behavior.getUser(user.getId()).getResult();
+            if (storedUser != null) {
+                Log.d(TAG, "Test Mode - Events joined from storage: " + storedUser.getEventsJoined());
+                // Use the stored user's events if available
+                eventsJoined = storedUser.getEventsJoined();
+            }
+
+            if (eventsJoined != null && !eventsJoined.isEmpty()) {
+                // Get events from test behavior
+                List<Event> validEvents = new ArrayList<>();
+                for (String eventId : eventsJoined) {
+                    try {
+                        Log.d(TAG, "Test Mode - Fetching event: " + eventId);
+                        Event event = behavior.getEvent(eventId).getResult();
+                        if (event != null) {
+                            Log.d(TAG, "Test Mode - Found event: " + event.getName());
+                            validEvents.add(event);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Test Mode - Error fetching event: " + eventId, e);
+                    }
+                }
+
+                if (!validEvents.isEmpty()) {
+                    Log.d(TAG, "Test Mode - Setting " + validEvents.size() + " events to adapter");
+                    eventsAdapter.setEventList(validEvents);
+                    defaultSubtitle.setVisibility(View.GONE);
+                    getStartedText.setVisibility(View.GONE);
+                    arrowDown.setVisibility(View.GONE);
+                    eventsListView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d(TAG, "Test Mode - No valid events found");
+                    showEmptyState();
+                }
+            } else {
+                Log.d(TAG, "Test Mode - No events joined");
+                showEmptyState();
+            }
+        } else {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             DocumentReference userDoc = db.collection("users").document(userId);
 
@@ -84,12 +136,6 @@ public class HomeActivity extends Fragment {
             }).addOnFailureListener(e -> {
                 Toast.makeText(getContext(), "Failed to load events.", Toast.LENGTH_SHORT).show();
             });
-        } else {
-            // In test mode, just show empty state
-            defaultSubtitle.setVisibility(View.VISIBLE);
-            getStartedText.setVisibility(View.VISIBLE);
-            arrowDown.setVisibility(View.VISIBLE);
-            eventsListView.setVisibility(View.GONE);
         }
 
         // Functionality of notifications button on HomeScreen
@@ -183,44 +229,49 @@ public class HomeActivity extends Fragment {
      */
     private void fetchEventDetails(List<String> eventIds) {
         if (eventIds == null || eventIds.isEmpty()) {
-            Log.d(TAG, "No event IDs to fetch");
+            Log.d(TAG, "fetchEventDetails - No event IDs to fetch");
             showEmptyState();
             return;
         }
 
-        Log.d(TAG, "Starting to fetch " + eventIds.size() + " events");
+        Log.d(TAG, "fetchEventDetails - Starting to fetch " + eventIds.size() + " events");
         List<Event> validEvents = Collections.synchronizedList(new ArrayList<>());
         AtomicInteger processedCount = new AtomicInteger(0);
 
         for (String eventId : eventIds) {
             if (eventId == null || eventId.trim().isEmpty()) {
-                Log.w(TAG, "Skipping null or empty event ID");
+                Log.w(TAG, "fetchEventDetails - Skipping null or empty event ID");
                 if (processedCount.incrementAndGet() == eventIds.size()) {
                     updateUI(validEvents);
                 }
                 continue;
             }
 
-            Log.d(TAG, "Fetching event: " + eventId);
+            Log.d(TAG, "fetchEventDetails - Fetching event: " + eventId);
             GlobalRepository.getEvent(eventId)
                     .addOnSuccessListener(event -> {
                         if (event != null) {
-                            Log.d(TAG, "Successfully fetched event: " + eventId);
+                            Log.d(TAG, "fetchEventDetails - Successfully fetched event: " + event.getName());
                             validEvents.add(event);
-                            updateUI(validEvents);
+
+                            // Update UI immediately when we get at least one event
+                            if (validEvents.size() == 1) {
+                                Log.d(TAG, "fetchEventDetails - First event received, updating UI");
+                                hideEmptyState();
+                                eventsAdapter.setEventList(new ArrayList<>(validEvents));
+                            }
                         } else {
-                            Log.w(TAG, "Event was null for ID: " + eventId);
+                            Log.w(TAG, "fetchEventDetails - Event was null for ID: " + eventId);
                         }
 
                         if (processedCount.incrementAndGet() == eventIds.size()) {
-                            Log.d(TAG, "All events processed. Valid events: " + validEvents.size());
+                            Log.d(TAG, "fetchEventDetails - All events processed. Valid events: " + validEvents.size());
                             updateUI(validEvents);
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to fetch event: " + eventId, e);
+                        Log.e(TAG, "fetchEventDetails - Failed to fetch event: " + eventId, e);
                         if (processedCount.incrementAndGet() == eventIds.size()) {
-                            Log.d(TAG, "All events processed after failure. Valid events: " + validEvents.size());
                             updateUI(validEvents);
                         }
                     });
@@ -233,16 +284,18 @@ public class HomeActivity extends Fragment {
      */
     private void updateUI(List<Event> events) {
         if (getActivity() == null || !isAdded()) {
-            Log.w(TAG, "Fragment not attached, skipping UI update");
+            Log.w(TAG, "updateUI - Fragment not attached, skipping update");
             return;
         }
 
+        Log.d(TAG, "updateUI - Updating with " + events.size() + " events");
+
         getActivity().runOnUiThread(() -> {
             if (events.isEmpty()) {
-                Log.d(TAG, "No valid events to display, showing empty state");
+                Log.d(TAG, "updateUI - No events, showing empty state");
                 showEmptyState();
             } else {
-                Log.d(TAG, "Displaying " + events.size() + " events");
+                Log.d(TAG, "updateUI - Has events, showing list");
                 hideEmptyState();
                 eventsAdapter.setEventList(new ArrayList<>(events));
             }
@@ -265,13 +318,21 @@ public class HomeActivity extends Fragment {
      * Hides the empty state for the Home screen.
      */
     private void hideEmptyState() {
-        if (getActivity() == null || !isAdded()) return;
+        Log.d(TAG, "hideEmptyState called");
+        defaultSubtitle.setVisibility(View.GONE);
+        getStartedText.setVisibility(View.GONE);
+        arrowDown.setVisibility(View.GONE);
+        eventsListView.setVisibility(View.VISIBLE);
+        Log.d(TAG, "hideEmptyState - RecyclerView visibility: " + eventsListView.getVisibility());
 
-        getActivity().runOnUiThread(() -> {
-            defaultSubtitle.setVisibility(View.GONE);
-            getStartedText.setVisibility(View.GONE);
-            arrowDown.setVisibility(View.GONE);
-            eventsListView.setVisibility(View.VISIBLE);
-        });
+//        if (getActivity() == null || !isAdded()) return;
+//
+//        getActivity().runOnUiThread(() -> {
+//            Log.d(TAG, "hideEmptyState - Setting list visible");
+//            defaultSubtitle.setVisibility(View.GONE);
+//            getStartedText.setVisibility(View.GONE);
+//            arrowDown.setVisibility(View.GONE);
+//            eventsListView.setVisibility(View.VISIBLE);
+//        });
     }
 }

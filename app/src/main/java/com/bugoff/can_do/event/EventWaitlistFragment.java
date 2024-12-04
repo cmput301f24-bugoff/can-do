@@ -25,8 +25,6 @@ import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.notification.Notification;
 import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserAdapter;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,10 +94,10 @@ public class EventWaitlistFragment extends Fragment {
      * @param numberToDraw The number of users to randomly select from the waitlist.
      */
     private void performDrawing(int numberToDraw) {
-        // Randomly select users from the waitlist
         Random random = new Random();
         List<User> selectedUsers = new ArrayList<>();
         List<String> remainingUserIds = new ArrayList<>();
+
         for (int i = 0; i < numberToDraw && !userList.isEmpty(); i++) {
             int randomIndex = random.nextInt(userList.size());
             User selectedUser = userList.get(randomIndex);
@@ -108,76 +106,47 @@ public class EventWaitlistFragment extends Fragment {
             Log.d(TAG, "performDrawing: " + selectedUser.getId() + " selected");
             userAdapter.notifyItemRemoved(randomIndex);
         }
+
         for (User user : userList) {
             remainingUserIds.add(user.getId());
         }
+
         if (userList.isEmpty()) {
-            // Handle empty state if necessary
             Log.d(TAG, "Observer: userList is empty");
         }
 
-        // Update Firestore document
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("events").document(eventId);
+        // Get current event
+        GlobalRepository.getEvent(eventId).addOnSuccessListener(event -> {
+            if (event != null) {
+                // Move users from waitlist to selected
+                List<String> selectedUserIds = new ArrayList<>();
+                for (User selectedUser : selectedUsers) {
+                    String userId = selectedUser.getId();
+                    selectedUserIds.add(userId);
+                    event.removeWaitingListEntrant(userId);
+                    event.addSelectedEntrant(userId);
+                }
 
-        // Fetch current lists and update
-        docRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                List<String> waitingListEntrants = (List<String>) documentSnapshot.get("waitingListEntrants");
-                List<String> selectedEntrants = (List<String>) documentSnapshot.get("selectedEntrants");
-
-                // Prepare to move users from waitingList to selected
-                if (waitingListEntrants != null && selectedEntrants != null) {
-                    List<String> selectedUserIds = new ArrayList<>();
-
-                    // Gather selected user IDs and remove from waiting list
-                    for (User selectedUser : selectedUsers) {
-                        String userId = selectedUser.getId();
-                        selectedUserIds.add(userId);
-                        waitingListEntrants.remove(userId);
-                    }
-                    // Add selected users to selectedEntrants list
-                    selectedEntrants.addAll(selectedUserIds);
-
-                    // Update Firestore document with new lists
-                    docRef.update("waitingListEntrants", waitingListEntrants, "selectedEntrants", selectedEntrants)
+                if (GlobalRepository.isInTestMode()) {
+                    // In test mode, just update the mock repository
+                    GlobalRepository.addEvent(event)
                             .addOnSuccessListener(aVoid -> {
-                                Log.d(TAG, "Drawing completed and lists updated");
-
-                                // Create and send notification to newly selected users
-                                if (!selectedUserIds.isEmpty()) {
-                                    String uniqueId = UUID.randomUUID().toString();
-                                    Notification notification = new Notification(
-                                            uniqueId,
-                                            "Selection Update",
-                                            "You have been selected to participate!",
-                                            documentSnapshot.getString("facilityId"),
-                                            new ArrayList<>(selectedUserIds),
-                                            eventId
-                                    );
-                                    GlobalRepository.addNotification(notification);
-                                }
-                                if (!remainingUserIds.isEmpty()) {
-                                    String uniqueId = UUID.randomUUID().toString();
-                                    Notification notification = new Notification(
-                                            uniqueId,
-                                            "Selection Update",
-                                            "Unfortunately, you were not selected this time. Stay tuned for future opportunities!",
-                                            documentSnapshot.getString("facilityId"),
-                                            new ArrayList<>(remainingUserIds),
-                                            eventId
-                                    );
-                                    GlobalRepository.addNotification(notification);
-                                }
-                            })
-                            .addOnFailureListener(e -> Log.e(TAG, "Error updating Firestore lists", e));
+                                sendNotifications(event, selectedUserIds, remainingUserIds);
+                                Toast.makeText(getContext(),
+                                        "Successfully selected " + numberToDraw + " users.",
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    // In production mode, update Firestore
+                    event.setRemote();
+                    sendNotifications(event, selectedUserIds, remainingUserIds);
+                    Toast.makeText(getContext(),
+                            "Successfully selected " + numberToDraw + " users.",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
-        }).addOnFailureListener(e -> Log.e(TAG, "Failed to retrieve document", e));
-
-        Toast.makeText(getContext(), "Successfully selected " + numberToDraw + " users.", Toast.LENGTH_SHORT).show();
+        });
     }
-
 
     /**
      * Initializes views, sets up the RecyclerView and ViewModel, and observes data changes for the waitlist users.
@@ -199,6 +168,10 @@ public class EventWaitlistFragment extends Fragment {
         // Initialize ViewModel using factory with the event ID
         EventViewModelFactory factory = new EventViewModelFactory(eventId);
         viewModel = new ViewModelProvider(this, factory).get(EventViewModel.class);
+
+        if (GlobalRepository.isInTestMode()) {
+            progressBar.setVisibility(View.GONE);
+        }
 
         // Initialize adapter with default settings first
         userAdapter = new UserAdapter(userList, null, false, false);
@@ -289,6 +262,36 @@ public class EventWaitlistFragment extends Fragment {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    private void sendNotifications(Event event, List<String> selectedUserIds, List<String> remainingUserIds) {
+        // Send notification to selected users
+        if (!selectedUserIds.isEmpty()) {
+            String uniqueId = UUID.randomUUID().toString();
+            Notification notification = new Notification(
+                    uniqueId,
+                    "Selection Update",
+                    "You have been selected to participate!",
+                    event.getFacility().getId(),
+                    new ArrayList<>(selectedUserIds),
+                    event.getId()
+            );
+            GlobalRepository.addNotification(notification);
+        }
+
+        // Send notification to remaining users
+        if (!remainingUserIds.isEmpty()) {
+            String uniqueId = UUID.randomUUID().toString();
+            Notification notification = new Notification(
+                    uniqueId,
+                    "Selection Update",
+                    "Unfortunately, you were not selected this time. Stay tuned for future opportunities!",
+                    event.getFacility().getId(),
+                    new ArrayList<>(remainingUserIds),
+                    event.getId()
+            );
+            GlobalRepository.addNotification(notification);
+        }
     }
 }
 

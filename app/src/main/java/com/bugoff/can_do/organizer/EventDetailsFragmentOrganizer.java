@@ -30,15 +30,15 @@ import com.bugoff.can_do.ImageUtils;
 import com.bugoff.can_do.R;
 import com.bugoff.can_do.admin.AdminActivity;
 import com.bugoff.can_do.database.GlobalRepository;
+import com.bugoff.can_do.database.NoOpDatabaseBehavior;
+import com.bugoff.can_do.event.Event;
 import com.bugoff.can_do.event.EventCancelledFragment;
 import com.bugoff.can_do.event.EventEnrolledFragment;
 import com.bugoff.can_do.event.EventSelectedFragment;
 import com.bugoff.can_do.event.EventWaitlistFragment;
+import com.bugoff.can_do.facility.Facility;
 import com.bugoff.can_do.notification.SendNotificationFragment;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -46,8 +46,13 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 /**
- * Fragment for displaying event details to organizers. Allows organizers to view and manage event details.
+ * Fragment for displaying and managing event details for organizers.
+ *
+ * <p>This fragment allows organizers to view detailed information about an event, manage its
+ * associated resources (e.g., QR codes, images, geolocation settings), and perform various
+ * operations such as sharing event details, sending notifications, and viewing event participant lists.</p>
  */
 public class EventDetailsFragmentOrganizer extends Fragment {
     private FirebaseFirestore db;
@@ -66,9 +71,15 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private ActivityResultLauncher<Intent> cameraLauncher;
     private static final String ARG_EVENT_ID = "selected_event_id";
     private androidx.appcompat.widget.SwitchCompat geolocationToggle;
+    private NoOpDatabaseBehavior testBehavior;
 
     private static final String TAG = "EventDetailsFragmentOrg";
-
+    /**
+     * Creates a new instance of {@code EventDetailsFragmentOrganizer} for the specified event ID.
+     *
+     * @param eventId The ID of the event to manage.
+     * @return A new instance of the fragment.
+     */
     public static EventDetailsFragmentOrganizer newInstance(String eventId) {
         EventDetailsFragmentOrganizer fragment = new EventDetailsFragmentOrganizer();
         Bundle args = new Bundle();
@@ -83,6 +94,11 @@ public class EventDetailsFragmentOrganizer extends Fragment {
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+
+        // Initialize test behavior if in test mode
+        if (GlobalRepository.isInTestMode()) {
+            testBehavior = (NoOpDatabaseBehavior) GlobalRepository.getBehavior();
+        }
 
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
@@ -202,80 +218,13 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private void fetchEventDetails(View rootView) {
         View progressBar = rootView.findViewById(R.id.progress_bar);
         View mainContent = rootView.findViewById(R.id.main_content);
+        progressBar.setVisibility(View.VISIBLE);
+        mainContent.setVisibility(View.GONE);
 
-        db.collection("events").document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Get all the basic event details first
-                        eventName = documentSnapshot.getString("name");
-                        eventDescription = documentSnapshot.getString("description");
-                        Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
-                        String imageUrl = documentSnapshot.getString("imageUrl");
-                        String qrCodeText = documentSnapshot.getString("qrCodeHash");
-
-                        // Update UI with the data we have
-                        eventNameTextView.setText(eventName != null ? eventName : "N/A");
-                        eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
-
-                        if (eventDateTimestamp != null) {
-                            Date eventDate = eventDateTimestamp.toDate();
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
-                            String formattedDate = dateFormat.format(eventDate);
-                            eventDateTextView.setText("Date: " + formattedDate);
-                        } else {
-                            eventDateTextView.setText("Date: N/A");
-                        }
-
-                        // Handle image
-                        String base64Image = documentSnapshot.getString("base64Image");
-                        if (base64Image != null) {
-                            Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
-                            if (bitmap != null) {
-                                eventImageView.setImageBitmap(bitmap);
-                            } else {
-                                eventImageView.setVisibility(View.GONE);
-                            }
-                        } else {
-                            eventImageView.setVisibility(View.GONE);
-                        }
-
-                        // Generate QR code if we have the hash
-                        if (qrCodeText != null) {
-                            generateQRCode(qrCodeText);
-                        }
-
-                        // Now get the facility details
-                        String facilityId = documentSnapshot.getString("facilityId");
-                        if (facilityId != null) {
-                            GlobalRepository.getFacility(facilityId)
-                                    .addOnSuccessListener(facility -> {
-                                        if (facility != null) {
-                                            eventLocation = facility.getAddress();
-                                            eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
-
-                                            // Now that we have everything, show the content
-                                            progressBar.setVisibility(View.GONE);
-                                            mainContent.setVisibility(View.VISIBLE);
-                                        } else {
-                                            handleError(rootView, "Facility not found");
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> handleError(rootView, "Failed to load facility details"));
-                        } else {
-                            handleError(rootView, "No facility ID found for event");
-                        }
-
-                        // Set geolocation toggle state
-                        Boolean geolocationRequired = documentSnapshot.getBoolean("geolocationRequired");
-                        geolocationToggle.setChecked(Boolean.TRUE.equals(geolocationRequired));
-
-                        // Setup toggle listener
-                        geolocationToggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                            updateGeolocationRequirement(isChecked);
-                        });
-
-                        // Now that we have everything, show the content
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        updateUI(event, rootView);
                         progressBar.setVisibility(View.GONE);
                         mainContent.setVisibility(View.VISIBLE);
                     } else {
@@ -314,6 +263,45 @@ public class EventDetailsFragmentOrganizer extends Fragment {
                     // Revert the toggle if update fails
                     geolocationToggle.setChecked(!required);
                 });
+    }
+    private void updateUI(Event event, View rootView) {
+        eventName = event.getName();
+        eventDescription = event.getDescription();
+        Facility facility = event.getFacility();
+        eventLocation = facility != null ? facility.getAddress() : "";
+
+        eventNameTextView.setText(eventName != null ? eventName : "N/A");
+        eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
+        eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
+
+        Date eventDate = event.getEventStartDate();
+        if (eventDate != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
+            String formattedDate = dateFormat.format(eventDate);
+            eventDateTextView.setText("Date: " + formattedDate);
+        } else {
+            eventDateTextView.setText("Date: N/A");
+        }
+
+        String base64Image = event.getBase64Image();
+        if (base64Image != null) {
+            Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
+            if (bitmap != null) {
+                eventImageView.setImageBitmap(bitmap);
+            } else {
+                eventImageView.setVisibility(View.GONE);
+            }
+        } else {
+            eventImageView.setVisibility(View.GONE);
+        }
+
+        String qrCodeText = event.getQrCodeHash();
+        if (qrCodeText != null) {
+            generateQRCode(qrCodeText);
+        }
+
+        Boolean geolocationRequired = event.getGeolocationRequired();
+        geolocationToggle.setChecked(Boolean.TRUE.equals(geolocationRequired));
     }
     /**
      * Sets up the image launchers for selecting images from gallery or camera.
@@ -465,11 +453,24 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private void deleteQrHash() {
         if (eventId == null) return;
 
-        db.collection("events").document(eventId)
-                .update("qrCodeHash", null)
-                .addOnSuccessListener(aVoid -> {
+        if (GlobalRepository.isInTestMode()) {
+            // Handle test mode
+            Event event = testBehavior.getEvent(eventId).getResult();
+            event.setQrCodeHash(null);
+            testBehavior.saveEvent(event);
+            Toast.makeText(requireContext(), "QR code deleted successfully", Toast.LENGTH_SHORT).show();
+            if (qrCodeImageView != null) {
+                qrCodeImageView.setImageDrawable(null);
+            }
+            return;
+        }
+
+        // Use GlobalRepository for production mode
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    event.setQrCodeHash(null);
+                    event.setRemote();
                     Toast.makeText(requireContext(), "QR code deleted successfully", Toast.LENGTH_SHORT).show();
-                    // Refresh QR code view
                     if (qrCodeImageView != null) {
                         qrCodeImageView.setImageDrawable(null);
                     }
@@ -497,75 +498,36 @@ public class EventDetailsFragmentOrganizer extends Fragment {
     private void deleteFacilityEvents() {
         if (eventId == null) return;
 
-        // First, get the facility ID and owner ID of the current event
-        db.collection("events").document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    String facilityId = documentSnapshot.getString("facilityId");
-                    if (facilityId == null) {
-                        Toast.makeText(requireContext(), "Facility ID not found", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+        if (GlobalRepository.isInTestMode()) {
+            // Handle test mode
+            Event event = testBehavior.getEvent(eventId).getResult();
+            Facility facility = event.getFacility();
+            facility.getEvents().clear();
+            testBehavior.addFacility(facility);
+            requireActivity().onBackPressed();
+            return;
+        }
 
-                    // Get the facility document to find its owner
-                    db.collection("facilities").document(facilityId)
-                            .get()
-                            .addOnSuccessListener(facilityDoc -> {
-                                String ownerId = facilityDoc.getString("ownerId");
-
-                                // Query all events with this facility ID
-                                db.collection("events")
-                                        .whereEqualTo("facilityId", facilityId)
-                                        .get()
-                                        .addOnSuccessListener(querySnapshot -> {
-                                            // Create a batch for all operations
-                                            WriteBatch batch = db.batch();
-
-                                            // Delete all events
-                                            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                                                batch.delete(db.collection("events").document(doc.getId()));
-                                            }
-
-                                            // Delete the facility document
-                                            batch.delete(db.collection("facilities").document(facilityId));
-
-                                            // Execute the batch
-                                            batch.commit()
-                                                    .addOnSuccessListener(aVoid -> {
-                                                        Toast.makeText(requireContext(),
-                                                                "Facility and all associated events deleted successfully",
-                                                                Toast.LENGTH_SHORT).show();
-                                                        // Return to previous screen
-                                                        requireActivity().onBackPressed();
-                                                    })
-                                                    .addOnFailureListener(e -> {
-                                                        Toast.makeText(requireContext(),
-                                                                "Failed to delete facility data: " + e.getMessage(),
-                                                                Toast.LENGTH_SHORT).show();
-                                                        Log.e(TAG, "Error in batch deletion", e);
-                                                    });
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(requireContext(),
-                                                    "Failed to query facility events: " + e.getMessage(),
-                                                    Toast.LENGTH_SHORT).show();
-                                            Log.e(TAG, "Error querying facility events", e);
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(requireContext(),
-                                        "Failed to get facility details: " + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                                Log.e(TAG, "Error getting facility details", e);
-                            });
+        // For production mode, use GlobalRepository methods
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    Facility facility = event.getFacility();
+                    // Clear facility events
+                    facility.getEvents().clear();
+                    facility.setRemote();
+                    Toast.makeText(requireContext(),
+                            "Facility and all associated events deleted successfully",
+                            Toast.LENGTH_SHORT).show();
+                    requireActivity().onBackPressed();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(),
-                            "Failed to get event details: " + e.getMessage(),
+                            "Failed to delete facility data: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error getting event details", e);
+                    Log.e(TAG, "Error in deletion", e);
                 });
     }
+
     /**
      * Opens the map to the event location.
      */

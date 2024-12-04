@@ -79,6 +79,9 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
+    testImplementation("org.mockito:mockito-core:5.3.1")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.3.1")
+
     dokkaPlugin(libs.kotlinAsJavaPlugin)
 
     androidTestImplementation("org.mockito:mockito-android:5.7.0")

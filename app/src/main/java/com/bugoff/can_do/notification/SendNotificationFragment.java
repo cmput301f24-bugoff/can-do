@@ -117,7 +117,7 @@ public class SendNotificationFragment extends Fragment {
 
                         // Send local notification
                         String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
+                        //sendLocalNotification(getContext(), eventTitle, message);
 
                         Toast.makeText(getContext(),
                                 "Notification sent to " + waitingListEntrants.size() + " waiting list entrants",
@@ -161,7 +161,7 @@ public class SendNotificationFragment extends Fragment {
 
                         // Send local notification
                         String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
+                        //sendLocalNotification(getContext(), eventTitle, message);
 
                         Toast.makeText(getContext(),
                                 "Notification sent to " + selectedEntrants.size() + " selected entrants",
@@ -203,7 +203,7 @@ public class SendNotificationFragment extends Fragment {
 
                         // Send local notification
                         String eventTitle = event.getName();
-                        sendLocalNotification(getContext(), eventTitle, message);
+                        //sendLocalNotification(getContext(), eventTitle, message);
 
                         Toast.makeText(getContext(),
                                 "Notification sent to " + cancelledEntrants.size() + " cancelled entrants",

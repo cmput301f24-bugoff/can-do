@@ -24,16 +24,21 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Fragment for displaying and managing event details for entrants.
+ *
+ * <p>This fragment allows users to view detailed information about an event,
+ * join or leave the event's waiting list, share the event details, and view
+ * the event location on a map. It uses {@link EventViewModel} to interact with
+ * the event data.</p>
+ */
 public class EventDetailsFragmentEntrant extends Fragment {
+    private static final String TAG = "EventDetailsFragmentEntrant";
     private TextView eventNameTextView;
     private TextView eventDateTextView;
     private TextView eventDescriptionTextView;
@@ -44,7 +49,12 @@ public class EventDetailsFragmentEntrant extends Fragment {
     private String eventName;
     private String eventId;
     private static final String ARG_EVENT_ID = "selected_event_id";
-
+    /**
+     * Creates a new instance of {@code EventDetailsFragmentEntrant} with the specified event ID.
+     *
+     * @param eventId The ID of the event to display.
+     * @return A new instance of the fragment.
+     */
     public static EventDetailsFragmentEntrant newInstance(String eventId) {
         EventDetailsFragmentEntrant fragment = new EventDetailsFragmentEntrant();
         Bundle args = new Bundle();
@@ -52,7 +62,14 @@ public class EventDetailsFragmentEntrant extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /**
+     * Called to create and return the view hierarchy for the fragment.
+     *
+     * @param inflater  The LayoutInflater object to use for inflating the layout.
+     * @param container The parent view that the fragment's UI will be attached to.
+     * @param savedInstanceState The previously saved state, if any.
+     * @return The root view for the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,10 +105,17 @@ public class EventDetailsFragmentEntrant extends Fragment {
             Toast.makeText(requireContext(), "No Event ID provided", Toast.LENGTH_SHORT).show();
         }
 
+        Log.d(TAG, "Finished onCreateView for event:" + eventId);
+
         return view;
     }
-
+    /**
+     * Fetches event details from the repository and updates the UI.
+     *
+     * @param eventId The ID of the event to fetch.
+     */
     private void fetchEventDetails(String eventId) {
+        Log.d("EventDetailsEntrant", "Fetching event details for: " + eventId);
         GlobalRepository.getEvent(eventId)
                 .addOnSuccessListener(event -> {
                     if (event != null) {
@@ -123,13 +147,18 @@ public class EventDetailsFragmentEntrant extends Fragment {
                         } else {
                             eventImageView.setVisibility(View.GONE);
                         }
+                    } else {
+                        Toast.makeText(requireContext(), "Event not found", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(requireContext(), "Failed to load event details", Toast.LENGTH_SHORT).show();
                 });
+        Log.d("TAG", "Finished fetchEventDetails for: " + eventId);
     }
-
+    /**
+     * Opens the map application to display the event location.
+     */
     private void openMapToLocation() {
         if (eventLocation != null && !eventLocation.isEmpty()) {
             Uri geoLocation = Uri.parse("geo:0,0?q=" + Uri.encode(eventLocation));
@@ -144,7 +173,9 @@ public class EventDetailsFragmentEntrant extends Fragment {
             Toast.makeText(requireContext(), "Event location not available", Toast.LENGTH_SHORT).show();
         }
     }
-
+    /**
+     * Shares the event details via a share intent.
+     */
     private void shareEventDetails() {
         String shareContent = "Check out this event: " + eventName + "\n"
                 + "Date: " + eventDateTextView.getText().toString().replace("Date: ", "") + "\n"
@@ -155,7 +186,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareContent);
         startActivity(Intent.createChooser(shareIntent, "Share Event via"));
     }
-
+    /**
+     * Adds the current user to the waiting list for the event.
+     *
+     * @param viewModel The {@link EventViewModel} instance managing the event data.
+     */
     public void joinWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {
@@ -199,14 +234,22 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     Toast.makeText(requireContext(), "Failed to check event requirements", Toast.LENGTH_SHORT).show();
                 });
     }
-
+    /**
+     * Proceeds with adding the current user to the waiting list.
+     *
+     * @param viewModel   The {@link EventViewModel} instance managing the event data.
+     * @param currentUser The current user joining the waiting list.
+     */
     private void proceedWithJoining(EventViewModel viewModel, User currentUser) {
         viewModel.addWaitingListEntrant(currentUser.getId());
         currentUser.addEventJoined(eventId);
 
-        // Update Firestore with the user's joined events
-        GlobalRepository.getUsersCollection().document(currentUser.getId())
-                .update("eventsJoined", currentUser.getEventsJoined())
+        if (GlobalRepository.isInTestMode()) {
+            Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        GlobalRepository.addUser(currentUser)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(requireContext(), "Successfully joined the waiting list.", Toast.LENGTH_SHORT).show();
                 })
@@ -214,36 +257,11 @@ public class EventDetailsFragmentEntrant extends Fragment {
                     Toast.makeText(requireContext(), "Error joining waiting list", Toast.LENGTH_SHORT).show();
                 });
     }
-
-    private void getLocationAndUpdateUser(EventViewModel viewModel, User currentUser) {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-        try {
-            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            currentUser.setLatitude(location.getLatitude());
-                            currentUser.setLongitude(location.getLongitude());
-                            Log.d("User", "Location updated: " + location.getLatitude() + ", " + location.getLongitude());
-                        } else {
-                            Log.d("User", "Location is null");
-                        }
-                        updateUserInFirestore(viewModel, currentUser); // Proceed regardless of location success
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("User", "Failed to get location", e);
-                        updateUserInFirestore(viewModel, currentUser); // Proceed without location update
-                    });
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateUserInFirestore(EventViewModel viewModel, User currentUser) {
-        viewModel.addWaitingListEntrant(currentUser.getId());
-        currentUser.addEventJoined(eventId);
-        currentUser.setRemote(); // Updates Firestore document with the user's data, including latitude and longitude
-    }
-
+    /**
+     * Removes the current user from the waiting list for the event.
+     *
+     * @param viewModel The {@link EventViewModel} instance managing the event data.
+     */
     public void leaveWaitingList(EventViewModel viewModel) {
         User currentUser = GlobalRepository.getLoggedInUser();
         if (currentUser == null) {

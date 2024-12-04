@@ -210,16 +210,12 @@ public class User implements DatabaseEntity {
     }
 
     public void addEventJoined(String eventId) {
-        // Log.d("User", "Adding event to joined list: " + eventId);
         if (this.eventsJoined == null) {
             this.eventsJoined = new ArrayList<>();
         }
         if (!this.eventsJoined.contains(eventId)) {
             this.eventsJoined.add(eventId);
-            // Log.d("User", "Updated eventsJoined list: " + this.eventsJoined);
             setRemote();
-        } else {
-            // Log.d("User", "Event already in joined list");
         }
     }
 

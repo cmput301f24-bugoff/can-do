@@ -8,8 +8,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.EditText;
@@ -32,6 +34,9 @@ import com.bugoff.can_do.user.User;
 import com.bugoff.can_do.user.UserViewModel;
 import com.bugoff.can_do.user.UserViewModelFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -232,22 +237,37 @@ public class MainActivity extends AppCompatActivity {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         try {
-            // A single location fetch
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, location -> {
-                            if (location != null) {
-                                double latitude = location.getLatitude();
-                                double longitude = location.getLongitude();
+                // Define location request parameters
+                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setNumUpdates(1); // We only need one update
+                locationRequest.setInterval(0); // Get update as soon as possible
 
-                                // Update user object
-                                cuser.setLatitude(latitude);
-                                cuser.setLongitude(longitude);
-                                cuser.setRemote(); // Save to database
+                // Create location callback
+                LocationCallback locationCallback = new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult != null && locationResult.getLastLocation() != null) {
+                            Location location = locationResult.getLastLocation();
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
 
-                                Log.d(TAG, "Location obtained: " + latitude + ", " + longitude);
-                            }
-                        });
+                            // Update user object
+                            cuser.setLatitude(latitude);
+                            cuser.setLongitude(longitude);
+                            cuser.setRemote(); // Save to database
+
+                            Log.d(TAG, "Fresh location obtained: " + latitude + ", " + longitude);
+
+                            // Remove the callback after getting location
+                            fusedLocationClient.removeLocationUpdates(this);
+                        }
+                    }
+                };
+
+                // Request location updates
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
             }
         } catch (SecurityException e) {
             e.printStackTrace();

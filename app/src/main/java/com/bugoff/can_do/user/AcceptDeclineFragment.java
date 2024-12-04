@@ -1,13 +1,7 @@
 package com.bugoff.can_do.user;
 
-import static android.content.ContentValues.TAG;
-
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +21,6 @@ import com.bugoff.can_do.R;
 import com.bugoff.can_do.database.GlobalRepository;
 import com.bugoff.can_do.event.EventViewModel;
 import com.bugoff.can_do.event.EventViewModelFactory;
-import com.bumptech.glide.Glide;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +31,7 @@ import java.util.Locale;
  * Fragment for accepting or declining an event invitation.
  */
 public class AcceptDeclineFragment extends Fragment {
-    private FirebaseFirestore db;
+    private static final String TAG = "AcceptDeclineFragment";
     private TextView eventNameTextView;
     private TextView eventDateTextView;
     private TextView eventDescriptionTextView;
@@ -71,7 +60,6 @@ public class AcceptDeclineFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accept_decline, container, false);
 
-        db = FirebaseFirestore.getInstance();
         if (getArguments() != null) {
             eventId = getArguments().getString(ARG_EVENT_ID);
         }
@@ -106,27 +94,22 @@ public class AcceptDeclineFragment extends Fragment {
      * @param eventId ID of the event to fetch
      */
     private void fetchEventDetails(String eventId) {
-        db.collection("events").document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        eventName = documentSnapshot.getString("name");
-                        String eventDescription = documentSnapshot.getString("description");
-                        Timestamp eventDateTimestamp = documentSnapshot.getTimestamp("eventStartDate");
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        eventName = event.getName();
+                        String eventDescription = event.getDescription();
+                        Date eventDate = event.getEventStartDate();
 
                         eventNameTextView.setText(eventName != null ? eventName : "N/A");
                         eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
-                        GlobalRepository.getFacility(documentSnapshot.getString("facilityId")).addOnSuccessListener(facility -> {
-                            eventLocation = facility.getAddress();
-                            Log.d(TAG, "fetchEventDetails: " + eventLocation);
+
+                        if (event.getFacility() != null) {
+                            eventLocation = event.getFacility().getAddress();
                             eventLocationTextView.setText("Address: " + (eventLocation != null ? eventLocation : "N/A"));
-                        });
+                        }
 
-                        eventNameTextView.setText(eventName != null ? eventName : "N/A");
-                        eventDescriptionTextView.setText(eventDescription != null ? eventDescription : "No Description");
-
-                        if (eventDateTimestamp != null) {
-                            Date eventDate = eventDateTimestamp.toDate();
+                        if (eventDate != null) {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault());
                             String formattedDate = dateFormat.format(eventDate);
                             eventDateTextView.setText("Date: " + formattedDate);
@@ -134,7 +117,7 @@ public class AcceptDeclineFragment extends Fragment {
                             eventDateTextView.setText("Date: N/A");
                         }
 
-                        String base64Image = documentSnapshot.getString("base64Image");
+                        String base64Image = event.getBase64Image();
                         if (base64Image != null) {
                             Bitmap bitmap = ImageUtils.decodeBase64Image(base64Image);
                             if (bitmap != null) {
@@ -153,46 +136,34 @@ public class AcceptDeclineFragment extends Fragment {
                     Toast.makeText(requireContext(), "Failed to load event details", Toast.LENGTH_SHORT).show();
                 });
     }
-
-    private void openMapToLocation() {
-        Toast.makeText(requireContext(), "Map feature not implemented.", Toast.LENGTH_SHORT).show();
-    }
     /**
      * Accepts an invitation to an event.
      *
      * @param eventId ID of the event to accept
      */
     private void acceptInvitation(String eventId) {
-        String androidId = GlobalRepository.getLoggedInUser().getId();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference eventRef = db.collection("events").document(eventId);
+        String userId = GlobalRepository.getLoggedInUser().getId();
 
-        db.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(eventRef);
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        List<String> selectedEntrants = event.getSelectedEntrants();
 
-            // Get current lists
-            List<String> selectedEntrants = (List<String>) snapshot.get("selectedEntrants");
-            List<String> enrolledEntrants = (List<String>) snapshot.get("enrolledEntrants");
+                        if (selectedEntrants.contains(userId)) {
+                            // Remove from selected list
+                            event.removeSelectedEntrant(userId);
+                            // Add to enrolled list
+                            event.enrollEntrant(userId);
+                            // Update the event
+                            event.setRemote();
 
-            if (selectedEntrants != null && selectedEntrants.contains(androidId)) {
-                selectedEntrants.remove(androidId);
-
-                if (enrolledEntrants == null) {
-                    enrolledEntrants = new ArrayList<>();
-                }
-                enrolledEntrants.add(androidId);
-
-                // Update Firestore
-                transaction.update(eventRef, "selectedEntrants", selectedEntrants);
-                transaction.update(eventRef, "enrolledEntrants", enrolledEntrants);
-            }
-
-            return null;
-        }).addOnSuccessListener(aVoid ->
-                Toast.makeText(requireContext(), "You have accepted the invitation.", Toast.LENGTH_SHORT).show()
-        ).addOnFailureListener(e ->
-                Toast.makeText(requireContext(), "Error accepting invitation: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-        );
+                            Toast.makeText(requireContext(), "You have accepted the invitation.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Error accepting invitation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
     /**
      * Rejects an invitation to an event.
@@ -200,38 +171,33 @@ public class AcceptDeclineFragment extends Fragment {
      * @param eventId ID of the event to reject
      */
     private void rejectInvitation(String eventId) {
-        String androidId = GlobalRepository.getLoggedInUser().getId();
+        String userId = GlobalRepository.getLoggedInUser().getId();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference eventRef = db.collection("events").document(eventId);
+        GlobalRepository.getEvent(eventId)
+                .addOnSuccessListener(event -> {
+                    if (event != null) {
+                        List<String> selectedEntrants = event.getSelectedEntrants();
 
-        db.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(eventRef);
+                        if (selectedEntrants.contains(userId)) {
+                            // Remove from selected list and add to cancelled list
+                            event.removeSelectedEntrant(userId);
 
-            // Get current lists
-            List<String> selectedEntrants = (List<String>) snapshot.get("selectedEntrants");
-            List<String> cancelledEntrants = (List<String>) snapshot.get("cancelledEntrants");
+                            // Create new list for cancelled entrants
+                            List<String> updatedCancelledEntrants = new ArrayList<>(event.getCancelledEntrants());
+                            updatedCancelledEntrants.add(userId);
 
-            if (selectedEntrants != null && selectedEntrants.contains(androidId)) {
-                selectedEntrants.remove(androidId);
+                            // Set the updated list of cancelled entrants
+                            event.setCancelledEntrants(updatedCancelledEntrants);
 
-                if (cancelledEntrants == null) {
-                    cancelledEntrants = new ArrayList<>();
-                }
-                cancelledEntrants.add(androidId);
+                            // Update the event
+                            event.setRemote();
 
-                // Update Firestore
-                transaction.update(eventRef, "selectedEntrants", selectedEntrants);
-                transaction.update(eventRef, "cancelledEntrants", cancelledEntrants);
-            }
-            
-            return null;
-        }).addOnSuccessListener(aVoid ->
-                Toast.makeText(requireContext(), "You have rejected the invitation.", Toast.LENGTH_SHORT).show()
-        ).addOnFailureListener(e ->
-                Toast.makeText(requireContext(), "Error rejecting invitation: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-        );
+                            Toast.makeText(requireContext(), "You have rejected the invitation.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Error rejecting invitation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
-
-
 }
