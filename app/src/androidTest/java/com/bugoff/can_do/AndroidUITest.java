@@ -494,7 +494,7 @@ public class AndroidUITest {
             HandleQRScan.processQRCode("cando-" + createdEvent.getId(), activity);
         });
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Verify event details and join waitlist
         onView(withId(R.id.class_tile)).check(matches(withText(testEventName)));
@@ -512,7 +512,7 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> organizerMainScenario = ActivityScenario.launch(OrganizerMain.class);
         organizerMainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Click on the event to view details
         onView(withText(testEventName)).perform(click());
@@ -520,7 +520,7 @@ public class AndroidUITest {
         // Navigate to waitlist and perform draw
         onView(withId(R.id.view_watch_list)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Verify the entrant is in the waitlist
         onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
@@ -532,7 +532,7 @@ public class AndroidUITest {
                 .perform(typeText("1"), closeSoftKeyboard());
         onView(withText("Draw")).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Go back to event details
         pressBack();
@@ -540,7 +540,7 @@ public class AndroidUITest {
         // Check selected entrants list
         onView(withId(R.id.view_selected_list)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Verify the entrant is in the selected list
         onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
@@ -650,7 +650,7 @@ public class AndroidUITest {
             HandleQRScan.processQRCode("cando-" + createdEvent.getId(), activity);
         });
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Join waitlist
         onView(withId(R.id.join_waiting_list)).perform(click());
@@ -667,7 +667,7 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> organizerMainScenario = ActivityScenario.launch(OrganizerMain.class);
         organizerMainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Navigate to event details and perform selection
         onView(withText(testEventName)).perform(click());
@@ -677,7 +677,7 @@ public class AndroidUITest {
                 .perform(typeText("1"), closeSoftKeyboard());
         onView(withText("Draw")).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         Log.d("TestEnrollFlow", "Original event: " + createdEvent.getId() + ", name: " + createdEvent.getName());
 
@@ -731,7 +731,7 @@ public class AndroidUITest {
         });
 
         // Wait for state to settle
-        SystemClock.sleep(2000);
+        SystemClock.sleep(5000);
 
         // Debug UI state
         onView(withId(R.id.hs_events_list)).check((view, noViewFoundException) -> {
@@ -757,7 +757,7 @@ public class AndroidUITest {
         // Accept the invitation
         onView(withId(R.id.accept_invitation)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Switch back to organizer view
         GlobalRepository.setLoggedInUser(organizer);
@@ -766,13 +766,13 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> finalOrganizerScenario = ActivityScenario.launch(OrganizerMain.class);
         finalOrganizerScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Navigate to event details and check enrolled list
         onView(withText(testEventName)).perform(click());
         onView(withId(R.id.view_enrolled_list)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Verify the entrant is in the enrolled list
         onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
@@ -884,7 +884,7 @@ public class AndroidUITest {
             HandleQRScan.processQRCode("cando-" + createdEvent.getId(), activity);
         });
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Join waitlist
         onView(withId(R.id.join_waiting_list)).perform(click());
@@ -901,7 +901,7 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> organizerMainScenario = ActivityScenario.launch(OrganizerMain.class);
         organizerMainScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Navigate to event details and perform selection
         onView(withText(testEventName)).perform(click());
@@ -911,7 +911,7 @@ public class AndroidUITest {
                 .perform(typeText("1"), closeSoftKeyboard());
         onView(withText("Draw")).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         Log.d("TestEnrollFlow", "Original event: " + createdEvent.getId() + ", name: " + createdEvent.getName());
 
@@ -965,7 +965,7 @@ public class AndroidUITest {
         });
 
         // Wait for state to settle
-        SystemClock.sleep(2000);
+        SystemClock.sleep(5000);
 
         // Debug UI state
         onView(withId(R.id.hs_events_list)).check((view, noViewFoundException) -> {
@@ -991,7 +991,7 @@ public class AndroidUITest {
         // Reject the invitation
         onView(withId(R.id.reject_invitation)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Switch back to organizer view
         GlobalRepository.setLoggedInUser(organizer);
@@ -1000,13 +1000,13 @@ public class AndroidUITest {
         ActivityScenario<OrganizerMain> finalOrganizerScenario = ActivityScenario.launch(OrganizerMain.class);
         finalOrganizerScenario.onActivity(activity -> GlobalRepository.setBehavior(testBehavior));
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Navigate to event details and check cancelled list
         onView(withText(testEventName)).perform(click());
         onView(withId(R.id.view_cancelled_list)).perform(click());
 
-        SystemClock.sleep(1000);
+        SystemClock.sleep(5000);
 
         // Verify the entrant is in the cancelled list
         onView(withId(R.id.text_view_user_name)).check(matches(withText("Test Entrant")));
