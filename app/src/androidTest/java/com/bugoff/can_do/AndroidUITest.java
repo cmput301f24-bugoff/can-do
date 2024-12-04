@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -520,7 +521,7 @@ public class AndroidUITest {
         SystemClock.sleep(5000);
 
         // Navigate to waitlist and perform draw
-        onView(withId(R.id.view_watch_list)).perform(click());
+        safeClickView(R.id.view_watch_list);
 
         SystemClock.sleep(5000);
 
@@ -674,7 +675,7 @@ public class AndroidUITest {
         // Navigate to event details and perform selection
         onView(withText(testEventName)).perform(click());
         SystemClock.sleep(5000);
-        onView(withId(R.id.view_watch_list)).perform(click());
+        safeClickView(R.id.view_watch_list);
         SystemClock.sleep(5000);
         onView(withId(R.id.draw)).perform(click());
         onView(withClassName(Matchers.endsWith("EditText")))
@@ -910,7 +911,7 @@ public class AndroidUITest {
         // Navigate to event details and perform selection
         onView(withText(testEventName)).perform(click());
         SystemClock.sleep(5000);
-        onView(withId(R.id.view_watch_list)).perform(click());
+        safeClickView(R.id.view_watch_list);
         SystemClock.sleep(5000);
         onView(withId(R.id.draw)).perform(click());
         onView(withClassName(Matchers.endsWith("EditText")))
@@ -1023,5 +1024,32 @@ public class AndroidUITest {
         entrantScenario.close();
         finalOrganizerScenario.close();
         UserAuthenticator.reset();
+    }
+
+    private void waitForView(int viewId) {
+        // Wait up to 10 seconds for the view to be visible
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 10000) {
+            try {
+                onView(withId(viewId))
+                        .check(matches(isDisplayed()));
+                return;
+            } catch (Exception e) {
+                SystemClock.sleep(500);
+            }
+        }
+        // If we get here, the view never became visible
+        throw new RuntimeException("View " + viewId + " never became visible");
+    }
+
+    private void safeClickView(int viewId) {
+        waitForView(viewId);
+
+        try {
+            onView(withId(viewId)).perform(click());
+        } catch (Exception e) {
+            // If direct click fails, try scrolling to it first
+            onView(withId(viewId)).perform(scrollTo(), click());
+        }
     }
 }
